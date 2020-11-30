@@ -1,67 +1,55 @@
-import 'package:flutter/material.dart';
+// import 'package:apple_sign_in/apple_sign_in.dart';
+// import 'package:bloc/bloc.dart';
+// import 'package:equatable/equatable.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter/material.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
+// import 'package:dietapp/app.dart';
+// import 'package:dietapp/simpleBlocObserver.dart';
+// import 'package:authentication_repository/authentication_repository.dart';
+// import 'package:provider/provider.dart';
 
-void main() {
-  runApp(MyApp());
-}
+// FirebaseAnalytics analytics;
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
+// /*class AppleSignInAvailable {
+//   AppleSignInAvailable(this.isAvailable);
+//   final bool isAvailable;
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+//   static Future<AppleSignInAvailable> check() async {
+//     return AppleSignInAvailable(await AppleSignIn.isAvailable());
+//   }
+// }*/
 
-  final String title;
+// void main() async {
+//   print("start");
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+//   EquatableConfig.stringify = kDebugMode;
+//   Bloc.observer = SimpleBlocObserver();
+//   analytics = FirebaseAnalytics();
+//   final appleSignInAvailable = await AppleSignInAvailable.check(); 
+//   print("before run app");
+//   runApp(App(authenticationRepository: AuthenticationRepository(),));
+// }
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
+// /*runApp(Provider<AppleSignInAvailable>.value(
+//       value: appleSignInAvailable,
+//       child: App(authenticationRepository: AuthenticationRepository())));*/
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:appdiet/app.dart';
+import 'package:appdiet/simpleBlocObserver.dart';
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), 
-    );
-  }
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  EquatableConfig.stringify = kDebugMode;
+  Bloc.observer = SimpleBlocObserver();
+  runApp(App(authenticationRepository: AuthenticationRepository()));
 }
