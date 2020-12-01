@@ -30,6 +30,7 @@ class AuthenticationRepository {
   AuthenticationRepository({
     firebase_auth.FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
+    AppleSignIn appleSignIn,
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
 
@@ -42,6 +43,7 @@ class AuthenticationRepository {
   /// Emits [User.empty] if the user is not authenticated.
   Stream<User> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
+      //return firebaseUser.uid == null ? User.empty : firebaseUser.toUser;
       return firebaseUser == null ? User.empty : firebaseUser.toUser;
     });
   }
@@ -100,47 +102,47 @@ class AuthenticationRepository {
   }
 
   Future<void> logInWithApple({List<Scope> scopes = const []}) async {
-     final result = await AppleSignIn.performRequests(
-         [AppleIdRequest(requestedScopes: scopes)]);
-     switch (result.status) {
-       case AuthorizationStatus.authorized:
-         print("authorized");
-         try {
-           final appleIdCredential = result.credential;
-           final oAuthProvider = firebase_auth.OAuthProvider('apple.com');
-           final credential = oAuthProvider.credential(
+    final result = await AppleSignIn.performRequests(
+        [AppleIdRequest(requestedScopes: scopes)]);
+    switch (result.status) {
+      case AuthorizationStatus.authorized:
+        print("authorized");
+        try {
+          final appleIdCredential = result.credential;
+          final oAuthProvider = firebase_auth.OAuthProvider('apple.com');
+          final credential = oAuthProvider.credential(
             idToken: String.fromCharCodes(appleIdCredential.identityToken),
-             accessToken:
-                 String.fromCharCodes(appleIdCredential.authorizationCode),
-           );
+            accessToken:
+                String.fromCharCodes(appleIdCredential.authorizationCode),
+          );
           final authResult =
-               await _firebaseAuth.signInWithCredential(credential);
-           final firebaseUser = authResult.user;
-           if (scopes.contains(Scope.fullName)) {
-             final displayName =
-                 '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
+              await _firebaseAuth.signInWithCredential(credential);
+          final firebaseUser = authResult.user;
+          if (scopes.contains(Scope.fullName)) {
+            final displayName =
+                '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}';
             await firebaseUser.updateProfile(displayName: displayName);
-           }
-         } on Exception {
-           throw LoginWithAppleFailure();
-         }
-         break;
+          }
+        } on Exception {
+          throw LoginWithAppleFailure();
+        }
+        break;
 
-       case AuthorizationStatus.error:
-         print("error");
+      case AuthorizationStatus.error:
+        print("error");
         throw PlatformException(
-           code: 'ERROR_AUTHORIZATION_DENIED',
-           message: result.error.toString(),
-         );
-       case AuthorizationStatus.cancelled:
-         throw PlatformException(
-           code: 'ERROR_ABORTED_BY_USER',
-           message: 'Sign in aborted by user',
-         );
-       default:
-         throw UnimplementedError();
-     }
-   }
+          code: 'ERROR_AUTHORIZATION_DENIED',
+          message: result.error.toString(),
+        );
+      case AuthorizationStatus.cancelled:
+        throw PlatformException(
+          code: 'ERROR_ABORTED_BY_USER',
+          message: 'Sign in aborted by user',
+        );
+      default:
+        throw UnimplementedError();
+    }
+  }
 
   /// Signs out the current user which will emit
   /// [User.empty] from the [user] Stream.
@@ -156,10 +158,16 @@ class AuthenticationRepository {
       throw LogOutFailure();
     }
   }
+
+  User getUserFromUid(String uid) {
+    return User(id: uid, email: "test@email", name: "name test", photo: null,creatingAccount : false);
+  }
 }
 
 extension on firebase_auth.User {
   User get toUser {
-    return User(id: uid, email: email, name: displayName, photo: photoURL);
+    return email == null
+        ? User(id: uid, email: "test@email", name: "name test", photo: photoURL,creatingAccount : false)
+        : User(id: uid, email: email, name: displayName, photo: photoURL,creatingAccount : false);
   }
 }

@@ -22,14 +22,12 @@ class AppleSignInAvailable {
 }
 
 void main() async {
-  print("start");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   EquatableConfig.stringify = kDebugMode;
   Bloc.observer = SimpleBlocObserver();
   analytics = FirebaseAnalytics();
   final appleSignInAvailable = await AppleSignInAvailable.check();
-  print("before run app");
   runApp(Provider<AppleSignInAvailable>.value(
       value: appleSignInAvailable,
       child: App(authenticationRepository: AuthenticationRepository())));

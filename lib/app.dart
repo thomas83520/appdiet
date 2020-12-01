@@ -56,6 +56,12 @@
                     (route) => false,
                   );
                   break;
+                case AuthenticationStatus.creatingAccount:
+                  _navigator.pushAndRemoveUntil<void>(
+                    HomePage.route(),
+                    (route) => false,
+                  );
+                  break;
                 case AuthenticationStatus.unauthenticated:
                   _navigator.pushAndRemoveUntil<void>(
                     LoginPage.route(),
