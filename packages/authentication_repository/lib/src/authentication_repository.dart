@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -27,15 +28,18 @@ class LogOutFailure implements Exception {}
 /// {@endtemplate}
 class AuthenticationRepository {
   /// {@macro authentication_repository}
-  AuthenticationRepository({
-    firebase_auth.FirebaseAuth firebaseAuth,
-    GoogleSignIn googleSignIn,
-    AppleSignIn appleSignIn,
-  })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
+  AuthenticationRepository(
+      {firebase_auth.FirebaseAuth firebaseAuth,
+      GoogleSignIn googleSignIn,
+      AppleSignIn appleSignIn,
+      FirebaseFirestore firestore})
+      : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+        _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
+        _firestore = firestore ?? FirebaseFirestore.instance;
 
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final FirebaseFirestore _firestore;
 
   /// Stream of [User] which will emit the current user when
   /// the authentication state changes.
@@ -106,7 +110,6 @@ class AuthenticationRepository {
         [AppleIdRequest(requestedScopes: scopes)]);
     switch (result.status) {
       case AuthorizationStatus.authorized:
-        print("authorized");
         try {
           final appleIdCredential = result.credential;
           final oAuthProvider = firebase_auth.OAuthProvider('apple.com');
@@ -129,7 +132,6 @@ class AuthenticationRepository {
         break;
 
       case AuthorizationStatus.error:
-        print("error");
         throw PlatformException(
           code: 'ERROR_AUTHORIZATION_DENIED',
           message: result.error.toString(),
@@ -159,15 +161,66 @@ class AuthenticationRepository {
     }
   }
 
-  User getUserFromUid(String uid) {
-    return User(id: uid, email: "test@email", name: "name test", photo: null,creatingAccount : false);
+  Future<User> getUserFromUid(String uid) {
+    return _firestore.collection('patient').doc(uid).get().then((snap) => User(
+          name: snap.get('name'),
+          email: snap.get('email'),
+          id: snap.id,
+          linkFoodPlan: snap.get('linkFoodPlan'),
+          linkStorageFolder: snap.get('linkStorageFolder'),
+          uidDiet: snap.get('uidDiet'),
+          creatingAccount: snap.get('creatingAccount'),
+        ));
+  }
+
+  Future<bool> isUserInFirestore(String uid) {
+    return _firestore.collection('patient').doc(uid).get().then((doc) {
+      if (doc.exists)
+        return true;
+      else
+        return false;
+    });
+  }
+
+  Future<User> initUserInFirestore(String uid,String email,String name) async {
+    await _firestore.collection('patient').doc(uid).set({
+      'name': name == null ? '' : name,
+      'email': email == null ? '' : email,
+      'id': uid,
+      'linkFoodPlan': null,
+      'linkStorageFolder': null,
+      'uidDiet': null,
+      'creatingAccount': true,
+    });
+    return User(
+        email: email == null ? '' : email,
+        id: uid,
+        name: name == null ? '' : name,
+        creatingAccount: true,
+        linkFoodPlan: null,
+        linkStorageFolder: null,
+        uidDiet: null);
   }
 }
 
 extension on firebase_auth.User {
   User get toUser {
     return email == null
-        ? User(id: uid, email: "test@email", name: "name test", photo: photoURL,creatingAccount : false)
-        : User(id: uid, email: email, name: displayName, photo: photoURL,creatingAccount : false);
+        ? User(
+            id: uid,
+            email: "test@email",
+            name: "name test",
+            creatingAccount: false,
+            linkStorageFolder: null,
+            linkFoodPlan: null,
+            uidDiet: null)
+        : User(
+            id: uid,
+            email: email,
+            name: displayName,
+            creatingAccount: false,
+            linkStorageFolder: null,
+            linkFoodPlan: null,
+            uidDiet: null);
   }
 }

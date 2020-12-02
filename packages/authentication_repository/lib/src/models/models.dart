@@ -12,8 +12,10 @@ class User extends Equatable {
     @required this.email,
     @required this.id,
     @required this.name,
-    @required this.photo,
     @required this.creatingAccount,
+    @required this.uidDiet,
+    @required this.linkStorageFolder,
+    @required this.linkFoodPlan,
   }) : assert(email != null),
         assert(id != null),
         assert(creatingAccount != null);
@@ -27,14 +29,17 @@ class User extends Equatable {
   /// The current user's name (display name).
   final String name;
 
-  /// Url for the current user's photo.
-  final String photo;
-
   final bool creatingAccount;
 
+  final String linkStorageFolder;
+
+  final String linkFoodPlan;
+
+  final String uidDiet;
+
   /// Empty user which represents an unauthenticated user.
-  static const empty = User(email: '', id: '', name: null, photo: null,creatingAccount: false);
+  static const empty = User(email: '', id: '', name: null,creatingAccount: false, linkStorageFolder: null, linkFoodPlan: null, uidDiet: null);
 
   @override
-  List<Object> get props => [email, id, name, photo,creatingAccount];
+  List<Object> get props => [email, id, name, creatingAccount,linkFoodPlan,linkStorageFolder,uidDiet];
 }

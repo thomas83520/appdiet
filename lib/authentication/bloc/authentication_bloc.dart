@@ -29,7 +29,7 @@ class AuthenticationBloc
     AuthenticationEvent event,
   ) async* {
     if (event is AuthenticationUserChanged) {
-      yield _mapAuthenticationUserChangedToState(event);
+      yield await _mapAuthenticationUserChangedToState(event);
     } else if (event is AuthenticationLogoutRequested) {
       unawaited(_authenticationRepository.logOut());
     }
@@ -41,16 +41,21 @@ class AuthenticationBloc
     return super.close();
   }
 
-  AuthenticationState _mapAuthenticationUserChangedToState(
+  Future<AuthenticationState> _mapAuthenticationUserChangedToState(
     AuthenticationUserChanged event,
-  ) {
+  ) async {
     if (event.user != User.empty) {
-      User user = _authenticationRepository.getUserFromUid(event.user.id);
-      if (user.creatingAccount == true) {
+      if (await _authenticationRepository.isUserInFirestore(event.user.id)) {
+        final User user =
+            await _authenticationRepository.getUserFromUid(event.user.id);
+        if (user.creatingAccount)
+          return AuthenticationState.creatingAccount(user);
+        else
+          return AuthenticationState.authenticated(user);
+      } else {
+        final User user =
+            await _authenticationRepository.initUserInFirestore(event.user.id,event.user.email,event.user.name);
         return AuthenticationState.creatingAccount(user);
-      }
-      else{
-        return AuthenticationState.authenticated(user);
       }
     } else
       return const AuthenticationState.unauthenticated();

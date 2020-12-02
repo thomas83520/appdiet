@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:appdiet/authentication/authentication.dart';
-import 'package:appdiet/home/home.dart';
+//import 'package:appdiet/home/home.dart';
 
 class HomePage extends StatelessWidget {
   static Route route() {
@@ -30,7 +30,6 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Avatar(photo: user.photo),
             const SizedBox(height: 4.0),
             Text(user.email, style: textTheme.headline6),
             const SizedBox(height: 4.0),
