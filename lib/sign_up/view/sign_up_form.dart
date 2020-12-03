@@ -1,5 +1,6 @@
 import 'package:appdiet/authentication/authentication.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:appdiet/sign_up/sign_up.dart';
 import 'package:formz/formz.dart';
@@ -19,19 +20,23 @@ class SignUpForm extends StatelessWidget {
         }
       },
       child: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(user.toString()),
-            _EmailInput(),
-            const SizedBox(height: 8.0),
-            _PasswordInput(),
-            const SizedBox(height: 8.0),
-            _ConfirmPasswordInput(),
-            const SizedBox(height: 8.0),
-            _SignUpButton(),
-          ],
+        alignment: const Alignment(0, -2 / 3),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(user.toString()),
+              _EmailInput(),
+              const SizedBox(height: 8.0),
+              _PasswordInput(),
+              const SizedBox(height: 8.0),
+              _ConfirmPasswordInput(),
+              const SizedBox(height: 8.0),
+              _DietCodeInput(),
+              const SizedBox(height: 8.0),
+              _SignUpButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -42,11 +47,14 @@ class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("build");
+    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
+        //context.read<SignUpCubit>().emailChanged(user.email);
         print("rebuild");
-        return TextField(
+        return TextFormField(
+          initialValue: user.email,
           key: const Key('signUpForm_emailInput_textField'),
           onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
@@ -106,6 +114,43 @@ class _ConfirmPasswordInput extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _DietCodeInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.codeDiet != current.codeDiet,
+      builder: (context, state) {
+        return TextField(
+          key: const Key('signUpForm_codeDietInput_textField'),
+          onChanged: (codeDiet) =>
+              context.read<SignUpCubit>().codeDietChanged(codeDiet),
+          maxLength: 6,
+          inputFormatters: [
+            UpperCaseTextFormatter(),
+          ],
+          textCapitalization: TextCapitalization.characters,
+          decoration: InputDecoration(
+            labelText: 'code diététicien(ne)',
+            helperText: '',
+            errorText: state.codeDiet.invalid ? 'Code Incomplet' : null,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text?.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

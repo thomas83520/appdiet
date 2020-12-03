@@ -21,6 +21,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         email,
         state.password,
         state.confirmedPassword,
+        state.codeDiet
       ]),
     ));
   }
@@ -38,6 +39,20 @@ class SignUpCubit extends Cubit<SignUpState> {
         state.email,
         password,
         state.confirmedPassword,
+        state.codeDiet
+      ]),
+    ));
+  }
+
+  void codeDietChanged(String value) {
+    final codeDiet = CodeDiet.dirty(value);
+    emit(state.copyWith(
+      codeDiet: codeDiet,
+      status: Formz.validate([
+        state.email,
+        state.password,
+        state.confirmedPassword,
+        codeDiet
       ]),
     ));
   }
@@ -53,6 +68,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         state.email,
         state.password,
         confirmedPassword,
+        state.codeDiet
       ]),
     ));
   }
