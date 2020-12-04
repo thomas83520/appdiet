@@ -170,6 +170,7 @@ class AuthenticationRepository {
           linkStorageFolder: snap.get('linkStorageFolder'),
           uidDiet: snap.get('uidDiet'),
           creatingAccount: snap.get('creatingAccount'),
+          birthDate: snap.get('birthDate'),
         ));
   }
 
@@ -182,7 +183,8 @@ class AuthenticationRepository {
     });
   }
 
-  Future<User> initUserInFirestore(String uid,String email,String name) async {
+  Future<User> initUserInFirestore(
+      String uid, String email, String name) async {
     await _firestore.collection('patient').doc(uid).set({
       'name': name == null ? '' : name,
       'email': email == null ? '' : email,
@@ -191,6 +193,7 @@ class AuthenticationRepository {
       'linkStorageFolder': null,
       'uidDiet': null,
       'creatingAccount': true,
+      'birthDate' : null,
     });
     return User(
         email: email == null ? '' : email,
@@ -199,7 +202,8 @@ class AuthenticationRepository {
         creatingAccount: true,
         linkFoodPlan: null,
         linkStorageFolder: null,
-        uidDiet: null);
+        uidDiet: null,
+        birthDate: null);
   }
 }
 
@@ -213,7 +217,9 @@ extension on firebase_auth.User {
             creatingAccount: false,
             linkStorageFolder: null,
             linkFoodPlan: null,
-            uidDiet: null)
+            uidDiet: null,
+            birthDate: null,
+          )
         : User(
             id: uid,
             email: email,
@@ -221,6 +227,8 @@ extension on firebase_auth.User {
             creatingAccount: false,
             linkStorageFolder: null,
             linkFoodPlan: null,
-            uidDiet: null);
+            uidDiet: null,
+            birthDate: null,
+          );
   }
 }

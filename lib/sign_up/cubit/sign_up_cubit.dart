@@ -2,12 +2,13 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:appdiet/authentication/authentication.dart';
+import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
 
 part 'sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
-  SignUpCubit(this._authenticationRepository)
+  SignUpCubit(this._authenticationRepository, String email)
       : assert(_authenticationRepository != null),
         super(const SignUpState());
 
@@ -54,6 +55,20 @@ class SignUpCubit extends Cubit<SignUpState> {
         state.confirmedPassword,
         codeDiet
       ]),
+    ));
+  }
+
+  void dateChanged(BuildContext context) async {
+    DateTime date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(1900), lastDate: DateTime.now());
+    final birthdate = BirthDate.dirty(date.toString());
+    print(birthdate);
+    emit(state.copyWith(
+      birthDate: birthdate,
+      status: Formz.validate([
+        state.name,
+        state.firstName,
+        birthdate
+      ])
     ));
   }
 

@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:appdiet/sign_up/sign_up.dart';
 import 'package:formz/formz.dart';
+import 'package:appdiet/sign_up/view/sign_up_page.dart';
 
 class SignUpForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
@@ -51,13 +51,10 @@ class SignUpForm extends StatelessWidget {
 class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("build");
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
-        //context.read<SignUpCubit>().emailChanged(user.email);
-        print("rebuild");
         return TextFormField(
           initialValue: user.email,
           key: const Key('signUpForm_emailInput_textField'),
@@ -183,7 +180,8 @@ class _SignUpButton extends StatelessWidget {
                   ),
                   color: theme.primaryColor,
                   onPressed: state.status.isValidated
-                      ? () => context.read<SignUpCubit>().signUpFormSubmitted()
+                      ? () => signUpNavigatorKey.currentState.pushNamed(
+                          '/infos_perso') //context.read<SignUpCubit>().signUpFormSubmitted()
                       : null,
                 ),
               );
@@ -218,7 +216,6 @@ class _LoginButton extends StatelessWidget {
   }
 }
 
-
 class _LogoAndName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -236,7 +233,6 @@ class _LogoAndName extends StatelessWidget {
     );
   }
 }
-
 
 class _InfoText extends StatelessWidget {
   @override
