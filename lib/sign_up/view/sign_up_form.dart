@@ -8,7 +8,7 @@ import 'package:formz/formz.dart';
 class SignUpForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+    //final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
@@ -20,12 +20,15 @@ class SignUpForm extends StatelessWidget {
         }
       },
       child: Align(
-        alignment: const Alignment(0, -2 / 3),
+        alignment: const Alignment(0, -1.25 / 3),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(user.toString()),
+              _LogoAndName(),
+              const SizedBox(height: 26.0),
+              _InfoText(),
+              const SizedBox(height: 30.0),
               _EmailInput(),
               const SizedBox(height: 8.0),
               _PasswordInput(),
@@ -35,6 +38,8 @@ class SignUpForm extends StatelessWidget {
               _DietCodeInput(),
               const SizedBox(height: 8.0),
               _SignUpButton(),
+              const SizedBox(height: 20.0),
+              _LoginButton(),
             ],
           ),
         ),
@@ -81,7 +86,7 @@ class _PasswordInput extends StatelessWidget {
               context.read<SignUpCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'password',
+            labelText: 'Mot de passe',
             helperText: '',
             errorText: state.password.invalid ? 'invalid password' : null,
           ),
@@ -106,10 +111,10 @@ class _ConfirmPasswordInput extends StatelessWidget {
               .confirmedPasswordChanged(confirmPassword),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'confirm password',
+            labelText: 'confirmer mot de passe',
             helperText: '',
             errorText: state.confirmedPassword.invalid
-                ? 'passwords do not match'
+                ? 'Les mots de passe ne correspondent pas'
                 : null,
           ),
         );
@@ -158,23 +163,102 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return state.status.isSubmissionInProgress
             ? const CircularProgressIndicator()
-            : RaisedButton(
-                key: const Key('signUpForm_continue_raisedButton'),
-                child: const Text('SIGN UP'),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+            : SizedBox(
+                width: double.infinity,
+                height: 50.0,
+                child: RaisedButton(
+                  key: const Key('signUpForm_continue_raisedButton'),
+                  child: const Text(
+                    'Continuer',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  color: theme.primaryColor,
+                  onPressed: state.status.isValidated
+                      ? () => context.read<SignUpCubit>().signUpFormSubmitted()
+                      : null,
                 ),
-                color: Colors.orangeAccent,
-                onPressed: state.status.isValidated
-                    ? () => context.read<SignUpCubit>().signUpFormSubmitted()
-                    : null,
               );
       },
     );
+  }
+}
+
+class _LoginButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Vous avez déjà un compte ?"),
+        FlatButton(
+            key: const Key('loginForm_backtologin_flatButton'),
+            child: Text(
+              'Se connecter',
+              style: TextStyle(
+                  color: theme.primaryColor, fontWeight: FontWeight.bold),
+            ),
+            onPressed: () {
+              context
+                  .read<AuthenticationBloc>()
+                  .add(AuthenticationLogoutRequested());
+              Navigator.of(context).pop();
+            }),
+      ],
+    );
+  }
+}
+
+
+class _LogoAndName extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Image.asset(
+          'assets/splash.png',
+          height: 120,
+        ),
+        Text(
+          "Ma diet et moi",
+          style: TextStyle(color: Colors.lightGreen, fontSize: 15.0),
+        ),
+      ],
+    );
+  }
+}
+
+
+class _InfoText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Row(
+        children: <Widget>[
+          Text(
+            "Créer un compte",
+            style: TextStyle(fontSize: 30.0),
+            textAlign: TextAlign.left,
+          ),
+        ],
+      ),
+      Row(
+        children: <Widget>[
+          Text(
+            "Heureux de vous rencontrer !",
+            style: TextStyle(color: Colors.grey, fontSize: 14.0),
+          )
+        ],
+      ),
+    ]);
   }
 }

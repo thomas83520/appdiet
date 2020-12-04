@@ -1,7 +1,7 @@
 name: appdiet
 description: A new Flutter project.
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -11,46 +11,50 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  pedantic: ^1.9.0
+  formz: ^0.3.0
+  meta: ^1.1.8
+
+  #State management
   bloc: ^6.1.0
   equatable: ^1.2.5
   flutter_bloc: ^6.1.0
-  font_awesome_flutter: ^8.4.0
-  formz: ^0.3.0
-  google_fonts: ^1.1.0
-  meta: ^1.1.8
-  apple_sign_in: ^0.1.0
   provider: ^4.3.2+2
-  pedantic: ^1.9.0
 
+  #UI
+  font_awesome_flutter: ^8.4.0
+  google_fonts: ^1.1.0
+  sign_button: ^1.0.0
+
+  #Firebase
   firebase_core: ^0.5.2+1
-  
+
   #Database
   cloud_firestore: ^0.14.3+1
 
   #Authentication
   firebase_auth: ^0.18.3+1
   google_sign_in: ^4.5.6
+  apple_sign_in: ^0.1.0
 
   #Analytics
   firebase_analytics: ^6.2.0
-  
+
   #Crashlytics
   #firebase_crashlytics: ^0.2.3+1
-  
+
   #Performance
   #firebase_performance: ^0.4.2
 
-
+  #Connexion package
   authentication_repository:
     path: packages/authentication_repository
-
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
-
   uses-material-design: true
   assets:
     - assets/
