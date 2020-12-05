@@ -1,6 +1,7 @@
 import 'package:appdiet/sign_up/view/sign_up_page.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'authentication/authentication.dart';
@@ -20,6 +21,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return RepositoryProvider.value(
       value: authenticationRepository,
       child: BlocProvider(

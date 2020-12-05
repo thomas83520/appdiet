@@ -39,7 +39,7 @@ class InfoPersoPage extends StatelessWidget {
               const SizedBox(height: 8.0),
               //_DietCodeInput(),
               const SizedBox(height: 8.0),
-              //_SignUpButton(),
+              _SignUpButton(),
               const SizedBox(height: 20.0),
               //_LoginButton(),
             ],
@@ -88,17 +88,17 @@ class _NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return BlocBuilder<SignUpCubit, SignUpState>(
-      buildWhen: (previous, current) => previous.email != current.email,
+      buildWhen: (previous, current) => previous.name != current.name,
       builder: (context, state) {
         return TextFormField(
-          initialValue: user.email,
+          initialValue: user.name == null ? "" : user.name.substring(0,user.name.indexOf(" ")),
           key: const Key('signUpForm_nameInput_textField'),
-          onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
+          onChanged: (name) => context.read<SignUpCubit>().nameChanged(name),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: 'Nom',
             helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            errorText: state.name.invalid ? 'invalid email' : null,
           ),
         );
       },
@@ -109,18 +109,19 @@ class _NameInput extends StatelessWidget {
 class _FirstNameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return BlocBuilder<SignUpCubit, SignUpState>(
-      buildWhen: (previous, current) => previous.password != current.password,
+      buildWhen: (previous, current) => previous.firstName != current.firstName,
       builder: (context, state) {
-        return TextField(
+        return TextFormField(
+          initialValue: user.name == null ? "" : user.name.substring(user.name.indexOf(" ")),
           key: const Key('signUpForm_firstNameInput_textField'),
-          onChanged: (password) =>
-              context.read<SignUpCubit>().passwordChanged(password),
-          obscureText: true,
+          onChanged: (firstName) =>
+              context.read<SignUpCubit>().firstNameChanged(firstName),
           decoration: InputDecoration(
             labelText: 'Prénom',
             helperText: '',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText: state.firstName.invalid ? 'Caractères non valide' : null,
           ),
         );
       },
@@ -131,22 +132,64 @@ class _FirstNameInput extends StatelessWidget {
 class _DateInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    TextEditingController txt = TextEditingController();
     return BlocBuilder<SignUpCubit, SignUpState>(
-      buildWhen: (previous, current) => previous.password != current.password,
+      buildWhen: (previous, current) => previous.birthDate != current.birthDate,
       builder: (context, state) {
-        return TextFormField(
-          controller : TextEditingController(text: state.birthDate.toString()),
+        switch(state.birthDate.value){
+          case "":
+            txt.text = "";
+            break;
+          case "null":
+            txt.text = "";
+            break;
+          default:
+            txt.text = state.birthDate.value.substring(0, 10);
+            break;
+        }
+        return TextField(
+          controller: txt,
           key: const Key('signUpForm_dateInput_textField'),
-          onChanged: (password) =>
-              context.read<SignUpCubit>().passwordChanged(password),
-          obscureText: true,
           onTap: () => context.read<SignUpCubit>().dateChanged(context),
           decoration: InputDecoration(
             labelText: 'Date de naissance',
             helperText: '',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText:
+                state.birthDate.invalid ? 'Date de naissance non valide' : null,
           ),
         );
+      },
+    );
+  }
+}
+
+class _SignUpButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        return state.status.isSubmissionInProgress
+            ? const CircularProgressIndicator()
+            : SizedBox(
+                width: double.infinity,
+                height: 50.0,
+                child: RaisedButton(
+                  key: const Key('signUpForm_continue_raisedButton'),
+                  child: const Text(
+                    'Créer un compte',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  color: theme.primaryColor,
+                  onPressed: state.status.isValidated
+                      ? () => {}
+                      : null,
+                ),
+              );
       },
     );
   }

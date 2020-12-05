@@ -61,7 +61,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   void dateChanged(BuildContext context) async {
     DateTime date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(1900), lastDate: DateTime.now());
     final birthdate = BirthDate.dirty(date.toString());
-    print(birthdate);
+    print("emit");
     emit(state.copyWith(
       birthDate: birthdate,
       status: Formz.validate([
@@ -85,6 +85,30 @@ class SignUpCubit extends Cubit<SignUpState> {
         confirmedPassword,
         state.codeDiet
       ]),
+    ));
+  }
+
+  void nameChanged(String value){
+    final name = Name.dirty(value);
+    emit(state.copyWith(
+      name: name,
+      status: Formz.validate([
+        name,
+        state.firstName,
+        state.birthDate
+      ])
+    ));
+  }
+
+  void firstNameChanged(String value){
+    final firstName = FirstName.dirty(value);
+    emit(state.copyWith(
+      firstName: firstName,
+      status: Formz.validate([
+        firstName,
+        state.name,
+        state.birthDate
+      ])
     ));
   }
 

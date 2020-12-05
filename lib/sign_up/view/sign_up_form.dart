@@ -209,7 +209,7 @@ class _LoginButton extends StatelessWidget {
               context
                   .read<AuthenticationBloc>()
                   .add(AuthenticationLogoutRequested());
-              Navigator.of(context).pop();
+              Navigator.of(context, rootNavigator: true).pop();
             }),
       ],
     );

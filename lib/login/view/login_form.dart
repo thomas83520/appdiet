@@ -170,7 +170,8 @@ class _SignUpButton extends StatelessWidget {
           key: const Key('loginForm_createAccount_flatButton'),
           child: Text(
             'Créer un compte',
-            style: TextStyle(color: theme.primaryColor),
+            style: TextStyle(
+                color: theme.primaryColor, fontWeight: FontWeight.bold),
           ),
           onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
         ),
