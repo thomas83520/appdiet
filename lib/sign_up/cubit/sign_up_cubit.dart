@@ -112,14 +112,35 @@ class SignUpCubit extends Cubit<SignUpState> {
     ));
   }
 
-  Future<void> signUpFormSubmitted() async {
+  User getUserFromState(User user){
+    return User(
+      id : user.id,
+      name: state.name.value,
+      firstName: state.firstName.value,
+      email: state.email.value,
+      uidDiet: state.codeDiet.value,
+      creatingAccount: user.creatingAccount,
+      linkFoodPlan: user.linkFoodPlan,
+      linkStorageFolder: user.linkStorageFolder,
+      birthDate: state.birthDate.value,
+    );
+  }
+
+  Future<void> signUpFormSubmitted(User user, AuthenticationBloc bloc) async {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
+      if(user.id!= ""){
+        User completeUser = await _authenticationRepository.completeUserSubscription(getUserFromState(user));
+        bloc.add(AuthenticationUserChanged(completeUser));
+      }
+      else{
+      await _authenticationRepository.addUserToWaiting(getUserFromState(user));
       await _authenticationRepository.signUp(
         email: state.email.value,
         password: state.password.value,
       );
+      }
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on Exception {
       emit(state.copyWith(status: FormzStatus.submissionFailure));

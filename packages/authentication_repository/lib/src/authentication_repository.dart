@@ -164,6 +164,7 @@ class AuthenticationRepository {
   Future<User> getUserFromUid(String uid) {
     return _firestore.collection('patient').doc(uid).get().then((snap) => User(
           name: snap.get('name'),
+          firstName: snap.get('firstName'),
           email: snap.get('email'),
           id: snap.id,
           linkFoodPlan: snap.get('linkFoodPlan'),
@@ -172,6 +173,45 @@ class AuthenticationRepository {
           creatingAccount: snap.get('creatingAccount'),
           birthDate: snap.get('birthDate'),
         ));
+  }
+
+  Future<User> completeUserSubscription(User user) async {
+    await _firestore.collection('patient').doc(user.id).set({
+      'name': user.name,
+      'firstName': user.firstName,
+      'email': user.email,
+      'id': user.id,
+      'linkFoodPlan': user.linkFoodPlan,
+      'linkStorageFolder': user.linkStorageFolder,
+      'uidDiet': user.uidDiet,
+      'creatingAccount': false,
+      'birthDate': user.birthDate,
+    });
+    return User(
+      name: user.name,
+      firstName: user.firstName,
+      email: user.email,
+      id: user.id,
+      linkFoodPlan: user.linkFoodPlan,
+      linkStorageFolder: user.linkStorageFolder,
+      uidDiet: user.uidDiet,
+      creatingAccount: false,
+      birthDate: user.birthDate,
+    );
+  }
+
+  Future<void> addUserToWaiting(User user) async {
+    await _firestore.collection('accountwaiting').add({
+      'name': user.name,
+      'firstName': user.firstName,
+      'email': user.email,
+      'id': user.id,
+      'linkFoodPlan': user.linkFoodPlan,
+      'linkStorageFolder': user.linkStorageFolder,
+      'uidDiet': user.uidDiet,
+      'creatingAccount': false,
+      'birthDate': user.birthDate,
+    });
   }
 
   Future<bool> isUserInFirestore(String uid) {
@@ -183,22 +223,51 @@ class AuthenticationRepository {
     });
   }
 
+  Future<User> isUserWaiting(String email) {
+    return _firestore
+        .collection('accountwaiting')
+        .where('email', isEqualTo: email)
+        .get()
+        .then((doc) {
+      if (doc.size == 1)
+        return _userFromSnapshot(doc.docs.elementAt(0));
+      else
+        return User.empty;
+    });
+  }
+
+  User _userFromSnapshot(DocumentSnapshot snap) {
+    return User(
+      name: snap.get('name'),
+      firstName: snap.get('firstName'),
+      email: snap.get('email'),
+      id: snap.id,
+      linkFoodPlan: snap.get('linkFoodPlan'),
+      linkStorageFolder: snap.get('linkStorageFolder'),
+      uidDiet: snap.get('uidDiet'),
+      creatingAccount: snap.get('creatingAccount'),
+      birthDate: snap.get('birthDate'),
+    );
+  }
+
   Future<User> initUserInFirestore(
-      String uid, String email, String name) async {
+      String uid, String email, String name, String firstName) async {
     await _firestore.collection('patient').doc(uid).set({
       'name': name == null ? '' : name,
+      'firstName': firstName == null ? '' : firstName,
       'email': email == null ? '' : email,
       'id': uid,
       'linkFoodPlan': null,
       'linkStorageFolder': null,
       'uidDiet': null,
       'creatingAccount': true,
-      'birthDate' : null,
+      'birthDate': null,
     });
     return User(
         email: email == null ? '' : email,
         id: uid,
         name: name == null ? '' : name,
+        firstName: name == null ? '' : firstName,
         creatingAccount: true,
         linkFoodPlan: null,
         linkStorageFolder: null,
@@ -213,7 +282,8 @@ extension on firebase_auth.User {
         ? User(
             id: uid,
             email: "test@email",
-            name: "name test",
+            name: "name",
+            firstName: "test",
             creatingAccount: false,
             linkStorageFolder: null,
             linkFoodPlan: null,
@@ -223,7 +293,8 @@ extension on firebase_auth.User {
         : User(
             id: uid,
             email: email,
-            name: displayName,
+            name: displayName == null ? "": displayName.substring(displayName.indexOf(" ") + 1),
+            firstName: displayName == null ? "":displayName.substring(0, displayName.indexOf(" ")),
             creatingAccount: false,
             linkStorageFolder: null,
             linkFoodPlan: null,

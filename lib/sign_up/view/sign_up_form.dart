@@ -181,7 +181,7 @@ class _SignUpButton extends StatelessWidget {
                   color: theme.primaryColor,
                   onPressed: state.status.isValidated
                       ? () => signUpNavigatorKey.currentState.pushNamed(
-                          '/infos_perso') //context.read<SignUpCubit>().signUpFormSubmitted()
+                          '/infos_perso') 
                       : null,
                 ),
               );

@@ -53,9 +53,20 @@ class AuthenticationBloc
         else
           return AuthenticationState.authenticated(user);
       } else {
-        final User user =
-            await _authenticationRepository.initUserInFirestore(event.user.id,event.user.email,event.user.name);
-        return AuthenticationState.creatingAccount(user);
+        final User user = await _authenticationRepository.isUserWaiting(event.user.email);
+        if (user != User.empty)
+        {
+          await _authenticationRepository.completeUserSubscription(user);
+          return AuthenticationState.authenticated(user);
+        }
+        else {
+          final User user = await _authenticationRepository.initUserInFirestore(
+              event.user.id,
+              event.user.email,
+              event.user.name,
+              event.user.firstName);
+          return AuthenticationState.creatingAccount(user);
+        }
       }
     } else
       return const AuthenticationState.unauthenticated();

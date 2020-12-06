@@ -91,7 +91,7 @@ class _NameInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.name != current.name,
       builder: (context, state) {
         return TextFormField(
-          initialValue: user.name == null ? "" : user.name.substring(0,user.name.indexOf(" ")),
+          initialValue: user.name,
           key: const Key('signUpForm_nameInput_textField'),
           onChanged: (name) => context.read<SignUpCubit>().nameChanged(name),
           keyboardType: TextInputType.emailAddress,
@@ -114,7 +114,7 @@ class _FirstNameInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.firstName != current.firstName,
       builder: (context, state) {
         return TextFormField(
-          initialValue: user.name == null ? "" : user.name.substring(user.name.indexOf(" ")),
+          initialValue: user.firstName,
           key: const Key('signUpForm_firstNameInput_textField'),
           onChanged: (firstName) =>
               context.read<SignUpCubit>().firstNameChanged(firstName),
@@ -167,6 +167,8 @@ class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+    final bloc = context.select((AuthenticationBloc bloc) => bloc);
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
@@ -186,7 +188,9 @@ class _SignUpButton extends StatelessWidget {
                   ),
                   color: theme.primaryColor,
                   onPressed: state.status.isValidated
-                      ? () => {}
+                      ? () => {
+                        context.read<SignUpCubit>().signUpFormSubmitted(user,bloc)
+                      }
                       : null,
                 ),
               );
