@@ -43,6 +43,8 @@ class User extends Equatable {
 
   final String birthDate;
 
+  String get completeName => this.name+' '+this.firstName;
+
   /// Empty user which represents an unauthenticated user.
   static const empty = User(email: '', id: '', name: '',firstName : '', creatingAccount: false, linkStorageFolder: null, linkFoodPlan: null, uidDiet: null, birthDate: null);
 
