@@ -13,11 +13,12 @@ class DetailMealView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final journal = context.select((JournalBloc bloc) => bloc.state.journal);
+    final statejournal = context.select((JournalBloc bloc) => bloc.state);
     return MultiBlocListener(
       listeners: [
         BlocListener<JournalBloc, JournalState>(
-          listener: (context, state) {
-            if (state.journalStateStatus == JournalStateStatus.complete) {
+          listener: (context, journalstate) {
+            if (journalstate.journalStateStatus == JournalStateStatus.complete) {
               Navigator.of(context).pop();
             }
           },
@@ -25,7 +26,7 @@ class DetailMealView extends StatelessWidget {
         BlocListener<DetailmealCubit, DetailmealState>(
             listener: (context, state) {
               print("state update " + state.status.toString());
-          if (state.status == SubmissionStatus.success)
+          if (state.status == SubmissionStatus.success && statejournal.journalStateStatus !=JournalStateStatus.complete)
             Navigator.of(context).pop();
         })
       ],

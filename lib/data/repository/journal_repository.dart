@@ -3,6 +3,7 @@ import 'package:appdiet/data/models/repas.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class ValidateRepasFailure implements Exception {}
 
 class AddRepasFailure implements Exception {}
@@ -25,6 +26,7 @@ class JournalRepository {
   }
 
   Future<Repas> repasById(String date, String userId, String repasId) async {
+    print("/patient/"+userId+"/Journal/"+date+"/Repas/"+repasId);
     return await _firestore
         .collection('patient')
         .doc(userId)
@@ -147,16 +149,18 @@ extension on DocumentSnapshot {
             : listRepas = Repas.fromSnapshot(this.data()["Meals"]);
 
     List<dynamic> listCommentaires;
-    this.data()["Meals"] == null
+    this.data()["Comments"] == null
         ? listCommentaires = []
-        : this.data()["Meals"] == ""
+        : this.data()["Comments"] == ""
             ? listCommentaires = []
-            : listCommentaires = Repas.fromSnapshot(this.data()["Meals"]);
-
+            : listCommentaires = Repas.fromSnapshot(this.data()["Comments"]);
+    String date;
+    this.data()["date"] == null 
+    ? date = "" : date = this.data()["date"];
     return Journal(
         mapCommentaires: listCommentaires,
         mapRepas: listRepas,
-        date: this.data()["test"]);
+        date: date);
   }
 
   Repas get toRepas {

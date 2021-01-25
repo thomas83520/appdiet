@@ -2,6 +2,7 @@ import 'package:appdiet/data/repository/journal_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:appdiet/logic/cubits/navbar_cubit/navbar_cubit.dart';
+import 'package:appdiet/presentation/pages/building_page.dart';
 import 'package:appdiet/presentation/pages/journal_page.dart';
 import 'package:appdiet/presentation/widgets/navBar.dart';
 import 'package:authentication_repository/authentication_repository.dart';
@@ -42,9 +43,7 @@ class HomePage extends StatelessWidget {
         break;
       case 1:
         return 
-         Container(
-          child: Text("screen 2"),
-        );
+         BuildingPage();
         break;
       case 2:
         return Container(

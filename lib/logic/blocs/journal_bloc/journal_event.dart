@@ -33,5 +33,5 @@ class RepasClicked extends JournalEvent {
   final User user;
 
   @override
-  List<Object> get props => [repas];
+  List<Object> get props => [repas,journal,user];
 }
