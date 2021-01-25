@@ -1,3 +1,5 @@
+import 'package:appdiet/logic/observer/simpleBlocObserver.dart';
+import 'package:appdiet/presentation/routers/app.dart';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -5,8 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:appdiet/app.dart';
-import 'package:appdiet/simpleBlocObserver.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:provider/provider.dart';
 
