@@ -1,7 +1,10 @@
+import 'package:appdiet/authentication/authentication.dart';
+import 'package:appdiet/journal/bloc/blocs.dart';
+import 'package:appdiet/journal/repository/journal_repository.dart';
+import 'package:appdiet/journal/views/journal_page.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:appdiet/authentication/authentication.dart';
-//import 'package:appdiet/home/home.dart';
 import 'package:appdiet/navBar/navBar.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,42 +14,34 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return BlocProvider(
       create: (context) => NavbarCubit(),
       child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Home'),
-            actions: <Widget>[
-              IconButton(
-                key: const Key('homePage_logout_iconButton'),
-                icon: const Icon(Icons.exit_to_app),
-                onPressed: () => context
-                    .read<AuthenticationBloc>()
-                    .add(AuthenticationLogoutRequested()),
-              ),
-            ],
-          ),
-          drawer: _Drawer(),
           bottomNavigationBar: NavBar(),
           body: BlocBuilder<NavbarCubit, NavbarState>(
+            buildWhen: (previous,current) => previous.index!= current.index,
             builder: (context, state) {
-              return childfromindex(state.index);
+              return childfromindex(state.index,user);
             },
           )),
     );
   }
 
-  Widget childfromindex(int index) {
+  Widget childfromindex(int index,User user) {
     switch (index) {
       case 0:
-        return Container(
-          child: Text("screen 1"),
-        );
+        return BlocProvider(
+            create: (_) =>
+                JournalBloc(date : "11_12_2020", journalRepository: JournalRepository(), user: user),
+            child: Navigator(
+            onGenerateRoute: (settings) => MaterialPageRoute(
+                builder: (context) => JournalPage(),
+        )));
         break;
       case 1:
-        return Container(
+        return 
+         Container(
           child: Text("screen 2"),
         );
         break;
@@ -69,57 +64,4 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _Drawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
-    return Drawer(
-      child: ListView(
-        children: [
-          DrawerHeader(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  user.completeName,
-                  style: TextStyle(color: Colors.black, fontSize: 30.0),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  user.email,
-                  style: TextStyle(color: Colors.grey),
-                )
-              ],
-            ),
-          ),
-          ListTile(
-            title: Text("Rendez-vous"),
-            trailing: Icon(Icons.arrow_forward_ios),
-          ),
-          ListTile(
-            title: Text("Photos"),
-            trailing: Icon(Icons.arrow_forward_ios),
-          ),
-          ListTile(
-            title: Text("Poids et mesures"),
-            trailing: Icon(Icons.arrow_forward_ios),
-          ),
-          ListTile(
-            title: Text("Plan alimentaire"),
-            trailing: Icon(Icons.arrow_forward_ios),
-          ),
-          ListTile(
-            title: Text(
-              "Se déconnecter ",
-              style: TextStyle(color: Colors.red),
-            ),
-            trailing: Icon(Icons.arrow_forward_ios),
-            onTap: () =>  context
-                    .read<AuthenticationBloc>()
-                    .add(AuthenticationLogoutRequested()),
-          ),
-        ],
-      ),
-    );
-  }
-}
+
