@@ -1,3 +1,4 @@
+import 'package:appdiet/data/models/Day_comments.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,11 +49,11 @@ class Comments extends StatelessWidget {
     );
   }
 
-  List<Widget> _generateInfos(List<dynamic> comments) {
+  List<Widget> _generateInfos(List<DayComments> comments) {
     if (comments.isEmpty)
       return [
         Text(
-          "Ajouter un repas",
+          "Ajouter un commentaire",
           style: TextStyle(color: Colors.grey),
         ),
       ];
@@ -68,7 +69,7 @@ class Comments extends StatelessWidget {
                   SizedBox(
                     width: 5.0,
                   ),
-                  Text(comment['heure'] + ' : ' + comment['titre']),
+                  Text(comment.heure + ' : ' + comment.name),
                 ],
               ))
           .toList();

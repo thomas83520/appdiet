@@ -1,5 +1,7 @@
+import 'package:appdiet/presentation/pages/list_day_comments_page.dart';
 import 'package:appdiet/presentation/pages/list_meal_page.dart';
 import 'package:appdiet/presentation/widgets/bien_etre.dart';
+import 'package:appdiet/presentation/widgets/comments.dart';
 import 'package:appdiet/presentation/widgets/meals.dart';
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +45,8 @@ class JournalView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(18.0),
             child: InkWell(
-              child: Container()//Comments(),
+              child: Comments(),
+              onTap: () => Navigator.of(context).push(ListDayCommentsPage.route()),
             ),
           ),
         ],

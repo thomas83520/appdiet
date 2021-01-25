@@ -1,13 +1,14 @@
 part of 'journal_bloc.dart';
 
-enum JournalStateStatus {loading,fail,complete,initial,modifyRepas}
+enum JournalStateStatus {loading,fail,complete,initial,modifyRepas,modifyDayComment}
 
 class JournalState extends Equatable {
   const JournalState._({
     this.journal = Journal.empty,
     this.date = '11_12_2020',
     this.journalStateStatus = JournalStateStatus.initial,
-    this.repas = Repas.empty
+    this.repas = Repas.empty,
+    this.dayComments = DayComments.empty,
   });
   
   const JournalState.fail() : this._(journalStateStatus : JournalStateStatus.fail);
@@ -20,10 +21,13 @@ class JournalState extends Equatable {
 
   const JournalState.modifyRepas(Repas repas,Journal journal) : this._(journalStateStatus : JournalStateStatus.modifyRepas, repas : repas,journal : journal);
 
+  const JournalState.modifyDayComment(DayComments dayComments, Journal journal) : this._(journalStateStatus : JournalStateStatus.modifyDayComment,dayComments : dayComments, journal : journal);
+
   final JournalStateStatus journalStateStatus;
   final Journal journal;
   final String date;
   final Repas repas;
+  final DayComments dayComments;
   
   @override
   List<Object> get props => [journal, journalStateStatus, date,repas];

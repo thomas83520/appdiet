@@ -1,3 +1,4 @@
+import 'package:appdiet/data/models/Day_comments.dart';
 import 'package:appdiet/data/models/journal.dart';
 import 'package:appdiet/data/models/repas.dart';
 import 'package:authentication_repository/authentication_repository.dart';
@@ -26,7 +27,6 @@ class JournalRepository {
   }
 
   Future<Repas> repasById(String date, String userId, String repasId) async {
-    print("/patient/"+userId+"/Journal/"+date+"/Repas/"+repasId);
     return await _firestore
         .collection('patient')
         .doc(userId)
@@ -36,6 +36,18 @@ class JournalRepository {
         .doc(repasId)
         .get()
         .then((snapshot) => snapshot.exists ? snapshot.toRepas : Repas.empty);
+  }
+
+  Future<DayComments> commentsById(String date, String userId, String commentsId) async {
+    return await _firestore
+        .collection('patient')
+        .doc(userId)
+        .collection('Journal')
+        .doc(date)
+        .collection('Comments')
+        .doc(commentsId)
+        .get()
+        .then((snapshot) => snapshot.exists ? snapshot.toComments : DayComments.empty);
   }
 
   Future<void> validateRepas(Repas repas, User user, String date) async {
@@ -148,12 +160,12 @@ extension on DocumentSnapshot {
             ? listRepas = []
             : listRepas = Repas.fromSnapshot(this.data()["Meals"]);
 
-    List<dynamic> listCommentaires;
+    List<DayComments> listCommentaires;
     this.data()["Comments"] == null
         ? listCommentaires = []
         : this.data()["Comments"] == ""
             ? listCommentaires = []
-            : listCommentaires = Repas.fromSnapshot(this.data()["Comments"]);
+            : listCommentaires = DayComments.fromSnapshot(this.data()["Comments"]);
     String date;
     this.data()["date"] == null 
     ? date = "" : date = this.data()["date"];
@@ -172,6 +184,15 @@ extension on DocumentSnapshot {
       satiete: this.data()["satiete"],
       contenu: this.data()["contenu"],
       commentaire: this.data()["commentaire"],
+    );
+  }
+
+  DayComments get toComments {
+    return DayComments(
+      id: this.data()["id"],
+      name: this.data()["name"],
+      heure: this.data()["heure"],
+      contenu: this.data()["contenu"],
     );
   }
 }

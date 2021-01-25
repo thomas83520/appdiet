@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:appdiet/data/models/Day_comments.dart';
 import 'package:appdiet/data/models/journal.dart';
 import 'package:appdiet/data/models/repas.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
@@ -43,6 +44,14 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
       else{
         Repas repas = await _journalRepository.repasById(event.journal.date, event.user.id, event.repas.id );
         yield JournalState.modifyRepas(repas,event.journal);
+      }
+    }else if (event is DayCommentsClicked){
+      yield JournalState.loading();
+      if(event.dayComments == DayComments.empty)
+        yield JournalState.modifyDayComment(DayComments.empty,event.journal);
+      else{
+        DayComments dayComments = await _journalRepository.commentsById(event.journal.date, event.user.id, event.dayComments.id );
+        yield JournalState.modifyDayComment(dayComments,event.journal);
       }
     }
   }

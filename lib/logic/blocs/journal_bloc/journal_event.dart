@@ -35,3 +35,14 @@ class RepasClicked extends JournalEvent {
   @override
   List<Object> get props => [repas,journal,user];
 }
+
+class DayCommentsClicked extends JournalEvent {
+  const DayCommentsClicked({this.dayComments,this.journal,this.user});
+
+  final DayComments dayComments;
+  final Journal journal;
+  final User user;
+
+  @override
+  List<Object> get props => [dayComments,journal,user];
+}
