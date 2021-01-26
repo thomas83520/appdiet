@@ -46,19 +46,13 @@ class HomePage extends StatelessWidget {
          BuildingPage();
         break;
       case 2:
-        return Container(
-          child: Text("screen 3"),
-        );
+        return BuildingPage();
         break;
       case 3:
-        return Container(
-          child: Text("screen 4"),
-        );
+        return BuildingPage();
         break;
       default:
-        return Container(
-          child: Text("screen 1"),
-        );
+        return BuildingPage();
         break;
     }
   }

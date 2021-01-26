@@ -1,7 +1,7 @@
 import 'package:appdiet/data/models/Day_comments.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
-import 'package:appdiet/presentation/pages/details_meal_page.dart';
+import 'package:appdiet/presentation/pages/detail_day_comment_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +17,7 @@ class ListDayCommentsPage extends StatelessWidget {
     return BlocListener<JournalBloc, JournalState>(
       listener: (context, state) {
         if (state.journalStateStatus == JournalStateStatus.modifyDayComment) {
-          Navigator.of(context).push(DetailmealPage.route(state.repas));
+          Navigator.of(context).push(DetailDayCommentsPage.route(state.dayComments));
         }
       },
       child: Scaffold(
@@ -100,7 +100,7 @@ class _DayComment extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              dayComment.name,
+              dayComment.titre,
               style: TextStyle(fontSize: 20.0),
             ),
             SizedBox(height: 8.0),

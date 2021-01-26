@@ -9,6 +9,8 @@ class ValidateRepasFailure implements Exception {}
 
 class AddRepasFailure implements Exception {}
 
+class AddDayCommentsFailure implements Exception{}
+
 class JournalRepository {
   JournalRepository({FirebaseFirestore firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
@@ -76,7 +78,7 @@ class JournalRepository {
     }
   }
 
-  Future<void> ajoutRepasToJournal(
+   Future<void> ajoutRepasToJournal(
       Repas repas, User user, String repasId, String date) async {
     try {
       await _firestore
@@ -139,15 +141,93 @@ class JournalRepository {
     }
   }
 
-  int getIdRepasinArray(DocumentSnapshot snapshot, String idRepas) {
-    List<dynamic> meals = snapshot.get("Meals");
-    int id = 0;
-    for (Map<String, dynamic> meal in meals) {
-      if (meal["id"] == idRepas) return id;
-      id++;
+  Future<void> validateDayComments(DayComments dayComments, User user, String date) async {
+    try {
+      dayComments.id == DayComments.empty.id
+          ? await _firestore
+              .collection("patient")
+              .doc(user.id)
+              .collection("Journal")
+              .doc(date)
+              .collection("Comments")
+              .add(dayComments.toDocuments())
+              .then(
+                  (docRef) => ajoutDayCommentsToJournal(dayComments, user, docRef.id, date))
+          : await _firestore
+              .collection("patient")
+              .doc(user.id)
+              .collection("Journal")
+              .doc(date)
+              .collection("Comments")
+              .doc(dayComments.id)
+              .set(dayComments.toDocuments())
+              .then((_) => updateDayCommentsToJournal(dayComments, user, dayComments.id, date));
+    } on Exception {
+      throw ValidateRepasFailure();
     }
+  }
 
-    return -1;
+ Future<void> ajoutDayCommentsToJournal(
+      DayComments dayComments, User user, String dayCommentsId, String date) async {
+    try {
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(date)
+          .update({
+        "Comments": FieldValue.arrayUnion([
+          {"titre": dayComments.titre, "id": dayCommentsId, "heure": dayComments.heure}
+        ])
+      });
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(date)
+          .collection("Comments")
+          .doc(dayCommentsId)
+          .update({"id": dayCommentsId});
+    } on Exception {
+      throw AddRepasFailure();
+    }
+  }
+
+  Future<void> updateDayCommentsToJournal(
+      DayComments dayComments, User user, String dayCommentsId, String date) async {
+    try {
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(date)
+          .get()
+          .then((snapshot) async {
+        List<dynamic> dayCommentsList = snapshot.data()['Comments'];
+        print(dayCommentsList);
+        var index;
+        dayCommentsList.asMap().forEach((key, value) {
+          if (value['id'] == dayCommentsId) index = key;
+        });
+        print(index);
+        dayCommentsList.length == 1
+            ? dayCommentsList = [
+                {"heure": dayComments.heure, "id": dayCommentsId, "titre": dayComments.titre}
+              ]
+            : dayCommentsList.replaceRange(index, index + 1, [
+                {"heure": dayComments.heure, "id": dayCommentsId, "titre": dayComments.titre}
+              ]);
+        print(dayCommentsList.toString());
+        await _firestore
+            .collection("patient")
+            .doc(user.id)
+            .collection("Journal")
+            .doc(date)
+            .update({"Comments": dayCommentsList});
+      });
+    } on Exception {
+      throw AddRepasFailure();
+    }
   }
 }
 
@@ -190,7 +270,7 @@ extension on DocumentSnapshot {
   DayComments get toComments {
     return DayComments(
       id: this.data()["id"],
-      name: this.data()["name"],
+      titre: this.data()["titre"],
       heure: this.data()["heure"],
       contenu: this.data()["contenu"],
     );

@@ -69,7 +69,7 @@ class Comments extends StatelessWidget {
                   SizedBox(
                     width: 5.0,
                   ),
-                  Text(comment.heure + ' : ' + comment.name),
+                  Text(comment.heure + ' : ' + comment.titre),
                 ],
               ))
           .toList();
