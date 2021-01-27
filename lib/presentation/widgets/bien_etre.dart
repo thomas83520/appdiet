@@ -14,17 +14,18 @@ class BienEtre extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
         width: double.infinity,
-        child: Row(children: [
-          Expanded(
-            flex: 2,
-            child: Icon(
-              Icons.mood,
-              size: 40.0,
+        child: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Icon(
+                Icons.mood,
+                size: 40.0,
+              ),
             ),
-          ),
-          Expanded(
-            flex: 8,
-            child: Column(
+            Expanded(
+              flex: 8,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -39,16 +40,19 @@ class BienEtre extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    Text("Niveau de stress"),
-                    Text("Ballonnements"),
-                    Text("Hydratation"),
-                    Text("Transit"),
-                    Text("Fatigue"),
-                    Text("Humeur du jour"),
-                  ]),
-                ]),
-          ),
-        ]),
+                      Text("Niveau de stress"),
+                      Text("Ballonnements"),
+                      Text("Hydratation"),
+                      Text("Transit"),
+                      Text("Fatigue"),
+                      Text("Humeur du jour"),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

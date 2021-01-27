@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:appdiet/data/models/Day_comments.dart';
 import 'package:appdiet/data/models/journal.dart';
 import 'package:appdiet/data/models/repas.dart';
+import 'package:appdiet/data/models/wellbeing.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -53,6 +54,9 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
         DayComments dayComments = await _journalRepository.commentsById(event.journal.date, event.user.id, event.dayComments.id );
         yield JournalState.modifyDayComment(dayComments,event.journal);
       }
+    }else if (event is WellBeingClicked){
+      yield JournalState.loading();
+      yield JournalState.modifyWellBeing(event.wellBeing,event.journal);
     }
   }
 

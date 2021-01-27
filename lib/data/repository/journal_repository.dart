@@ -1,6 +1,7 @@
 import 'package:appdiet/data/models/Day_comments.dart';
 import 'package:appdiet/data/models/journal.dart';
 import 'package:appdiet/data/models/repas.dart';
+import 'package:appdiet/data/models/wellbeing.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -86,11 +87,11 @@ class JournalRepository {
           .doc(user.id)
           .collection("Journal")
           .doc(date)
-          .update({
+          .set({
         "Meals": FieldValue.arrayUnion([
           {"nom": repas.name, "id": repasId, "heure": repas.heure}
         ])
-      });
+      }, SetOptions(merge: true));
       await _firestore
           .collection("patient")
           .doc(user.id)
@@ -175,11 +176,11 @@ class JournalRepository {
           .doc(user.id)
           .collection("Journal")
           .doc(date)
-          .update({
+          .set({
         "Comments": FieldValue.arrayUnion([
           {"titre": dayComments.titre, "id": dayCommentsId, "heure": dayComments.heure}
         ])
-      });
+      }, SetOptions(merge: true));
       await _firestore
           .collection("patient")
           .doc(user.id)
@@ -249,9 +250,13 @@ extension on DocumentSnapshot {
     String date;
     this.data()["date"] == null 
     ? date = "" : date = this.data()["date"];
+    print(this.data()["Wellbeing"]);
+    WellBeing wellBeing = WellBeing.fromSnapshot(this.data()["Wellbeing"]);
+    print(wellBeing.toString());
     return Journal(
         mapCommentaires: listCommentaires,
         mapRepas: listRepas,
+        wellBeing: wellBeing,
         date: date);
   }
 
