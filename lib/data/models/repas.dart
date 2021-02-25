@@ -21,7 +21,7 @@ class Repas extends Equatable{
       heure: snap["heure"],
       before: 0,
       satiete: 0,
-      contenu: "",
+      contenu: snap["contenu"],
       commentaire: "",
     )).toList();
   }

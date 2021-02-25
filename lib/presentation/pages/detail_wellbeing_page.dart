@@ -1,5 +1,10 @@
 import 'package:appdiet/data/models/wellbeing.dart';
+import 'package:appdiet/data/repository/journal_repository.dart';
+import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:appdiet/logic/cubits/detailwellbeing_cubit/detailwellbeing_cubit.dart';
+import 'package:appdiet/presentation/view/detail_wellbeing_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailWellBeingPage extends StatelessWidget {
   static Route route(WellBeing wellBeing) {
@@ -15,8 +20,15 @@ class DetailWellBeingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+    return BlocProvider(
+      create: (_) => DetailwellbeingCubit(
+        date: "11_12_2020",
+        journalRepository: JournalRepository(),
+        user: user,
+        wellBeing: wellBeing,
+      ),
+      child: DetailWellbeingView(),
     );
   }
 }

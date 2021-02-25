@@ -6,10 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class DetailMealView extends StatelessWidget {
-  const DetailMealView({this.mealId});
-
-  final String mealId;
-
   @override
   Widget build(BuildContext context) {
     final journal = context.select((JournalBloc bloc) => bloc.state.journal);
@@ -18,15 +14,17 @@ class DetailMealView extends StatelessWidget {
       listeners: [
         BlocListener<JournalBloc, JournalState>(
           listener: (context, journalstate) {
-            if (journalstate.journalStateStatus == JournalStateStatus.complete) {
+            if (journalstate.journalStateStatus ==
+                JournalStateStatus.complete) {
               Navigator.of(context).pop();
             }
           },
         ),
         BlocListener<DetailmealCubit, DetailmealState>(
             listener: (context, state) {
-              print("state update " + state.status.toString());
-          if (state.status == SubmissionStatus.success && statejournal.journalStateStatus !=JournalStateStatus.complete)
+          print("state update " + state.status.toString());
+          if (state.status == SubmissionStatus.success &&
+              statejournal.journalStateStatus != JournalStateStatus.complete)
             Navigator.of(context).pop();
         })
       ],
@@ -244,8 +242,7 @@ class _Contenu extends StatelessWidget {
 class _Before extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final repas = context.select((DetailmealCubit cubit) => cubit.state.repas);
-    return Material(
+     return Material(
       elevation: 2,
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       child: Container(
@@ -273,15 +270,20 @@ class _Before extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.remove),
-                Expanded(
-                    child: Slider.adaptive(
-                  onChanged: (value) =>
-                      context.read<DetailmealCubit>().beforeChanged(value),
-                  value: repas.before.toDouble(),
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                )),
+                BlocBuilder<DetailmealCubit, DetailmealState>(
+                  builder: (context, state) {
+                    return Expanded(
+                        child: Slider.adaptive(
+                      onChanged: (value) =>
+                          context.read<DetailmealCubit>()
+                          .beforeChanged(value),
+                      value: state.repas.before.toDouble(),
+                      min: 0,
+                      max: 10,
+                      divisions: 10,
+                    ));
+                  },
+                ),
                 Icon(Icons.add)
               ],
             )
@@ -324,15 +326,19 @@ class _Satiete extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.sentiment_very_dissatisfied),
-                Expanded(
-                    child: Slider.adaptive(
-                  onChanged: (value) =>
-                      context.read<DetailmealCubit>().satieteChanged(value),
-                  value: repas.satiete.toDouble(),
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                )),
+                BlocBuilder<DetailmealCubit, DetailmealState>(
+                  builder: (context, state) {
+                    return Expanded(
+                        child: Slider.adaptive(
+                      onChanged: (value) =>
+                          context.read<DetailmealCubit>().satieteChanged(value),
+                      value: state.repas.satiete.toDouble(),
+                      min: 0,
+                      max: 10,
+                      divisions: 10,
+                    ));
+                  },
+                ),
                 Icon(Icons.sentiment_very_satisfied)
               ],
             )

@@ -5,12 +5,11 @@ import 'package:appdiet/data/models/wellbeing.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class ValidateRepasFailure implements Exception {}
 
 class AddRepasFailure implements Exception {}
 
-class AddDayCommentsFailure implements Exception{}
+class AddDayCommentsFailure implements Exception {}
 
 class JournalRepository {
   JournalRepository({FirebaseFirestore firestore})
@@ -41,7 +40,8 @@ class JournalRepository {
         .then((snapshot) => snapshot.exists ? snapshot.toRepas : Repas.empty);
   }
 
-  Future<DayComments> commentsById(String date, String userId, String commentsId) async {
+  Future<DayComments> commentsById(
+      String date, String userId, String commentsId) async {
     return await _firestore
         .collection('patient')
         .doc(userId)
@@ -50,7 +50,8 @@ class JournalRepository {
         .collection('Comments')
         .doc(commentsId)
         .get()
-        .then((snapshot) => snapshot.exists ? snapshot.toComments : DayComments.empty);
+        .then((snapshot) =>
+            snapshot.exists ? snapshot.toComments : DayComments.empty);
   }
 
   Future<void> validateRepas(Repas repas, User user, String date) async {
@@ -79,7 +80,7 @@ class JournalRepository {
     }
   }
 
-   Future<void> ajoutRepasToJournal(
+  Future<void> ajoutRepasToJournal(
       Repas repas, User user, String repasId, String date) async {
     try {
       await _firestore
@@ -90,7 +91,8 @@ class JournalRepository {
           .set({
         "Meals": FieldValue.arrayUnion([
           {"nom": repas.name, "id": repasId, "heure": repas.heure}
-        ])
+        ]),
+        "date": date,
       }, SetOptions(merge: true));
       await _firestore
           .collection("patient")
@@ -142,7 +144,8 @@ class JournalRepository {
     }
   }
 
-  Future<void> validateDayComments(DayComments dayComments, User user, String date) async {
+  Future<void> validateDayComments(
+      DayComments dayComments, User user, String date) async {
     try {
       dayComments.id == DayComments.empty.id
           ? await _firestore
@@ -152,8 +155,8 @@ class JournalRepository {
               .doc(date)
               .collection("Comments")
               .add(dayComments.toDocuments())
-              .then(
-                  (docRef) => ajoutDayCommentsToJournal(dayComments, user, docRef.id, date))
+              .then((docRef) =>
+                  ajoutDayCommentsToJournal(dayComments, user, docRef.id, date))
           : await _firestore
               .collection("patient")
               .doc(user.id)
@@ -162,14 +165,29 @@ class JournalRepository {
               .collection("Comments")
               .doc(dayComments.id)
               .set(dayComments.toDocuments())
-              .then((_) => updateDayCommentsToJournal(dayComments, user, dayComments.id, date));
+              .then((_) => updateDayCommentsToJournal(
+                  dayComments, user, dayComments.id, date));
     } on Exception {
       throw ValidateRepasFailure();
     }
   }
 
- Future<void> ajoutDayCommentsToJournal(
-      DayComments dayComments, User user, String dayCommentsId, String date) async {
+  Future<void> validateWellbeing(
+      WellBeing wellBeing, User user, String date) async {
+    try {
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(date)
+          .set({"Wellbeing": wellBeing.toDocuments(),"date":date}, SetOptions(merge: true));
+    } on Exception {
+      throw ValidateRepasFailure();
+    }
+  }
+
+  Future<void> ajoutDayCommentsToJournal(DayComments dayComments, User user,
+      String dayCommentsId, String date) async {
     try {
       await _firestore
           .collection("patient")
@@ -178,8 +196,13 @@ class JournalRepository {
           .doc(date)
           .set({
         "Comments": FieldValue.arrayUnion([
-          {"titre": dayComments.titre, "id": dayCommentsId, "heure": dayComments.heure}
-        ])
+          {
+            "titre": dayComments.titre,
+            "id": dayCommentsId,
+            "heure": dayComments.heure
+          }
+        ]),
+        "date": date,
       }, SetOptions(merge: true));
       await _firestore
           .collection("patient")
@@ -194,8 +217,8 @@ class JournalRepository {
     }
   }
 
-  Future<void> updateDayCommentsToJournal(
-      DayComments dayComments, User user, String dayCommentsId, String date) async {
+  Future<void> updateDayCommentsToJournal(DayComments dayComments, User user,
+      String dayCommentsId, String date) async {
     try {
       await _firestore
           .collection("patient")
@@ -213,10 +236,18 @@ class JournalRepository {
         print(index);
         dayCommentsList.length == 1
             ? dayCommentsList = [
-                {"heure": dayComments.heure, "id": dayCommentsId, "titre": dayComments.titre}
+                {
+                  "heure": dayComments.heure,
+                  "id": dayCommentsId,
+                  "titre": dayComments.titre
+                }
               ]
             : dayCommentsList.replaceRange(index, index + 1, [
-                {"heure": dayComments.heure, "id": dayCommentsId, "titre": dayComments.titre}
+                {
+                  "heure": dayComments.heure,
+                  "id": dayCommentsId,
+                  "titre": dayComments.titre
+                }
               ]);
         print(dayCommentsList.toString());
         await _firestore
@@ -246,12 +277,15 @@ extension on DocumentSnapshot {
         ? listCommentaires = []
         : this.data()["Comments"] == ""
             ? listCommentaires = []
-            : listCommentaires = DayComments.fromSnapshot(this.data()["Comments"]);
+            : listCommentaires =
+                DayComments.fromSnapshot(this.data()["Comments"]);
     String date;
-    this.data()["date"] == null 
-    ? date = "" : date = this.data()["date"];
+    this.data()["date"] == null ? date = "" : date = this.data()["date"];
     print(this.data()["Wellbeing"]);
-    WellBeing wellBeing = WellBeing.fromSnapshot(this.data()["Wellbeing"]);
+    WellBeing wellBeing;
+    this.data()["Wellbeing"] == null
+        ? wellBeing = WellBeing.empty
+        : wellBeing = WellBeing.fromSnapshot(this.data()["Wellbeing"]);
     print(wellBeing.toString());
     return Journal(
         mapCommentaires: listCommentaires,

@@ -6,10 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class DetailDayCommentView extends StatelessWidget {
-  const DetailDayCommentView({this.dayCommentId});
-
-  final String dayCommentId;
-
   @override
   Widget build(BuildContext context) {
     final journal = context.select((JournalBloc bloc) => bloc.state.journal);
