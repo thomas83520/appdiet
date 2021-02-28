@@ -17,14 +17,14 @@ class JournalRepository {
 
   final FirebaseFirestore _firestore;
 
-  Stream<Journal> journalByDate(String date, String uid) {
-    return _firestore
+  Future<Journal> journalByDate(String date, String uid) async {
+    return await _firestore
         .collection('patient')
         .doc(uid)
         .collection('Journal')
         .doc(date)
-        .snapshots()
-        .map(
+        .get()
+        .then(
             (snapshot) => snapshot.exists ? snapshot.toJournal : Journal.empty);
   }
 
@@ -180,7 +180,8 @@ class JournalRepository {
           .doc(user.id)
           .collection("Journal")
           .doc(date)
-          .set({"Wellbeing": wellBeing.toDocuments(),"date":date}, SetOptions(merge: true));
+          .set({"Wellbeing": wellBeing.toDocuments(), "date": date},
+              SetOptions(merge: true));
     } on Exception {
       throw ValidateRepasFailure();
     }

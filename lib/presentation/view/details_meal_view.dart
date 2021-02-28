@@ -1,4 +1,5 @@
 import 'package:appdiet/data/models/repas.dart';
+import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:appdiet/logic/cubits/detailmeal_cubit/detailmeal_cubit.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ class DetailMealView extends StatelessWidget {
   Widget build(BuildContext context) {
     final journal = context.select((JournalBloc bloc) => bloc.state.journal);
     final statejournal = context.select((JournalBloc bloc) => bloc.state);
+    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return MultiBlocListener(
       listeners: [
         BlocListener<JournalBloc, JournalState>(
@@ -24,8 +26,12 @@ class DetailMealView extends StatelessWidget {
             listener: (context, state) {
           print("state update " + state.status.toString());
           if (state.status == SubmissionStatus.success &&
-              statejournal.journalStateStatus != JournalStateStatus.complete)
+              statejournal.journalStateStatus != JournalStateStatus.complete) {
+            context
+                .read<JournalBloc>()
+                .add(JournalUpdate(journal, statejournal.date, user));
             Navigator.of(context).pop();
+          }
         })
       ],
       child: Scaffold(
@@ -33,7 +39,9 @@ class DetailMealView extends StatelessWidget {
           leading: Builder(
             builder: (BuildContext context) => BackButton(
               onPressed: () {
-                context.read<JournalBloc>().add(JournalUpdate(journal));
+                context
+                    .read<JournalBloc>()
+                    .add(JournalUpdate(journal, statejournal.date, user));
               },
             ),
           ),
@@ -242,7 +250,7 @@ class _Contenu extends StatelessWidget {
 class _Before extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-     return Material(
+    return Material(
       elevation: 2,
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       child: Container(
@@ -275,8 +283,7 @@ class _Before extends StatelessWidget {
                     return Expanded(
                         child: Slider.adaptive(
                       onChanged: (value) =>
-                          context.read<DetailmealCubit>()
-                          .beforeChanged(value),
+                          context.read<DetailmealCubit>().beforeChanged(value),
                       value: state.repas.before.toDouble(),
                       min: 0,
                       max: 10,
@@ -297,7 +304,6 @@ class _Before extends StatelessWidget {
 class _Satiete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final repas = context.select((DetailmealCubit cubit) => cubit.state.repas);
     return Material(
       elevation: 2,
       borderRadius: BorderRadius.all(Radius.circular(10.0)),

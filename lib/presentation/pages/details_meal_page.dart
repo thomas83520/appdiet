@@ -1,6 +1,7 @@
 import 'package:appdiet/data/models/repas.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:appdiet/logic/cubits/detailmeal_cubit/detailmeal_cubit.dart';
 import 'package:appdiet/presentation/view/details_meal_view.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,10 @@ static Route route(Repas repas) {
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+    final date  = context.select((JournalBloc bloc ) => bloc.state.date);
     return BlocProvider(
       create: (_) => DetailmealCubit(
-        date: "11_12_2020",
+        date: date,
         journalRepository: JournalRepository(),
         user: user,
         repas: repas,

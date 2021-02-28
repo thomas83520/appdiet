@@ -1,4 +1,5 @@
 import 'package:appdiet/data/models/Day_comments.dart';
+import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:appdiet/logic/cubits/detailday_comment_cubit/detail_day_comments_cubit.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ class DetailDayCommentView extends StatelessWidget {
   Widget build(BuildContext context) {
     final journal = context.select((JournalBloc bloc) => bloc.state.journal);
     final statejournal = context.select((JournalBloc bloc) => bloc.state);
+    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return MultiBlocListener(
       listeners: [
         BlocListener<JournalBloc, JournalState>(
@@ -23,8 +25,12 @@ class DetailDayCommentView extends StatelessWidget {
         BlocListener<DetailDayCommentsCubit, DetailDayCommentsState>(
             listener: (context, state) {
           if (state.status == SubmissionStatus.success &&
-              statejournal.journalStateStatus != JournalStateStatus.complete)
+              statejournal.journalStateStatus != JournalStateStatus.complete) {
+            context
+                .read<JournalBloc>()
+                .add(JournalUpdate(journal, journal.date, user));
             Navigator.of(context).pop();
+          }
         })
       ],
       child: Scaffold(
@@ -32,7 +38,9 @@ class DetailDayCommentView extends StatelessWidget {
           leading: Builder(
             builder: (BuildContext context) => BackButton(
               onPressed: () {
-                context.read<JournalBloc>().add(JournalUpdate(journal));
+                context
+                    .read<JournalBloc>()
+                    .add(JournalUpdate(journal, statejournal.date, user));
               },
             ),
           ),
@@ -104,7 +112,7 @@ class _Titre extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              "Nom Repas:",
+              "Titre commentaire:",
               style: TextStyle(fontSize: 20),
             ),
             Expanded(
@@ -161,7 +169,7 @@ class _Heure extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                "Heure du repas:",
+                "Heure:",
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(
@@ -175,7 +183,7 @@ class _Heure extends StatelessWidget {
                       DetailDayCommentsState>(
                     builder: (context, state) {
                       return state.dayComments.heure == DayComments.empty.heure
-                          ? Text("Cliquez pour ajouter l'heure du repas")
+                          ? Text("Cliquez pour ajouter l'heure du commentaire")
                           : Text(
                               dayComments.heure,
                               style: TextStyle(fontSize: 30),
@@ -212,7 +220,7 @@ class _Contenu extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Contenu du repas :",
+              "Contenu du commentaire :",
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(
@@ -225,7 +233,7 @@ class _Contenu extends StatelessWidget {
                   .read<DetailDayCommentsCubit>()
                   .contenuChanged(commentaire),
               decoration:
-                  InputDecoration(hintText: "Ecrivez ce que vous avez mangé.."),
+                  InputDecoration(hintText: "Ecrivez votre commentaire.."),
               minLines: 1,
               maxLines: 15,
             )

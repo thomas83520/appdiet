@@ -1,3 +1,4 @@
+import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:appdiet/logic/cubits/detailwellbeing_cubit/detailwellbeing_cubit.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ class DetailWellbeingView extends StatelessWidget {
   Widget build(BuildContext context) {
     final journal = context.select((JournalBloc bloc) => bloc.state.journal);
     final statejournal = context.select((JournalBloc bloc) => bloc.state);
+    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return MultiBlocListener(
       listeners: [
         BlocListener<JournalBloc, JournalState>(
@@ -21,8 +23,12 @@ class DetailWellbeingView extends StatelessWidget {
         BlocListener<DetailwellbeingCubit, DetailwellBeingState>(
             listener: (context, state) {
           if (state.status == SubmissionStatus.success &&
-              statejournal.journalStateStatus != JournalStateStatus.complete)
-            Navigator.of(context).pop();
+              statejournal.journalStateStatus != JournalStateStatus.complete) {
+            context
+                .read<JournalBloc>()
+                .add(JournalUpdate(journal, journal.date, user));
+            //Navigator.of(context).pop();
+          }
         })
       ],
       child: Scaffold(
@@ -30,7 +36,9 @@ class DetailWellbeingView extends StatelessWidget {
           leading: Builder(
             builder: (BuildContext context) => BackButton(
               onPressed: () {
-                context.read<JournalBloc>().add(JournalUpdate(journal));
+                context
+                    .read<JournalBloc>()
+                    .add(JournalUpdate(journal, statejournal.date, user));
               },
             ),
           ),

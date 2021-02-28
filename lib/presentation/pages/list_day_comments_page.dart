@@ -39,7 +39,8 @@ class ListDayCommentsPage extends StatelessWidget {
             context.read<JournalBloc>().add(DayCommentsClicked(
                 dayComments: DayComments.empty,
                 journal: state.journal,
-                user: user));
+                user: user,
+                date : state.date));
           },
         ),
       ),
@@ -70,7 +71,7 @@ class _ListDayComments extends StatelessWidget {
               child: _DayComment(dayComment: comment),
               onTap: () {
                 context.read<JournalBloc>().add(DayCommentsClicked(
-                    dayComments: comment, journal: state.journal, user: user));
+                    dayComments: comment, journal: state.journal, user: user,date: state.date));
               },
             ),
           ),

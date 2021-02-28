@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
       case 0:
         return BlocProvider(
             create: (_) =>
-                JournalBloc(date : "11_12_2020", journalRepository: JournalRepository(), user: user),
+                JournalBloc(date : "", journalRepository: JournalRepository(), user: user),
             child: Navigator(
             onGenerateRoute: (settings) => MaterialPageRoute(
                 builder: (context) => JournalPage(),

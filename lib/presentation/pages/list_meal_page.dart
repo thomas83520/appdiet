@@ -36,7 +36,7 @@ class ListMealPage extends StatelessWidget {
           child: Icon(Icons.add),
           onPressed: () {
             context.read<JournalBloc>().add(
-                RepasClicked(repas: Repas.empty, journal: state.journal, user: user));
+                RepasClicked(repas: Repas.empty, journal: state.journal, user: user,date: state.date));
           },
         ),
       ),
@@ -66,7 +66,7 @@ class _ListRepas extends StatelessWidget {
                 child: _Repas(repas: meal),
                 onTap: () {
                   context.read<JournalBloc>().add(RepasClicked(
-                      repas: meal, journal: state.journal, user: user));
+                      repas: meal, journal: state.journal, user: user,date: state.date));
                 },
               ),
             ))
