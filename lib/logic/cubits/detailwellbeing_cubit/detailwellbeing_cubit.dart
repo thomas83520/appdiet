@@ -26,37 +26,30 @@ class DetailwellbeingCubit extends Cubit<DetailwellBeingState> {
   final JournalRepository _journalRepository;
 
   void stressChanged(double value) {
-    print(value.toString());
     emit(state.copyWith(stress: value.toInt()));
   }
 
   void ballonnementsChanged(double value) {
-    print(value.toString());
     emit(state.copyWith(ballonnements: value.toInt()));
   }
 
   void hydratationChanged(double value) {
-    print(value.toString());
     emit(state.copyWith(hydratation: value.toInt()));
   }
 
   void transitChanged(double value) {
-    print(value.toString());
     emit(state.copyWith(transit: value.toInt()));
   }
 
   void fatigueChanged(double value) {
-    print(value.toString());
     emit(state.copyWith(fatigue: value.toInt()));
   }
 
   void sommeilChanged(double value) {
-    print(value.toString());
     emit(state.copyWith(sommeil: value.toInt()));
   }
 
   void humeurChanged(double value) {
-    print(value.toString());
     emit(state.copyWith(humeur: value.toInt()));
   }
 

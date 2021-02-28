@@ -118,12 +118,10 @@ class JournalRepository {
           .get()
           .then((snapshot) async {
         List<dynamic> mealsList = snapshot.data()['Meals'];
-        print(mealsList);
         var index;
         mealsList.asMap().forEach((key, value) {
           if (value['id'] == repasId) index = key;
         });
-        print(index);
         mealsList.length == 1
             ? mealsList = [
                 {"heure": repas.heure, "id": repasId, "nom": repas.name}
@@ -131,7 +129,6 @@ class JournalRepository {
             : mealsList.replaceRange(index, index + 1, [
                 {"heure": repas.heure, "id": repasId, "nom": repas.name}
               ]);
-        print(mealsList.toString());
         await _firestore
             .collection("patient")
             .doc(user.id)
@@ -229,12 +226,10 @@ class JournalRepository {
           .get()
           .then((snapshot) async {
         List<dynamic> dayCommentsList = snapshot.data()['Comments'];
-        print(dayCommentsList);
         var index;
         dayCommentsList.asMap().forEach((key, value) {
           if (value['id'] == dayCommentsId) index = key;
         });
-        print(index);
         dayCommentsList.length == 1
             ? dayCommentsList = [
                 {
@@ -250,7 +245,6 @@ class JournalRepository {
                   "titre": dayComments.titre
                 }
               ]);
-        print(dayCommentsList.toString());
         await _firestore
             .collection("patient")
             .doc(user.id)
@@ -282,12 +276,10 @@ extension on DocumentSnapshot {
                 DayComments.fromSnapshot(this.data()["Comments"]);
     String date;
     this.data()["date"] == null ? date = "" : date = this.data()["date"];
-    print(this.data()["Wellbeing"]);
     WellBeing wellBeing;
     this.data()["Wellbeing"] == null
         ? wellBeing = WellBeing.empty
         : wellBeing = WellBeing.fromSnapshot(this.data()["Wellbeing"]);
-    print(wellBeing.toString());
     return Journal(
         mapCommentaires: listCommentaires,
         mapRepas: listRepas,

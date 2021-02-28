@@ -24,7 +24,6 @@ class DetailMealView extends StatelessWidget {
         ),
         BlocListener<DetailmealCubit, DetailmealState>(
             listener: (context, state) {
-          print("state update " + state.status.toString());
           if (state.status == SubmissionStatus.success &&
               statejournal.journalStateStatus != JournalStateStatus.complete) {
             context

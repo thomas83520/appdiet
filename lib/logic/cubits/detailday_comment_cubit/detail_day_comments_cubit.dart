@@ -28,7 +28,6 @@ class DetailDayCommentsCubit extends Cubit<DetailDayCommentsState> {
 
 
   void nameChanged(String name){
-    print("state : " + state.dayComments.toString());
     emit(state.copyWith(nameRepas: name));
   }
 
@@ -37,7 +36,6 @@ class DetailDayCommentsCubit extends Cubit<DetailDayCommentsState> {
   }
 
   void contenuChanged(String value){
-    print("value : " +value);
     emit(state.copyWith(contenu: value));
   }
 
@@ -46,7 +44,6 @@ class DetailDayCommentsCubit extends Cubit<DetailDayCommentsState> {
     try{
       await _journalRepository.validateDayComments(state.dayComments,_user,_date);
       emit(state.copyWith(status: SubmissionStatus.success));
-      print("emited");
     }
     on Exception{
       emit(state.copyWith(status: SubmissionStatus.failure));

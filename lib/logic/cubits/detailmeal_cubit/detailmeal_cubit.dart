@@ -28,7 +28,6 @@ class DetailmealCubit extends Cubit<DetailmealState> {
 
 
   void nameChanged(String name){
-    print("state : " + state.repas.toString());
     emit(state.copyWith(nameRepas: name));
   }
 
@@ -37,22 +36,18 @@ class DetailmealCubit extends Cubit<DetailmealState> {
   }
 
   void contenuChanged(String value){
-    print("value : " +value);
     emit(state.copyWith(contenu: value));
   }
 
   void beforeChanged(double value){
-    print(value.toString());
     emit(state.copyWith(before: value.toInt()));
   }
 
   void satieteChanged(double value){
-    print(value.toString());
     emit(state.copyWith(satiete: value.toInt()));
   }
 
   void commentaireChanged(String value){
-    print("value : " +value);
     emit(state.copyWith(commentaire: value));
   }
 
@@ -61,7 +56,6 @@ class DetailmealCubit extends Cubit<DetailmealState> {
     try{
       await _journalRepository.validateRepas(state.repas,_user,_date);
       emit(state.copyWith(status: SubmissionStatus.success));
-      print("emited");
     }
     on Exception{
       emit(state.copyWith(status: SubmissionStatus.failure));

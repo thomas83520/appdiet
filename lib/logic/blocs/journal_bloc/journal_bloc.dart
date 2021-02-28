@@ -62,7 +62,6 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
   String dateformat(DateTime date){
     
     String formattedDate = DateFormat('dd_MM_yyyy').format(date);
-    print(formattedDate);
     return formattedDate;
   }
 

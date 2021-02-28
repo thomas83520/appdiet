@@ -11,7 +11,6 @@ class DayComments extends Equatable{
   static const empty = DayComments(id:'',titre: '',heure: '',contenu : '');
 
   static List<DayComments> fromSnapshot(List<dynamic> snapshot){
-    print("list :" + snapshot.toString());
     return snapshot.map((snap) => DayComments(
       id: snap["id"],
       titre: snap["titre"],

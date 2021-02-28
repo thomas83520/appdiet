@@ -14,7 +14,6 @@ class Repas extends Equatable{
   static const empty = Repas(id:'',name: '',heure: '',before: 5,satiete: 5,contenu : '',commentaire: '' );
 
   static List<Repas> fromSnapshot(List<dynamic> snapshot){
-    print("list :" + snapshot.toString());
     return snapshot.map((snap) => Repas(
       id: snap["id"],
       name: snap["nom"],

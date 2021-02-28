@@ -194,7 +194,6 @@ class _Ballonnements extends StatelessWidget {
                 Icon(Icons.remove),
                 BlocBuilder<DetailwellbeingCubit, DetailwellBeingState>(
                   builder: (context, state) {
-                    print(state.wellBeing.toString());
                     return Expanded(
                         child: Slider.adaptive(
                       onChanged: (value) => context

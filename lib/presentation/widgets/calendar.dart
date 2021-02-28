@@ -44,7 +44,6 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
 
   void _onVisibleDaysChanged(
       DateTime first, DateTime last, CalendarFormat format) {
-    print('CALLBACK: _onVisibleDaysChanged');
   }
 
 
@@ -91,14 +90,12 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
         weekendStyle: TextStyle().copyWith(color: Colors.green[600]),
       ),
       onDaySelected: (date,event,holiday) {
-        print(date.toString());
         context.read<JournalBloc>().add(
           JournalDateChange(date,user)
         );
       },
       onVisibleDaysChanged: _onVisibleDaysChanged,
       onCalendarCreated: (first,last,format) {
-        print("calendat created");
         context.read<JournalBloc>().add(
           JournalDateChange(DateTime.now(),user)
         );
