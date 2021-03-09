@@ -1,7 +1,7 @@
-import 'package:appdiet/data/models/Day_comments.dart';
+import 'package:appdiet/data/models/journal/Day_comments.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
-import 'package:appdiet/presentation/pages/detail_day_comment_page.dart';
+import 'package:appdiet/presentation/pages/journal/detail_day_comment_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

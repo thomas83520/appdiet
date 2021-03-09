@@ -19,11 +19,13 @@ dependencies:
   calendar_strip: ^1.0.6
   cloud_firestore: ^0.14.3+1
   equatable: ^1.2.5
+  expandable: ^4.1.4
   firebase_analytics: ^6.2.0
   firebase_auth: ^0.18.3+1
   firebase_core: ^0.5.2+1
   flutter_bloc: ^6.1.0
   flutter_datetime_picker: ^1.5.0
+  folding_cell: ^1.0.0
   font_awesome_flutter: ^8.4.0
   formz: ^0.3.0
   google_fonts: ^1.1.0

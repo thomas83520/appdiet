@@ -1,6 +1,6 @@
-import 'package:appdiet/data/models/Day_comments.dart';
-import 'package:appdiet/data/models/repas.dart';
-import 'package:appdiet/data/models/wellbeing.dart';
+import 'package:appdiet/data/models/journal/Day_comments.dart';
+import 'package:appdiet/data/models/journal/repas.dart';
+import 'package:appdiet/data/models/journal/wellbeing.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 

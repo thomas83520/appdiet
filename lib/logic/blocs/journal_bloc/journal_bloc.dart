@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:appdiet/data/models/Day_comments.dart';
-import 'package:appdiet/data/models/journal.dart';
-import 'package:appdiet/data/models/repas.dart';
-import 'package:appdiet/data/models/wellbeing.dart';
+import 'package:appdiet/data/models/journal/Day_comments.dart';
+import 'package:appdiet/data/models/journal/journal.dart';
+import 'package:appdiet/data/models/journal/repas.dart';
+import 'package:appdiet/data/models/journal/wellbeing.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';

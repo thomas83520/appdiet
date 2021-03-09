@@ -49,11 +49,9 @@ class DetailWellbeingView extends StatelessWidget {
         body: BlocListener<DetailwellbeingCubit, DetailwellBeingState>(
           listener: (context, state) {
             if (state.status == SubmissionStatus.failure)
-              Scaffold.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  const SnackBar(content: Text("Une erreur est surevenu")),
-                );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Une erreur est surevenu")),
+              );
           },
           child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -512,16 +510,18 @@ class _ValidateButton extends StatelessWidget {
             : SizedBox(
                 width: double.infinity,
                 height: 50.0,
-                child: RaisedButton(
+                child: ElevatedButton(
                   key: const Key('detailWellbeingForm_validate_raisedButton'),
                   child: const Text(
                     'Valider',
                     style: TextStyle(color: Colors.white),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                  style: ElevatedButton.styleFrom(
+                    onSurface: theme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
-                  color: theme.primaryColor,
                   onPressed: () =>
                       context.read<DetailwellbeingCubit>().validateWellbeing(),
                 ),

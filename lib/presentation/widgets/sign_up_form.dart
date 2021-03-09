@@ -1,6 +1,6 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/sign_up_cubit/sign_up_cubit.dart';
-import 'package:appdiet/presentation/pages/sign_up_page.dart';
+import 'package:appdiet/presentation/pages/login_signup/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,11 +12,9 @@ class SignUpForm extends StatelessWidget {
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(content: Text('Sign Up Failure')),
-            );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sign Up Failure')),
+          );
         }
       },
       child: Align(
@@ -169,19 +167,21 @@ class _SignUpButton extends StatelessWidget {
             : SizedBox(
                 width: double.infinity,
                 height: 50.0,
-                child: RaisedButton(
+                child: ElevatedButton(
                   key: const Key('signUpForm_continue_raisedButton'),
                   child: const Text(
                     'Continuer',
                     style: TextStyle(color: Colors.white),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                  style: ElevatedButton.styleFrom(
+                    onSurface: theme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
-                  color: theme.primaryColor,
                   onPressed: state.status.isValidated
-                      ? () => signUpNavigatorKey.currentState.pushNamed(
-                          '/infos_perso') 
+                      ? () => signUpNavigatorKey.currentState
+                          .pushNamed('/infos_perso')
                       : null,
                 ),
               );
@@ -198,7 +198,7 @@ class _LoginButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text("Vous avez déjà un compte ?"),
-        FlatButton(
+        TextButton(
             key: const Key('loginForm_backtologin_flatButton'),
             child: Text(
               'Se connecter',

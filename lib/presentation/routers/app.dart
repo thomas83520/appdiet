@@ -1,8 +1,8 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/presentation/decoration/theme.dart';
 import 'package:appdiet/presentation/pages/home_page.dart';
-import 'package:appdiet/presentation/pages/login_page.dart';
-import 'package:appdiet/presentation/pages/sign_up_page.dart';
+import 'package:appdiet/presentation/pages/login_signup/login_page.dart';
+import 'package:appdiet/presentation/pages/login_signup/sign_up_page.dart';
 import 'package:appdiet/presentation/pages/splash_page.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';

@@ -1,8 +1,8 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
-import 'package:appdiet/presentation/pages/detail_wellbeing_page.dart';
-import 'package:appdiet/presentation/pages/list_day_comments_page.dart';
-import 'package:appdiet/presentation/pages/list_meal_page.dart';
+import 'package:appdiet/presentation/pages/journal/detail_wellbeing_page.dart';
+import 'package:appdiet/presentation/pages/journal/list_day_comments_page.dart';
+import 'package:appdiet/presentation/pages/journal/list_meal_page.dart';
 import 'package:appdiet/presentation/widgets/bien_etre.dart';
 import 'package:appdiet/presentation/widgets/calendar.dart';
 import 'package:appdiet/presentation/widgets/comments.dart';

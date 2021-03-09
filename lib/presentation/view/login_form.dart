@@ -1,5 +1,5 @@
 import 'package:appdiet/logic/cubits/login_cubit/login_cubit.dart';
-import 'package:appdiet/presentation/pages/sign_up_page.dart';
+import 'package:appdiet/presentation/pages/login_signup/sign_up_page.dart';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/apple_sign_in_button.dart' as applebutton;
 import 'package:appdiet/main.dart';
@@ -18,11 +18,9 @@ class LoginForm extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(content: Text('Authentication Failure')),
-            );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Authentication Failure')),
+          );
         }
       },
       child: Align(
@@ -111,16 +109,18 @@ class _LoginButton extends StatelessWidget {
             : SizedBox(
                 width: double.infinity,
                 height: 50.0,
-                child: RaisedButton(
+                child: ElevatedButton(
                   key: const Key('loginForm_continue_raisedButton'),
                   child: const Text(
                     'Continuer',
                     style: TextStyle(color: Colors.white),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                  style: ElevatedButton.styleFrom(
+                    onSurface: theme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
-                  color: theme.primaryColor,
                   onPressed: state.status.isValidated
                       ? () => context.read<LoginCubit>().logInWithCredentials()
                       : null,
@@ -166,7 +166,7 @@ class _SignUpButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text("Vous n'avez pas de compte ?"),
-        FlatButton(
+        TextButton(
           key: const Key('loginForm_createAccount_flatButton'),
           child: Text(
             'Créer un compte',

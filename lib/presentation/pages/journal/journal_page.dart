@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class JournalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return Scaffold(
         appBar: AppBar(
           title: Text("Journal"),

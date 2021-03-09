@@ -1,7 +1,7 @@
-import 'package:appdiet/data/models/repas.dart';
+import 'package:appdiet/data/models/journal/repas.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
-import 'package:appdiet/presentation/pages/details_meal_page.dart';
+import 'package:appdiet/presentation/pages/journal/details_meal_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

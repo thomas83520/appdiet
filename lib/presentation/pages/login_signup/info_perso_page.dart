@@ -14,11 +14,9 @@ class InfoPersoPage extends StatelessWidget {
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(content: Text('Sign Up Failure')),
-            );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sign Up Failure')),
+          );
         }
       },
       child: Align(
@@ -55,9 +53,9 @@ class _BackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        RaisedButton.icon(
-            elevation: 0,
-            color: Color(0xFFFFFAFA),
+        ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+                elevation: 0, onSurface: Color(0xFFFFFAFA)),
             onPressed: () => Navigator.of(context).pop(),
             icon: Icon(Icons.arrow_back),
             label: Text("Retour")),
@@ -136,7 +134,7 @@ class _DateInput extends StatelessWidget {
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.birthDate != current.birthDate,
       builder: (context, state) {
-        switch(state.birthDate.value){
+        switch (state.birthDate.value) {
           case "":
             txt.text = "";
             break;
@@ -177,20 +175,24 @@ class _SignUpButton extends StatelessWidget {
             : SizedBox(
                 width: double.infinity,
                 height: 50.0,
-                child: RaisedButton(
+                child: ElevatedButton(
                   key: const Key('signUpForm_continue_raisedButton'),
                   child: const Text(
                     'Créer un compte',
                     style: TextStyle(color: Colors.white),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                  style: ElevatedButton.styleFrom(
+                    onSurface: theme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
-                  color: theme.primaryColor,
                   onPressed: state.status.isValidated
                       ? () => {
-                        context.read<SignUpCubit>().signUpFormSubmitted(user,bloc)
-                      }
+                            context
+                                .read<SignUpCubit>()
+                                .signUpFormSubmitted(user, bloc)
+                          }
                       : null,
                 ),
               );

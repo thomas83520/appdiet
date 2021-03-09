@@ -1,4 +1,4 @@
-import 'package:appdiet/data/models/Day_comments.dart';
+import 'package:appdiet/data/models/journal/Day_comments.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:appdiet/logic/cubits/detailday_comment_cubit/detail_day_comments_cubit.dart';
@@ -54,11 +54,9 @@ class DetailDayCommentView extends StatelessWidget {
         body: BlocListener<DetailDayCommentsCubit, DetailDayCommentsState>(
           listener: (context, state) {
             if (state.status == SubmissionStatus.failure)
-              Scaffold.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  const SnackBar(content: Text("Erreur dans l'ajout du repas")),
-                );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Erreur dans l'ajout du repas")),
+              );
           },
           child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -255,16 +253,18 @@ class _ValidateButton extends StatelessWidget {
             : SizedBox(
                 width: double.infinity,
                 height: 50.0,
-                child: RaisedButton(
+                child: ElevatedButton(
                   key: const Key('detailmealForm_validate_raisedButton'),
                   child: const Text(
                     'Valider',
                     style: TextStyle(color: Colors.white),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                  style: ElevatedButton.styleFrom(
+                    onSurface: theme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
-                  color: theme.primaryColor,
                   onPressed: () => context
                       .read<DetailDayCommentsCubit>()
                       .validateDayComments(),

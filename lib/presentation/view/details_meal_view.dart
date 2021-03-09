@@ -1,4 +1,4 @@
-import 'package:appdiet/data/models/repas.dart';
+import 'package:appdiet/data/models/journal/repas.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:appdiet/logic/cubits/detailmeal_cubit/detailmeal_cubit.dart';
@@ -54,9 +54,7 @@ class DetailMealView extends StatelessWidget {
         body: BlocListener<DetailmealCubit, DetailmealState>(
           listener: (context, state) {
             if (state.status == SubmissionStatus.failure)
-              Scaffold.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Erreur dans l'ajout du repas")),
                 );
           },
@@ -408,16 +406,15 @@ class _ValidateButton extends StatelessWidget {
             : SizedBox(
                 width: double.infinity,
                 height: 50.0,
-                child: RaisedButton(
+                child: ElevatedButton(
                     key: const Key('detailmealForm_validate_raisedButton'),
                     child: const Text(
                       'Valider',
                       style: TextStyle(color: Colors.white),
                     ),
-                    shape: RoundedRectangleBorder(
+                    style: ElevatedButton.styleFrom(onSurface: theme.primaryColor,shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    color: theme.primaryColor,
+                    ),),
                     onPressed: () =>
                         context.read<DetailmealCubit>().validateRepas()),
               );

@@ -1,4 +1,4 @@
-import 'package:appdiet/data/models/wellbeing.dart';
+import 'package:appdiet/data/models/journal/wellbeing.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';

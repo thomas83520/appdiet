@@ -1,6 +1,6 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/sign_up_cubit/sign_up_cubit.dart';
-import 'package:appdiet/presentation/pages/info_perso_page.dart';
+import 'package:appdiet/presentation/pages/login_signup/info_perso_page.dart';
 import 'package:appdiet/presentation/widgets/sign_up_form.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';

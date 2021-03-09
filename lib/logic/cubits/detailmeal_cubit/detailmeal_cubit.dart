@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:appdiet/data/models/repas.dart';
+import 'package:appdiet/data/models/journal/repas.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
