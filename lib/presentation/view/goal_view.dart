@@ -76,53 +76,6 @@ class GoalView extends StatelessWidget {
                     Text(" Objectifs long termes"),
                   ],
                 ),
-                /*SimpleFoldingCell(
-                  key: _foldingCellKey1,
-                  frontWidget: _buildFrontWidget(
-                      _foldingCellKey1,
-                      "Objectifs long terme",
-                      state.goals.pourcentageLong,
-                      Colors.orange),
-                  innerTopWidget: _buildInnerTopWidget(
-                      _foldingCellKey1,
-                      "Objectifs long terme",
-                      state.goals.pourcentageLong,
-                      Colors.orange),
-                  innerBottomWidget: _buildInnerBottomWidget(
-                      _foldingCellKey1, Colors.orange, state.goals.longTerm,context),
-                  cellSize: Size(MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).size.height / 4),
-                  padding: EdgeInsets.all(15),
-                  animationDuration: Duration(milliseconds: 500),
-                  borderRadius: 10,
-                  onOpen: () => print('cell opened'),
-                  onClose: () => print('cell closed'),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SimpleFoldingCell(
-                  key: _foldingCellKey2,
-                  frontWidget: _buildFrontWidget(
-                      _foldingCellKey2,
-                      "Objectifs court terme",
-                      state.goals.pourcentageShort,
-                      Colors.green),
-                  innerTopWidget: _buildInnerTopWidget(
-                      _foldingCellKey2,
-                      "Objectifs court terme",
-                      state.goals.pourcentageShort,
-                      Colors.green),
-                  innerBottomWidget: _buildInnerBottomWidget(
-                      _foldingCellKey2, Colors.green, state.goals.shortTerm,context),
-                  cellSize: Size(MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).size.height / 4),
-                  padding: EdgeInsets.all(15),
-                  animationDuration: Duration(milliseconds: 500),
-                  borderRadius: 10,
-                  onOpen: () => print('cell opened'),
-                  onClose: () => print('cell closed'),
-                ),*/
                 _buildcard(
                   "Objectifs long terme",
                   state.goals.pourcentageLong,
@@ -149,115 +102,56 @@ class GoalView extends StatelessWidget {
     );
   }
 
-  Widget _buildFrontWidget(GlobalKey<SimpleFoldingCellState> key, String text,
-      double pourcentage, Color color) {
-    return Container(
-      color: color,
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(text + " " + pourcentage.toString() + "%",
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'OpenSans',
-                fontSize: 20.0,
-              )),
-          TextButton(
-            onPressed: () => key?.currentState?.toggleFold(),
-            child: Text(
-              "Voir",
-            ),
-            style: TextButton.styleFrom(primary: Colors.white),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInnerTopWidget(GlobalKey<SimpleFoldingCellState> key,
-      String text, double pourcentage, Color color) {
-    return Container(
-      color: color,
-      alignment: Alignment.center,
-      child: Text(
-        text + " " + pourcentage.toString() + "%",
-        style: TextStyle(
-          color: Colors.white,
-          fontFamily: 'OpenSans',
-          fontSize: 20.0,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInnerBottomWidget(GlobalKey<SimpleFoldingCellState> key,
-      Color color, List<Goal> listGoal, BuildContext context,GoalType type,Goals goals) {
-    return SingleChildScrollView(
-      child: Wrap(
-        children: [
-          Container(
-            color: color,
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              children: [
-                Column(
-                    children: listGoal.isEmpty
-                        ? []
-                        : _buildListObjectifs(listGoal, context,type,goals)),
-                TextButton(
-                  onPressed: () => key?.currentState?.toggleFold(),
-                  child: Text(
-                    "Fermer",
-                  ),
-                  style: TextButton.styleFrom(primary: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _buildListObjectifs(List<Goal> listGoal, BuildContext context,GoalType type,Goals goals) {
-    return listGoal.asMap().map(
-      (index,goal) {
-       return MapEntry(index, Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: goal.isDone
-              ? Container(
-                  color: Colors.grey,
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: true,
-                        onChanged: (bool) => context.read<GoalBloc>().add(GoalSelected(id:index,type: type,goals : goals)),
-                      ),
-                      Text(goal.goalName)
-                    ],
-                  ),
-                )
-              : Container(
-                  color: Colors.white,
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: false,
-                        onChanged: (bool) =>
-                            context.read<GoalBloc>().add(GoalSelected(id:index,type: type,goals : goals)),
-                      ),
-                      Text(goal.goalName)
-                    ],
-                  ),
-                ),
-        ));
-      },
-    ).values.toList();
+  List<Widget> _buildListObjectifs(
+      List<Goal> listGoal, BuildContext context, GoalType type, Goals goals) {
+    return listGoal
+        .asMap()
+        .map(
+          (index, goal) {
+            return MapEntry(
+                index,
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: goal.isDone
+                      ? Container(
+                          color: Colors.grey,
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: true,
+                                onChanged: (bool) => context
+                                    .read<GoalBloc>()
+                                    .add(GoalSelected(
+                                        id: index, type: type, goals: goals)),
+                              ),
+                              Text(goal.goalName)
+                            ],
+                          ),
+                        )
+                      : Container(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: false,
+                                onChanged: (bool) => context
+                                    .read<GoalBloc>()
+                                    .add(GoalSelected(
+                                        id: index, type: type, goals: goals)),
+                              ),
+                              Text(goal.goalName)
+                            ],
+                          ),
+                        ),
+                ));
+          },
+        )
+        .values
+        .toList();
   }
 
   Widget _buildcard(String text, double pourcentage, Color color,
-      List<Goal> listGoal, BuildContext context,GoalType type,Goals goals) {
+      List<Goal> listGoal, BuildContext context, GoalType type, Goals goals) {
     return ExpandableNotifier(
         child: Padding(
       padding: const EdgeInsets.all(10),
@@ -288,8 +182,9 @@ class GoalView extends StatelessWidget {
                 ),
                 expanded: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children:
-                      listGoal.isEmpty ? [] : _buildListObjectifs(listGoal, context,type,goals),
+                  children: listGoal.isEmpty
+                      ? []
+                      : _buildListObjectifs(listGoal, context, type, goals),
                 ),
                 builder: (_, collapsed, expanded) {
                   return Padding(

@@ -25,7 +25,6 @@ class GoalRepository {
   Future<void> goalClicked(int id, GoalType type, Goals goals) async {
     goals = modifyGoals(id, type, goals);
 
-    if (type == GoalType.shortTerm)
       return await _firestore
           .collection("patient")
           .doc(_user.id)
