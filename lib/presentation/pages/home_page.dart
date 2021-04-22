@@ -10,6 +10,7 @@ import 'package:appdiet/presentation/pages/building_page.dart';
 import 'package:appdiet/presentation/pages/goal/goal_page.dart';
 import 'package:appdiet/presentation/pages/journal/journal_page.dart';
 import 'package:appdiet/presentation/pages/messages/messages_page.dart';
+import 'package:appdiet/presentation/widgets/drawer.dart';
 import 'package:appdiet/presentation/widgets/navBar.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
@@ -23,47 +24,84 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
-    return BlocProvider(
-      create: (context) => NavbarCubit(),
-      child: Scaffold(
-          bottomNavigationBar: NavBar(),
-          body: BlocBuilder<NavbarCubit, NavbarState>(
-            buildWhen: (previous, current) => previous.index != current.index,
-            builder: (context, state) {
-              return childfromindex(state.index, user);
-            },
-          )),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NavbarCubit>(
+          create: (context) => NavbarCubit(),
+        ),
+        BlocProvider<JournalBloc>(
+          create: (context) => JournalBloc(
+              date: "", journalRepository: JournalRepository(), user: user),
+        )
+      ],
+      child: Navigator(
+        onGenerateRoute: (settings) => MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: BlocBuilder<NavbarCubit, NavbarState>(
+                buildWhen: (previous, current) =>
+                    previous.index != current.index,
+                builder: (context, state) {
+                  return titlefromindex(state.index, user);
+                },
+              ),
+            ),
+            drawer: SideDrawer(),
+            bottomNavigationBar: NavBar(),
+            body: BlocBuilder<NavbarCubit, NavbarState>(
+              buildWhen: (previous, current) => previous.index != current.index,
+              builder: (context, state) {
+                return childfromindex(state.index, user);
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 
   Widget childfromindex(int index, User user) {
     switch (index) {
       case 0:
-        return BlocProvider(
-            create: (_) => JournalBloc(
-                date: "", journalRepository: JournalRepository(), user: user),
-            child: Navigator(
-                onGenerateRoute: (settings) => MaterialPageRoute(
-                      builder: (context) => JournalPage(),
-                    )));
+        return JournalPage();
         break;
       case 1:
         return BuildingPage();
         break;
       case 2:
         return BlocProvider(
-          create: (context) => ChatBloc(chatRepository: ChatRepository(user: user)),
+          create: (context) =>
+              ChatBloc(chatRepository: ChatRepository(user: user)),
           child: MessagesPage(),
         );
         break;
       case 3:
         return BlocProvider(
-          create: (_) => GoalBloc(goalRepository: GoalRepository(user : user)),
-          child : GoalPage()
-        );
+            create: (_) => GoalBloc(goalRepository: GoalRepository(user: user)),
+            child: GoalPage());
         break;
       default:
         return BuildingPage();
+        break;
+    }
+  }
+
+  Widget titlefromindex(int index, User user) {
+    switch (index) {
+      case 0:
+        return Text("Journal");
+        break;
+      case 1:
+        return Text("Cuisine");
+        break;
+      case 2:
+        return Text("Messages");
+        break;
+      case 3:
+        return Text("Objectifs");
+        break;
+      default:
+        return Text("");
         break;
     }
   }

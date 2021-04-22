@@ -2,13 +2,9 @@ import 'package:appdiet/data/models/goal/goals.dart';
 import 'package:appdiet/logic/blocs/goal_bloc/goal_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:folding_cell/folding_cell.dart';
 import 'package:expandable/expandable.dart';
 
 class GoalView extends StatelessWidget {
-  final _foldingCellKey1 = GlobalKey<SimpleFoldingCellState>();
-  final _foldingCellKey2 = GlobalKey<SimpleFoldingCellState>();
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
