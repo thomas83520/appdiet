@@ -21,6 +21,7 @@ class HomePage extends StatelessWidget {
     return MaterialPageRoute<void>(builder: (_) => HomePage());
   }
 
+
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
