@@ -11,17 +11,20 @@ class MessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        BlocBuilder<ChatBloc, ChatState>(
-          builder: (context, state) {
-            return ListMessage(
-              messages: state.messages,
-            );
-          },
-        ),
-        ChatInput(),
-      ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Column(
+        children: <Widget>[
+          BlocBuilder<ChatBloc, ChatState>(
+            builder: (context, state) {
+              return ListMessage(
+                messages: state.messages,
+              );
+            },
+          ),
+          ChatInput(),
+        ],
+      ),
     );
   }
 }

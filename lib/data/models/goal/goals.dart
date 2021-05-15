@@ -65,16 +65,11 @@ class Goal extends Equatable {
   final bool isDone;
 
   static List<Goal> fromSnapshot(List<dynamic> snapshot) {
-    print(snapshot);
     List<Goal> test = snapshot
         .map((snapshot) {
-          print(snapshot);
-          print(snapshot["goalName"]);
-          print(snapshot["isDone"]);
             return Goal(goalName: snapshot["goalName"], isDone: snapshot["isDone"]);})
         .toList();
 
-        print(test);
         return test;
   }
 

@@ -13,8 +13,6 @@ class PlanAlimentaireRepository {
     String downloadURL = await firebase_storage.FirebaseStorage.instance
       .ref(_user.id+'/plan_alimentaire.pdf')
       .getDownloadURL();
-      print(_user.id);
-      print("download URL : " + downloadURL);
 
       return await PDFDocument.fromURL(
         downloadURL,

@@ -55,7 +55,7 @@ class DetailDayCommentView extends StatelessWidget {
           listener: (context, state) {
             if (state.status == SubmissionStatus.failure)
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Erreur dans l'ajout du repas")),
+                const SnackBar(content: Text("Erreur dans l'ajout du commentaire")),
               );
           },
           child: GestureDetector(
