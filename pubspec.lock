@@ -58,7 +58,7 @@ packages:
     source: hosted
     version: "6.1.1"
   bloc_test:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: bloc_test
       url: "https://pub.dartlang.org"
@@ -841,7 +841,7 @@ packages:
     source: hosted
     version: "1.2.0"
   test:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: test
       url: "https://pub.dartlang.org"

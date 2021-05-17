@@ -41,6 +41,8 @@ class Goals extends Equatable {
       "isDone" : goal.isDone,
     }).toList();
   }
+
+  
   double calculatePourcentage(List<Goal> goals) {
     double nb = 0;
     if(goals.isEmpty)

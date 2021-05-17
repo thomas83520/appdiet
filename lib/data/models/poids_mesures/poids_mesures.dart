@@ -11,7 +11,7 @@ class PoidsMesures extends Equatable {
 
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [mesures,poids,photos];
 }
 
 enum MesureType { taille,ventre,hanche,cuisses,bras, poitrine }
