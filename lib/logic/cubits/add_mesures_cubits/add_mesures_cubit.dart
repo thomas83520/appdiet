@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:appdiet/data/repository/photos_repository.dart';
 import 'package:appdiet/data/repository/poids_mesures_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -58,9 +56,10 @@ class AddMesuresCubit extends Cubit<AddMesuresState> {
     print(map);
     try{
       emit(state.copyWith(formState: AddMesureFormState.loadInProgress));
-      _poidsMesuresRepository.addPoidsMesures(map);
+      String url = "";
       if(state.file!=null)
-        _photosRepository.uploadPhoto(state.file.path, state.date.toString());
+        url = await _photosRepository.uploadPhoto(state.file.path, state.date.toString());
+      _poidsMesuresRepository.addPoidsMesures(map,url);
       emit(state.copyWith(formState: AddMesureFormState.complete));
     }catch (e){
       emit(state.copyWith(formState: AddMesureFormState.error));

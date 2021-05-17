@@ -31,7 +31,7 @@ class PhotosRepository {
 
   Future<DetailPhoto> loadDetail(String url) async {
     double poids;
-    Map<String, double> mesures;
+    Map<String, double> mesures = {};
     DateTime date;
 
     QuerySnapshot doc = await firestore
@@ -51,7 +51,9 @@ class PhotosRepository {
 
       if (doc.data().containsKey("mesures")) {
         Map<String, dynamic> map = doc["mesures"];
+        print(map);
         map.forEach((key, value) {
+          print(key);
           switch (key) {
             case "taille":
               mesures.putIfAbsent("taille", () => value.toDouble());
@@ -61,7 +63,7 @@ class PhotosRepository {
               mesures.putIfAbsent("ventre", () => value.toDouble());
               break;
 
-            case "hanche":
+            case "hanches":
               mesures.putIfAbsent("hanche", () => value.toDouble());
               break;
 
@@ -88,11 +90,18 @@ class PhotosRepository {
         photoUrl: url, poids: poids, mesures: mesures, date: date);
   }
 
-  Future<void> uploadPhoto(String filePath,String fileName) async {
+  Future<String> uploadPhoto(String filePath, String fileName) async {
     File file = File(filePath);
     print(fileName);
+
     await firebase_storage.FirebaseStorage.instance
-        .ref(_user.id+'/photos/'+fileName+'.png')
+        .ref(_user.id + '/photos/' + fileName + '.png')
         .putFile(file);
+
+    String url = await firebase_storage.FirebaseStorage.instance
+        .ref(_user.id + '/photos/' + fileName + '.png').getDownloadURL();
+
+        print(url);
+    return url;
   }
 }

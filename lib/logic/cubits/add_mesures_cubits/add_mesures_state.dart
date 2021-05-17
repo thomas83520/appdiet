@@ -13,7 +13,9 @@ class AddMesuresState extends Equatable {
       this.poitrine = 0,
       this.taille = 0,
       this.ventre = 0,
-      this.formState = AddMesureFormState.writing});
+      this.formState = AddMesureFormState.writing,
+      this.url,
+      });
 
   final DateTime date;
   final PickedFile file;
@@ -25,6 +27,7 @@ class AddMesuresState extends Equatable {
   final double bras;
   final double poitrine;
   final AddMesureFormState formState;
+  final String url;
 
   AddMesuresState copyWith({
     DateTime date,

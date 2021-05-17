@@ -1,6 +1,7 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/sign_up_cubit/sign_up_cubit.dart';
 import 'package:appdiet/presentation/pages/login_signup/sign_up_page.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,8 +14,11 @@ class SignUpForm extends StatelessWidget {
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sign Up Failure')),
+            const SnackBar(content: Text('Code diététicien(ne) incorrect')),
           );
+        }
+        if (state.status.isSubmissionSuccess) {
+          signUpNavigatorKey.currentState.pushNamed('/infos_perso');
         }
       },
       child: Align(
@@ -83,7 +87,9 @@ class _PasswordInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Mot de passe',
             helperText: '',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText: state.password.invalid
+                ? 'Le mot de passe ne correspond pas aux critères'
+                : null,
           ),
         );
       },
@@ -121,22 +127,31 @@ class _ConfirmPasswordInput extends StatelessWidget {
 class _DietCodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var _controller = TextEditingController();
+
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.codeDiet != current.codeDiet,
       builder: (context, state) {
-        return TextField(
-          key: const Key('signUpForm_codeDietInput_textField'),
-          onChanged: (codeDiet) =>
-              context.read<SignUpCubit>().codeDietChanged(codeDiet),
-          maxLength: 6,
-          inputFormatters: [
-            UpperCaseTextFormatter(),
-          ],
-          textCapitalization: TextCapitalization.characters,
-          decoration: InputDecoration(
-            labelText: 'code diététicien(ne)',
-            helperText: '',
-            errorText: state.codeDiet.invalid ? 'Code Incomplet' : null,
+        return BlocListener<SignUpCubit, SignUpState>(
+          listener: (context, state) {
+            if (state.status == FormzStatus.submissionFailure)
+              _controller.clear();
+          },
+          child: TextField(
+            controller: _controller,
+            key: const Key('signUpForm_codeDietInput_textField'),
+            onChanged: (codeDiet) =>
+                context.read<SignUpCubit>().codeDietChanged(codeDiet),
+            maxLength: 6,
+            inputFormatters: [
+              UpperCaseTextFormatter(),
+            ],
+            textCapitalization: TextCapitalization.characters,
+            decoration: InputDecoration(
+              labelText: 'code diététicien(ne)',
+              helperText: '',
+              errorText: state.codeDiet.invalid ? 'Code Incomplet' : null,
+            ),
           ),
         );
       },
@@ -158,6 +173,8 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final User user =
+        context.select((AuthenticationBloc bloc) => bloc.state.user);
     final theme = Theme.of(context);
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.status != current.status,
@@ -180,8 +197,9 @@ class _SignUpButton extends StatelessWidget {
                     ),
                   ),
                   onPressed: state.status.isValidated
-                      ? () => signUpNavigatorKey.currentState
-                          .pushNamed('/infos_perso')
+                      ? () => context
+                          .read<SignUpCubit>()
+                          .validCodeDiet(user, state.codeDiet.value)
                       : null,
                 ),
               );

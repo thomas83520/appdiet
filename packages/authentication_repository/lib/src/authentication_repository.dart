@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 import 'models/models.dart';
 
@@ -32,14 +33,18 @@ class AuthenticationRepository {
       {firebase_auth.FirebaseAuth firebaseAuth,
       GoogleSignIn googleSignIn,
       AppleSignIn appleSignIn,
-      FirebaseFirestore firestore})
+      FirebaseFirestore firestore,
+      FirebaseFunctions funcitons})
       : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
-        _firestore = firestore ?? FirebaseFirestore.instance;
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        _functions =
+            funcitons ?? FirebaseFunctions.instanceFor(region: 'europe-west1');
 
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final FirebaseFirestore _firestore;
+  final FirebaseFunctions _functions;
 
   /// Stream of [User] which will emit the current user when
   /// the authentication state changes.
@@ -249,6 +254,14 @@ class AuthenticationRepository {
     );
   }
 
+  Future<bool> isCodeDietAvailable(String codeDiet) async {
+    HttpsCallable callable = _functions.httpsCallable('verifyCodeDiet');
+    final results = await callable.call(codeDiet);
+    final snapshot = await _firestore.collection("dieteticien").where("codeDiet", isEqualTo: codeDiet).get();
+    print(snapshot.size);
+    return results.data;
+  }
+
   Future<User> initUserInFirestore(
       String uid, String email, String name, String firstName) async {
     await _firestore.collection('patient').doc(uid).set({
@@ -292,8 +305,12 @@ extension on firebase_auth.User {
         : User(
             id: uid,
             email: email,
-            name: displayName == null ? "": displayName.substring(displayName.indexOf(" ") + 1),
-            firstName: displayName == null ? "":displayName.substring(0, displayName.indexOf(" ")),
+            name: displayName == null
+                ? ""
+                : displayName.substring(displayName.indexOf(" ") + 1),
+            firstName: displayName == null
+                ? ""
+                : displayName.substring(0, displayName.indexOf(" ")),
             creatingAccount: false,
             linkStorageFolder: null,
             linkFoodPlan: null,

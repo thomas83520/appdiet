@@ -90,7 +90,9 @@ class PoidsMesuresRepository {
     return PoidsMesures(mesures: mesures, poids: poids, photos: photos);
   }
 
-  Future<void> addPoidsMesures(Map<String, dynamic> map) async {
+  Future<void> addPoidsMesures(Map<String, dynamic> map,String url) async {
+    print(map);
+    map.putIfAbsent("photoUrl", () => url);
     await _firestore
         .collection("patient")
         .doc(_user.id)
