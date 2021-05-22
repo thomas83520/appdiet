@@ -7,9 +7,9 @@ import 'package:appdiet/logic/blocs/goal_bloc/goal_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:appdiet/logic/cubits/navbar_cubit/navbar_cubit.dart';
 import 'package:appdiet/presentation/pages/building_page.dart';
-import 'package:appdiet/presentation/pages/goal/goal_page.dart';
-import 'package:appdiet/presentation/pages/journal/journal_page.dart';
-import 'package:appdiet/presentation/pages/messages/messages_page.dart';
+import 'package:appdiet/presentation/view/goal_view.dart';
+import 'package:appdiet/presentation/view/journal_view.dart';
+import 'package:appdiet/presentation/view/messages_view.dart';
 import 'package:appdiet/presentation/widgets/drawer.dart';
 import 'package:appdiet/presentation/widgets/navBar.dart';
 import 'package:authentication_repository/authentication_repository.dart';
@@ -64,7 +64,7 @@ class HomePage extends StatelessWidget {
   Widget childfromindex(int index, User user) {
     switch (index) {
       case 0:
-        return JournalPage();
+        return JournalView();
         break;
       case 1:
         return BuildingPage();
@@ -73,13 +73,13 @@ class HomePage extends StatelessWidget {
         return BlocProvider(
           create: (context) =>
               ChatBloc(chatRepository: ChatRepository(user: user)),
-          child: MessagesPage(),
+          child: MessageView(),
         );
         break;
       case 3:
         return BlocProvider(
             create: (_) => GoalBloc(goalRepository: GoalRepository(user: user)),
-            child: GoalPage());
+            child: GoalView());
         break;
       default:
         return BuildingPage();

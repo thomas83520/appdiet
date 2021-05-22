@@ -7,92 +7,94 @@ import 'package:expandable/expandable.dart';
 class GoalView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Center(
-        child: BlocBuilder<GoalBloc, GoalState>(
-          builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      child: CircularProgressIndicator(
-                        value: state.goals.pourcentageLong / 100,
-                        strokeWidth: 15.0,
-                        backgroundColor: Colors.orange[100],
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Colors.orange),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Center(
+          child: BlocBuilder<GoalBloc, GoalState>(
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        child: CircularProgressIndicator(
+                          value: state.goals.pourcentageLong / 100,
+                          strokeWidth: 15.0,
+                          backgroundColor: Colors.orange[100],
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.orange),
+                        ),
+                        height: 150,
+                        width: 150,
                       ),
-                      height: 150,
-                      width: 150,
-                    ),
-                    SizedBox(
-                      child: CircularProgressIndicator(
-                        value: state.goals.pourcentageShort / 100,
-                        strokeWidth: 15.0,
-                        backgroundColor: Colors.green[100],
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                      SizedBox(
+                        child: CircularProgressIndicator(
+                          value: state.goals.pourcentageShort / 100,
+                          strokeWidth: 15.0,
+                          backgroundColor: Colors.green[100],
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                        ),
+                        height: 120,
+                        width: 120,
                       ),
-                      height: 120,
-                      width: 120,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                      width: 10,
-                      child: Container(
-                        color: Colors.green,
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: Container(
+                          color: Colors.green,
+                        ),
                       ),
-                    ),
-                    Text(" Objectifs court termes"),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    SizedBox(
-                      height: 10,
-                      width: 10,
-                      child: Container(
-                        color: Colors.orange,
+                      Text(" Objectifs court termes"),
+                      SizedBox(
+                        width: 20,
                       ),
-                    ),
-                    Text(" Objectifs long termes"),
-                  ],
-                ),
-                _buildcard(
-                  "Objectifs long terme",
-                  state.goals.pourcentageLong,
-                  Colors.orange,
-                  state.goals.longTerm,
-                  context,
-                  GoalType.longTerm,
-                  state.goals,
-                ),
-                _buildcard(
-                  "Objectifs court terme",
-                  state.goals.pourcentageShort,
-                  Colors.green,
-                  state.goals.shortTerm,
-                  context,
-                  GoalType.shortTerm,
-                  state.goals,
-                ),
-              ],
-            );
-          },
+                      SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: Container(
+                          color: Colors.orange,
+                        ),
+                      ),
+                      Text(" Objectifs long termes"),
+                    ],
+                  ),
+                  _buildcard(
+                    "Objectifs long terme",
+                    state.goals.pourcentageLong,
+                    Colors.orange,
+                    state.goals.longTerm,
+                    context,
+                    GoalType.longTerm,
+                    state.goals,
+                  ),
+                  _buildcard(
+                    "Objectifs court terme",
+                    state.goals.pourcentageShort,
+                    Colors.green,
+                    state.goals.shortTerm,
+                    context,
+                    GoalType.shortTerm,
+                    state.goals,
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

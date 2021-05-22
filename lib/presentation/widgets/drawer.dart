@@ -1,8 +1,8 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:appdiet/presentation/pages/building_page.dart';
 import 'package:appdiet/presentation/pages/photos/photos_page.dart';
 import 'package:appdiet/presentation/pages/plan_alimentaire/plan_alimentaire.dart';
 import 'package:appdiet/presentation/pages/poids_mesures/poids_mesures_page.dart';
-import 'package:appdiet/presentation/screens/builing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -299,7 +299,7 @@ class _PoidsMesureInput extends StatelessWidget {
                           : context.read<AddMesuresCubit>().poidsChanged(poids),
                       keyboardType:
                           TextInputType.numberWithOptions(decimal: true),
-                      key: const Key('signUpForm_dateInput_textField'),
+                      key: const Key('signUpForm_poidsMesursInput_textField'),
                       decoration: InputDecoration(
                           border: UnderlineInputBorder(), hintText: "Poids"),
                     ),
@@ -429,6 +429,7 @@ class _DateMesureInput extends StatelessWidget {
 class _AddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+        final theme = Theme.of(context);
     return Row(
       children: [
         SizedBox(
@@ -443,8 +444,8 @@ class _AddButton extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
               style: ElevatedButton.styleFrom(
-                primary: const Color(0xFF629C44),
-                onSurface: const Color(0xFF629C44),
+                primary: theme.primaryColor,
+                onSurface: theme.primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),

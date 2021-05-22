@@ -24,49 +24,56 @@ class JournalView extends StatelessWidget {
         if (state.journalStateStatus == JournalStateStatus.modifyWellBeing) {
           Navigator.of(context)
               .push(DetailWellBeingPage.route(state.wellBeing));
-        }
+        }else if (state.journalStateStatus == JournalStateStatus.fail)
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Une erreur est surevenue")),
+            );
       },
       child: Container(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Calendar(),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: InkWell(
-                child: Meals(),
-                onTap: () => Navigator.of(context).push(ListMealPage.route()),
-              ),
+        child: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Calendar(),
+                Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: InkWell(
+                    child: Meals(),
+                    onTap: () => Navigator.of(context).push(ListMealPage.route()),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: BlocBuilder<JournalBloc, JournalState>(
+                    builder: (context, state) {
+                      return InkWell(
+                        child: BienEtre(),
+                        onTap: () => context.read<JournalBloc>().add(
+                              WellBeingClicked(
+                                journal: state.journal,
+                                user: user,
+                                wellBeing: state.journal.wellBeing,
+                                date: state.date,
+                              ),
+                            ),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: InkWell(
+                    child: Comments(),
+                    onTap: () =>
+                        Navigator.of(context).push(ListDayCommentsPage.route()),
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: BlocBuilder<JournalBloc, JournalState>(
-                builder: (context, state) {
-                  return InkWell(
-                    child: BienEtre(),
-                    onTap: () => context.read<JournalBloc>().add(
-                          WellBeingClicked(
-                            journal: state.journal,
-                            user: user,
-                            wellBeing: state.journal.wellBeing,
-                            date: state.date,
-                          ),
-                        ),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: InkWell(
-                child: Comments(),
-                onTap: () =>
-                    Navigator.of(context).push(ListDayCommentsPage.route()),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

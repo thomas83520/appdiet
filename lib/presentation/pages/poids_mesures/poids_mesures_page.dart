@@ -207,6 +207,7 @@ class _PhotosButton extends StatelessWidget {
   final List<String> photos;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         SizedBox(
@@ -234,8 +235,8 @@ class _PhotosButton extends StatelessWidget {
                 ],
               ),
               style: ElevatedButton.styleFrom(
-                primary: const Color(0xFF629C44),
-                onSurface: const Color(0xFF629C44),
+                primary: theme.primaryColor,
+                onSurface: theme.primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),

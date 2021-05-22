@@ -23,7 +23,7 @@ class NavBar extends StatelessWidget {
           type: BottomNavigationBarType.fixed,
           backgroundColor: theme.primaryColor,
           unselectedItemColor: Colors.white,
-          selectedItemColor: Colors.orange[300],
+          selectedItemColor: theme.focusColor,
           onTap: (index) => context.read<NavbarCubit>().navigateTo(index),
         );
       },

@@ -11,19 +11,21 @@ class MessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Column(
-        children: <Widget>[
-          BlocBuilder<ChatBloc, ChatState>(
-            builder: (context, state) {
-              return ListMessage(
-                messages: state.messages,
-              );
-            },
-          ),
-          ChatInput(),
-        ],
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Column(
+          children: <Widget>[
+            BlocBuilder<ChatBloc, ChatState>(
+              builder: (context, state) {
+                return ListMessage(
+                  messages: state.messages,
+                );
+              },
+            ),
+            ChatInput(),
+          ],
+        ),
       ),
     );
   }
@@ -68,6 +70,7 @@ class ChatInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Align(
       alignment: Alignment.bottomLeft,
       child: Container(
@@ -83,7 +86,7 @@ class ChatInput extends StatelessWidget {
                 height: 30,
                 width: 30,
                 decoration: BoxDecoration(
-                  color: Colors.lightBlue,
+                  color: theme.primaryColor,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Icon(
@@ -124,7 +127,7 @@ class ChatInput extends StatelessWidget {
                   color: Colors.white,
                   size: 18,
                 ),
-                backgroundColor: Colors.blue,
+                backgroundColor: theme.primaryColor,
                 elevation: 0,
               ),
             ),

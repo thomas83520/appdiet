@@ -1,5 +1,5 @@
 import 'package:appdiet/logic/cubits/login_cubit/login_cubit.dart';
-import 'package:appdiet/presentation/view/login_form.dart';
+import 'package:appdiet/presentation/view/login_view.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

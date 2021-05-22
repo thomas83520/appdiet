@@ -62,6 +62,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   // Simple TableCalendar configuration (using Styles)
   Widget _buildTableCalendar(BuildContext contetx) {
     final user = context.select((AuthenticationBloc bloc ) => bloc.state.user);
+    final theme = Theme.of(context);
     return TableCalendar(
       calendarController: _calendarController,
       startingDayOfWeek: StartingDayOfWeek.monday,
@@ -72,7 +73,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
         CalendarFormat.twoWeeks : "2 semaines"
       },
       calendarStyle: CalendarStyle(
-        selectedColor: Colors.green[400],
+        selectedColor: theme.primaryColor,
         todayColor: Colors.green[200],
         markersColor: Colors.brown[700],
         weekendStyle: TextStyle(color: Colors.green),

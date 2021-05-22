@@ -51,11 +51,12 @@ class InfoPersoPage extends StatelessWidget {
 class _BackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-                elevation: 0, onSurface: Color(0xFFFFFAFA)),
+                elevation: 0, onSurface: theme.scaffoldBackgroundColor),
             onPressed: () => Navigator.of(context).pop(),
             icon: Icon(Icons.arrow_back),
             label: Text("Retour")),
