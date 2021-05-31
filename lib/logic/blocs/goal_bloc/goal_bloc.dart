@@ -10,13 +10,13 @@ part 'goal_event.dart';
 part 'goal_state.dart';
 
 class GoalBloc extends Bloc<GoalEvent, GoalState> {
-  GoalBloc({@required GoalRepository goalRepository}) : 
-  assert(goalRepository != null),
-  _goalRepository=goalRepository,
-  super(GoalState.unknown()){
-    _streamSubscription = _goalRepository.getGoals().listen((goals) {
-      add(GoalLoaded(goals : goals));
-     });
+  GoalBloc({@required GoalRepository goalRepository})
+      : assert(goalRepository != null),
+        _goalRepository = goalRepository,
+        super(GoalState.unknown()) {
+    _streamSubscription = _goalRepository.goals.listen((goals) {
+      add(GoalLoaded(goals: goals));
+    });
   }
 
   final GoalRepository _goalRepository;
@@ -25,18 +25,21 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
   Stream<GoalState> mapEventToState(
     GoalEvent event,
   ) async* {
-    if(event is GoalLoaded){
+    if (event is GoalLoaded) {
       yield GoalState.complete(event.goals);
     }
-    if(event is GoalSelected){
-      _goalRepository.goalClicked(event.id,event.type,event.goals);
+    if (event is GoalSelected) {
+      try {
+        _goalRepository.goalClicked(event.id, event.type, event.goals);
+      } catch (e) {
+        yield GoalState.error();
+      }
     }
   }
 
-    @override
-    Future<void> close(){
-      _streamSubscription?.cancel();
-      return super.close();
-    }
-
+  @override
+  Future<void> close() {
+    _streamSubscription?.cancel();
+    return super.close();
+  }
 }

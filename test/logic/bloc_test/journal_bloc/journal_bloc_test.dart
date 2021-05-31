@@ -12,8 +12,10 @@ import 'package:mockito/mockito.dart';
 
 class MockJournalRepository extends Mock implements JournalRepository {}
 
+// ignore: must_be_immutable
 class MockUser extends Mock implements User {}
 
+// ignore: must_be_immutable
 class MockRepas extends Mock implements Repas {}
 
 void main() {

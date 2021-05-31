@@ -14,8 +14,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       : assert(chatRepository != null),
         _chatRepository = chatRepository,
         super(ChatState.unknown()) {
-    _streamSubscription = _chatRepository
-        .streamMessage()
+    _streamSubscription = _chatRepository.streamMessage
         .listen((messages) => add(ChatNewMessage(messages: messages)));
   }
 
@@ -25,16 +24,20 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Stream<ChatState> mapEventToState(
     ChatEvent event,
   ) async* {
-    if(event is ChatNewMessage){
+    if (event is ChatNewMessage) {
       yield ChatState.complete(event.messages);
     }
-    if(event is MessageSend){
-      _chatRepository.sendMessage(event.message);
+    if (event is MessageSend) {
+      try {
+        _chatRepository.sendMessage(event.message);
+      } catch (e) {
+        yield ChatState.error();
+      }
     }
   }
 
   @override
-  Future<void> close(){
+  Future<void> close() {
     _streamSubscription?.cancel();
     return super.close();
   }

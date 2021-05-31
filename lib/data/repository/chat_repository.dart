@@ -12,7 +12,7 @@ class ChatRepository {
   final FirebaseFirestore _firestore;
   final User _user;
 
-  Stream<List<ChatMessage>> streamMessage() {
+  Stream<List<ChatMessage>> get streamMessage {
     return _firestore
         .collection("chat")
         .doc(docId)

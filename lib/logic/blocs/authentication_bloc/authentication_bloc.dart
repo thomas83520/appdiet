@@ -53,7 +53,7 @@ class AuthenticationBloc
         else
           return AuthenticationState.authenticated(user);
       } else {
-        final User user = await _authenticationRepository.isUserWaiting(event.user.email);
+        final User user = await _authenticationRepository.getUserFromWaiting(event.user.email);
         if (user != User.empty)
         {
           await _authenticationRepository.completeUserSubscription(user);

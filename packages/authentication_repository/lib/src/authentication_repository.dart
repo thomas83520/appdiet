@@ -227,7 +227,7 @@ class AuthenticationRepository {
     });
   }
 
-  Future<User> isUserWaiting(String email) {
+  Future<User> getUserFromWaiting(String email) {
     return _firestore
         .collection('accountwaiting')
         .where('email', isEqualTo: email)

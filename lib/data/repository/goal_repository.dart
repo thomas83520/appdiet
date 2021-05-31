@@ -12,7 +12,7 @@ class GoalRepository {
   final FirebaseFirestore _firestore;
   final User _user;
 
-  Stream<Goals> getGoals() {
+  Stream<Goals> get goals {
     return _firestore
         .collection("patient")
         .doc(_user.id)
