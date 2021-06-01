@@ -1,18 +1,17 @@
 import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/logic/cubits/sign_up_cubit/sign_up_cubit.dart';
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:bloc/bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../bloc_test/authentication_bloc/authentication_bloc_test.dart';
 
 class MockAuthenticationRepository extends Mock
     implements AuthenticationRepository {}
 
-class Mockuser extends Mock implements User {}
+// ignore: must_be_immutable
+class MockUser extends Mock implements User {}
 
 void main() {
   const invalidEmailString = 'invalid';
@@ -355,5 +354,91 @@ void main() {
                 birthDate: validBirthDate),
           ]);
     });
+
+    group('Name', () {
+      blocTest<SignUpCubit, SignUpState>(
+        'emits [invalid] when all field are invalid',
+        build: () => SignUpCubit(authenticationRepository, ''),
+        act: (cubit) => cubit.nameChanged(invalidNameString),
+        expect: <SignUpState>[
+          SignUpState(
+            name: invalidName,
+            status: FormzStatus.invalid,
+          ),
+        ],
+      );
+
+      blocTest<SignUpCubit, SignUpState>(
+        'emits [valid] when all field are valid',
+        build: () => SignUpCubit(authenticationRepository, ''),
+        seed: SignUpState(
+          email: validEmail,
+          password: validPassword,
+          confirmedPassword: validConfirmedPassword,
+          codeDiet: validCodeDiet,
+          firstName: validFirstName,
+          birthDate: validBirthDate,
+        ),
+        act: (cubit) => cubit.nameChanged(
+          validNameString,
+        ),
+        expect: <SignUpState>[
+          SignUpState(
+            email: validEmail,
+            password: validPassword,
+            confirmedPassword: validConfirmedPassword,
+            status: FormzStatus.valid,
+            codeDiet: validCodeDiet,
+            name: validName,
+            firstName: validFirstName,
+            birthDate: validBirthDate,
+          ),
+        ],
+      );
+    });
+
+    group('first name', () {
+      blocTest<SignUpCubit, SignUpState>(
+        'emits [invalid] when all field are invalid',
+        build: () => SignUpCubit(authenticationRepository, ''),
+        act: (cubit) => cubit.firstNameChanged(invalidFirstNameString),
+        expect: <SignUpState>[
+          SignUpState(
+            firstName: invalidFirstName,
+            status: FormzStatus.invalid,
+          ),
+        ],
+      );
+
+      blocTest<SignUpCubit, SignUpState>(
+        'emits [valid] when all field are valid',
+        build: () => SignUpCubit(authenticationRepository, ''),
+        seed: SignUpState(
+          email: validEmail,
+          password: validPassword,
+          confirmedPassword: validConfirmedPassword,
+          name: validName,
+          codeDiet: validCodeDiet,
+          birthDate: validBirthDate,
+        ),
+        act: (cubit) => cubit.firstNameChanged(
+          validFirstNameString,
+        ),
+        expect: <SignUpState>[
+          SignUpState(
+            email: validEmail,
+            password: validPassword,
+            confirmedPassword: validConfirmedPassword,
+            status: FormzStatus.valid,
+            codeDiet: validCodeDiet,
+            name: validName,
+            firstName: validFirstName,
+            birthDate: validBirthDate,
+          ),
+        ],
+      );
+    });
+
+    
   });
 }

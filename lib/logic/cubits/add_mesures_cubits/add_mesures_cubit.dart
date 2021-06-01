@@ -53,7 +53,6 @@ class AddMesuresCubit extends Cubit<AddMesuresState> {
 
   Future<void> addMesures() async {
     Map<String, dynamic> map = mapState();
-    print(map);
     try{
       emit(state.copyWith(formState: AddMesureFormState.loadInProgress));
       String url = "";
