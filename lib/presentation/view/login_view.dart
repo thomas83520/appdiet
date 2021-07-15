@@ -5,6 +5,7 @@ import 'package:apple_sign_in/apple_sign_in_button.dart' as applebutton;
 import 'package:appdiet/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:formz/formz.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_button/sign_button.dart' as signin_button;
@@ -29,6 +30,7 @@ class LoginForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 26.0),
               _LogoAndName(),
               const SizedBox(height: 26.0),
               _InfoText(),
@@ -165,7 +167,7 @@ class _SignUpButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("Vous n'avez pas de compte ?"),
+        Expanded(child: Text("Vous n'avez pas de compte ?")),
         TextButton(
           key: const Key('loginForm_createAccount_flatButton'),
           child: Text(
@@ -241,13 +243,13 @@ class _LogoAndName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          'assets/splash.png',
+        SvgPicture.asset(
+          'assets/logo_7.svg',
           height: 120,
         ),
         Text(
-          "Ma diet et moi",
-          style: TextStyle(color: Colors.lightGreen, fontSize: 15.0),
+          "DietUp!",
+          style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
         ),
       ],
     );

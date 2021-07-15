@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SplashPage extends StatelessWidget {
   static Route route() {
@@ -9,10 +10,10 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset(
-          'assets/splash.png',
+        child: SvgPicture.asset(
+          'assets/logo_7.svg',
           key: const Key('splash_bloc_image'),
-          width: 150,
+          width: 200,
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:formz/formz.dart';
 
 class SignUpForm extends StatelessWidget {
@@ -27,6 +28,7 @@ class SignUpForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 10.0),
               _LogoAndName(),
               const SizedBox(height: 26.0),
               _InfoText(),
@@ -239,13 +241,13 @@ class _LogoAndName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          'assets/splash.png',
+        SvgPicture.asset(
+          'assets/logo_7.svg',
           height: 120,
         ),
         Text(
-          "Ma diet et moi",
-          style: TextStyle(color: Colors.lightGreen, fontSize: 15.0),
+          "DietUp!",
+          style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
         ),
       ],
     );

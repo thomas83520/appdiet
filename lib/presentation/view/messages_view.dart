@@ -80,7 +80,7 @@ class ChatInput extends StatelessWidget {
         color: Colors.white,
         child: Row(
           children: <Widget>[
-            GestureDetector(
+            /*GestureDetector(
               onTap: () {},
               child: Container(
                 height: 30,
@@ -95,7 +95,7 @@ class ChatInput extends StatelessWidget {
                   size: 20,
                 ),
               ),
-            ),
+            ),*/
             SizedBox(
               width: 15,
             ),

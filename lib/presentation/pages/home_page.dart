@@ -25,35 +25,38 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<NavbarCubit>(
-          create: (context) => NavbarCubit(),
-        ),
-        BlocProvider<JournalBloc>(
-          create: (context) => JournalBloc(
-              date: "", journalRepository: JournalRepository(), user: user),
-        )
-      ],
-      child: Navigator(
-        onGenerateRoute: (settings) => MaterialPageRoute(
-          builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: BlocBuilder<NavbarCubit, NavbarState>(
-                buildWhen: (previous, current) =>
-                    previous.index != current.index,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<NavbarCubit>(
+            create: (context) => NavbarCubit(),
+          ),
+          BlocProvider<JournalBloc>(
+            create: (context) => JournalBloc(
+                date: "", journalRepository: JournalRepository(), user: user),
+          )
+        ],
+        child: Navigator(
+          onGenerateRoute: (settings) => MaterialPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(
+                title: BlocBuilder<NavbarCubit, NavbarState>(
+                  buildWhen: (previous, current) =>
+                      previous.index != current.index,
+                  builder: (context, state) {
+                    return titlefromindex(state.index, user);
+                  },
+                ),
+              ),
+              drawer: SideDrawer(),
+              bottomNavigationBar: NavBar(),
+              body: BlocBuilder<NavbarCubit, NavbarState>(
+                buildWhen: (previous, current) => previous.index != current.index,
                 builder: (context, state) {
-                  return titlefromindex(state.index, user);
+                  return childfromindex(state.index, user);
                 },
               ),
-            ),
-            drawer: SideDrawer(),
-            bottomNavigationBar: NavBar(),
-            body: BlocBuilder<NavbarCubit, NavbarState>(
-              buildWhen: (previous, current) => previous.index != current.index,
-              builder: (context, state) {
-                return childfromindex(state.index, user);
-              },
             ),
           ),
         ),

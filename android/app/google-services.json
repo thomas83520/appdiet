@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:638444754160:android:199bcec60537f8a5295e35",
+        "mobilesdk_app_id": "1:638444754160:android:2cdc2fcd67de9431295e35",
         "android_client_info": {
-          "package_name": "com.mydietandi.app"
+          "package_name": "fr.dietup.mobileapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "638444754160-4eo45qpl87saf6h5m865jlegsj6du0lq.apps.googleusercontent.com",
+          "client_id": "638444754160-qibm9si2n7ulcfv8mv78or6qd4kps51i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mydietandi.app",
+            "package_name": "fr.dietup.mobileapp",
             "certificate_hash": "56a7c550816a976d651c0a0e6f31eb03069df9f9"
           }
         },
