@@ -257,8 +257,6 @@ class AuthenticationRepository {
   Future<bool> isCodeDietAvailable(String codeDiet) async {
     HttpsCallable callable = _functions.httpsCallable('verifyCodeDiet');
     final results = await callable.call(codeDiet);
-    final snapshot = await _firestore.collection("dieteticien").where("codeDiet", isEqualTo: codeDiet).get();
-    print(snapshot.size);
     return results.data;
   }
 

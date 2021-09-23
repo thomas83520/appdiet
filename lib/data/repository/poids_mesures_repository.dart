@@ -48,7 +48,7 @@ class PoidsMesuresRepository {
               ventre.add(Mesures(date: dateTime, mesure: value.toDouble()));
               break;
 
-            case "hanche":
+            case "hanches":
               hanche.add(Mesures(date: dateTime, mesure: value.toDouble()));
               break;
 
