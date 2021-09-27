@@ -56,7 +56,7 @@ class Meals extends StatelessWidget {
     if (meals.isEmpty)
       return [
         Text(
-          "Ajouter un repas",
+          "Ajoutez un repas",
           style: TextStyle(color: Colors.grey),
         ),
       ];

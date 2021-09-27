@@ -53,7 +53,7 @@ class Comments extends StatelessWidget {
     if (comments.isEmpty)
       return [
         Text(
-          "Ajouter un commentaire",
+          "Ajoutez un commentaire",
           style: TextStyle(color: Colors.grey),
         ),
       ];

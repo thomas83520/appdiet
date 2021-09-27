@@ -29,7 +29,7 @@ class AddPoidsMesures extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: Text("Ajouter poids et mesures"),
+            title: Text("Ajoutez poids et mesures"),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -342,7 +342,7 @@ class _PhotoMesure extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    "Ajouter une photo:",
+                    "Ajoutez une photo:",
                     style: TextStyle(fontSize: 20),
                   ),
                   SizedBox(
@@ -440,7 +440,7 @@ class _AddButton extends StatelessWidget {
             height: 60.0,
             child: ElevatedButton(
               child: Text(
-                'Ajouter les mesures',
+                'Ajoutez les mesures',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
               style: ElevatedButton.styleFrom(

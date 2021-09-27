@@ -128,7 +128,7 @@ class _Stress extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text("Exprimer votre niveau de stress de la journée"),
+            Text("Exprimez votre niveau de stress de la journée"),
             SizedBox(
               height: 30,
             ),
@@ -183,7 +183,7 @@ class _Ballonnements extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text("Exprimer votre niveau de Ballonnements dans la journée"),
+            Text("Vous êtes-vous senti(e) ballonné(e) aujourd’hui ?"),
             SizedBox(
               height: 30,
             ),
@@ -240,7 +240,7 @@ class _Hydratation extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text("Avez-vous bu suffisament dans la journée "),
+            Text("Avez-vous atteint au moins 1,5L d’eau dans la journée ? "),
             SizedBox(
               height: 30,
             ),
@@ -297,7 +297,7 @@ class _Transit extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text("Comment était votre transit aujourd'hui"),
+            Text("Exprimez votre état de transit"),
             SizedBox(
               height: 30,
             ),
@@ -354,7 +354,7 @@ class _Fatigue extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text("Étiez-vous faitguez aujourd'hui"),
+            Text("Étiez-vous fatiguez aujourd'hui"),
             SizedBox(
               height: 30,
             ),
@@ -411,7 +411,7 @@ class _Sommeil extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text("Avez-vous bien dormi cette nuit"),
+            Text("Avez-vous bien dormi la nuit dernière ?"),
             SizedBox(
               height: 30,
             ),
@@ -468,7 +468,7 @@ class _Humeur extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text("Exprimer votre humeur de la journée"),
+            Text("Exprimez votre humeur de la journée"),
             SizedBox(
               height: 30,
             ),
