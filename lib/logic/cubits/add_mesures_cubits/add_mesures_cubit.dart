@@ -8,9 +8,8 @@ part 'add_mesures_state.dart';
 
 class AddMesuresCubit extends Cubit<AddMesuresState> {
   AddMesuresCubit(this._photosRepository, this._poidsMesuresRepository)
-      : assert(_photosRepository != null),
-        assert(_poidsMesuresRepository != null),
-        super(AddMesuresState());
+      :
+        super(AddMesuresState(date : DateTime.now(),file: XFile('')));
 
   final PoidsMesuresRepository _poidsMesuresRepository;
   final PhotosRepository _photosRepository;
@@ -19,7 +18,7 @@ class AddMesuresCubit extends Cubit<AddMesuresState> {
     emit(state.copyWith(date: date));
   }
 
-  void fileChanged(PickedFile file) {
+  void fileChanged(XFile file) {
     emit(state.copyWith(file: file));
   }
 
@@ -56,9 +55,9 @@ class AddMesuresCubit extends Cubit<AddMesuresState> {
     try{
       emit(state.copyWith(formState: AddMesureFormState.loadInProgress));
       String url = "";
-      if(state.file!=null)
+      if(state.file.path != '')
         url = await _photosRepository.uploadPhoto(state.file.path, state.date.toString());
-      _poidsMesuresRepository.addPoidsMesures(map,url);
+      await _poidsMesuresRepository.addPoidsMesures(map,url,state.date.toString());
       emit(state.copyWith(formState: AddMesureFormState.complete));
     }catch (e){
       emit(state.copyWith(formState: AddMesureFormState.error));

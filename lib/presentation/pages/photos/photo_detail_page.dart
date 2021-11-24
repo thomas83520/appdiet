@@ -1,15 +1,16 @@
+import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/photos_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/photo_detail/photo_detail_cubit.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class PhotoDetailPage extends StatelessWidget {
-  const PhotoDetailPage({Key key, this.url}) : super(key: key);
+  const PhotoDetailPage({Key? key, required this.url,required this.image}) : super(key: key);
 
   final String url;
+  final Image image;
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +31,22 @@ class PhotoDetailPage extends StatelessWidget {
             },
           ),
           actions: [
-            TextButton(
-                onPressed: () => null,
-                child: Text(
-                  "Supprimer",
-                  style: TextStyle(color: Colors.white),
-                ))
+            BlocBuilder<PhotoDetailCubit, PhotoDetailState>(
+              builder: (context, state) {
+                return TextButton(
+                    onPressed: () async {
+                      await context
+                        .read<PhotoDetailCubit>()
+                        .supprPhoto(
+                            (state as PhotoDetailLoadSuccess).detailPhoto);
+                      Navigator.of(context).pop();
+                        },
+                    child: Text(
+                      "Supprimer",
+                      style: TextStyle(color: Colors.white),
+                    ));
+              },
+            )
           ],
         ),
         body: BlocBuilder<PhotoDetailCubit, PhotoDetailState>(
@@ -47,7 +58,7 @@ class PhotoDetailPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.network(url),
+                      image,
                       _MesuresView(),
                     ],
                   ),
@@ -89,11 +100,7 @@ class _MesuresView extends StatelessWidget {
                 SizedBox(
                   height: 8,
                 ),
-                Column(
-                  children: state.detailPhoto.mesures != null
-                      ? loadMesures(state.detailPhoto.mesures)
-                      : Container(),
-                )
+                Column(children: loadMesures(state.detailPhoto.mesures))
               ],
             ),
           );

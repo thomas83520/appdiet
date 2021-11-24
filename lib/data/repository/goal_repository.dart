@@ -1,12 +1,9 @@
-import 'package:appdiet/data/models/goal/goals.dart';
-import 'package:appdiet/logic/blocs/goal_bloc/goal_bloc.dart';
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:appdiet/data/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GoalRepository {
-  GoalRepository({FirebaseFirestore firestore, User user})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
-        assert(user != null && user != User.empty),
+  GoalRepository({required User user})
+      : _firestore = FirebaseFirestore.instance,
         _user = user;
 
   final FirebaseFirestore _firestore;
@@ -25,12 +22,12 @@ class GoalRepository {
   Future<void> goalClicked(int id, GoalType type, Goals goals) async {
     goals = modifyGoals(id, type, goals);
 
-      return await _firestore
-          .collection("patient")
-          .doc(_user.id)
-          .collection("objectifs")
-          .doc("objectifs")
-          .set(goals.toJson());
+    return await _firestore
+        .collection("patient")
+        .doc(_user.id)
+        .collection("objectifs")
+        .doc("objectifs")
+        .set(goals.toJson());
   }
 
   Goals modifyGoals(int id, GoalType type, Goals goals) {
@@ -52,28 +49,28 @@ class GoalRepository {
 extension on DocumentSnapshot {
   Goals get toGoals {
     double pourcentageShort;
-    this.data()["pourcentageShort"] == null
+    this.get("pourcentageShort") == null
         ? pourcentageShort = 0
         : pourcentageShort = this.get("pourcentageShort").toDouble();
 
     double pourcentageLong;
-    this.data()["pourcentageLong"] == null
+    this.get("pourcentageLong") == null
         ? pourcentageLong = 0
         : pourcentageLong = this.get("pourcentageLong").toDouble();
 
     List<Goal> shortTerm;
-    this.data()["shortTerm"] == null
+    this.get("shortTerm") == null
         ? shortTerm = []
-        : this.data()["shortTerm"] == ""
+        : this.get("shortTerm") == ""
             ? shortTerm = []
-            : shortTerm = Goal.fromSnapshot(this.data()["shortTerm"]);
+            : shortTerm = Goal.fromSnapshot(this.get("shortTerm"));
 
     List<Goal> longTerm;
-    this.data()["longTerm"] == null
+    this.get("longTerm") == null
         ? longTerm = []
-        : this.data()["longTerm"] == ""
+        : this.get("longTerm") == ""
             ? longTerm = []
-            : longTerm = Goal.fromSnapshot(this.data()["longTerm"]);
+            : longTerm = Goal.fromSnapshot(this.get("longTerm"));
 
     return Goals(
         pourcentageShort: pourcentageShort,

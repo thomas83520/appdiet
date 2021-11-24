@@ -12,9 +12,9 @@ class PhotosInitial extends PhotosState {}
 class PhotosLoadInProgress extends PhotosState {}
 
 class PhotosLoadSuccess extends PhotosState {
-  PhotosLoadSuccess({@required this.photosUrl}) : assert(photosUrl != null);
+  PhotosLoadSuccess({required this.photosUrl});
 
-  final List<String> photosUrl;
+  final List<DetailPhoto> photosUrl;
 
   @override
   List<Object> get props => [photosUrl];

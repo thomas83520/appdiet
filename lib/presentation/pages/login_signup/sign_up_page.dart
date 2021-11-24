@@ -1,15 +1,15 @@
+import 'package:appdiet/data/repository/authentication_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/sign_up_cubit/sign_up_cubit.dart';
 import 'package:appdiet/presentation/view/info_perso_view.dart';
 import 'package:appdiet/presentation/view/sign_up_form.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 var signUpNavigatorKey = GlobalKey<NavigatorState>();
 
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({Key key}) : super(key: key);
+  const SignUpPage({Key? key}) : super(key: key);
 
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => const SignUpPage());

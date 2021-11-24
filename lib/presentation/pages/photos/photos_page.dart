@@ -1,19 +1,13 @@
+import 'package:appdiet/data/models/models.dart';
+import 'package:appdiet/data/models/photos/photos_detail.dart';
 import 'package:appdiet/data/repository/photos_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/photos/photos_cubit.dart';
 import 'package:appdiet/presentation/pages/photos/photo_detail_page.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PhotosPage extends StatelessWidget {
-  final List<String> photosUrl = [
-    "https://placeimg.com/500/500/any",
-    "https://placeimg.com/500/500/any",
-    "https://placeimg.com/500/500/any",
-    "https://placeimg.com/500/500/any"
-  ];
-
   @override
   Widget build(BuildContext context) {
     final User user =
@@ -35,7 +29,7 @@ class PhotosPage extends StatelessWidget {
                   mainAxisSpacing: 3,
                   crossAxisSpacing: 3,
                   padding: EdgeInsets.all(5),
-                  children: loadImage(state.photosUrl,context),
+                  children: loadImage(state.photosUrl, context),
                 ),
               );
             else
@@ -46,13 +40,30 @@ class PhotosPage extends StatelessWidget {
     );
   }
 
-  List<Widget> loadImage(List<String> photosUrl,BuildContext context) {
+  List<Widget> loadImage(List<DetailPhoto> photosUrl, BuildContext context) {
     List<Widget> photos = [];
-    photosUrl.forEach((url) {
+    photosUrl.forEach((photo) {
       photos.add(
-        InkWell(
-          child: Image.network(url),
-          onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context)=> PhotoDetailPage(url: url,))),
+        BlocBuilder<PhotosCubit, PhotosState>(
+          builder: (context, state) {
+            return InkWell(
+              child: Stack(children: [
+                Center(child: CircularProgressIndicator()),
+                Center(child: Image.network(photo.photoUrl))
+              ]),
+              onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PhotoDetailPage(
+                      url: photo.photoUrl,
+                      image: Image.network(photo.photoUrl),
+                    ),
+                  ),
+                );
+                context.read<PhotosCubit>().loadimages();
+              },
+            );
+          },
         ),
       );
     });

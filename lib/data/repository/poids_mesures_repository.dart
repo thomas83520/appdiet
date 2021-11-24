@@ -1,11 +1,10 @@
+import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/models/poids_mesures/poids_mesures.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PoidsMesuresRepository {
-  PoidsMesuresRepository({FirebaseFirestore firestore, User user})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
-        assert(user != null),
+  PoidsMesuresRepository({required User user})
+      : _firestore = FirebaseFirestore.instance,
         _user = user;
 
   final User _user;
@@ -32,11 +31,11 @@ class PoidsMesuresRepository {
     querySnapshot.docs.forEach((doc) {
       DateTime dateTime = doc["date"].toDate();
 
-      if (doc.data().containsKey("poids")) {
+      if ((doc.data() as Map<String, dynamic>).containsKey("poids")) {
         poids.add(Poids(poids: doc["poids"], date: dateTime));
       }
 
-      if (doc.data().containsKey("mesures")) {
+      if ((doc.data() as Map<String, dynamic>).containsKey("mesures")) {
         Map<String, dynamic> map = doc["mesures"];
         map.forEach((key, value) {
           switch (key) {
@@ -70,7 +69,7 @@ class PoidsMesuresRepository {
         });
       }
 
-      if (doc.data().containsKey("photos")) {
+      if ((doc.data() as Map<String, dynamic>).containsKey("photos")) {
         String photo;
         List<String> urlPhoto = [];
         for (photo in doc["photos"]) {
@@ -90,9 +89,9 @@ class PoidsMesuresRepository {
     return PoidsMesures(mesures: mesures, poids: poids, photos: photos);
   }
 
-  Future<void> addPoidsMesures(Map<String, dynamic> map,String url) async {
-    print(map);
+  Future<void> addPoidsMesures(Map<String, dynamic> map, String url,String photoName) async {
     map.putIfAbsent("photoUrl", () => url);
+    map.putIfAbsent("photoName", () => photoName);
     await _firestore
         .collection("patient")
         .doc(_user.id)

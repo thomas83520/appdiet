@@ -11,7 +11,7 @@ class CodeDiet extends FormzInput<String, CodeDietValidationError> {
   );
 
   @override
-  CodeDietValidationError validator(String value) {
+  CodeDietValidationError? validator(String value) {
     return _codeDietRegExp.hasMatch(value)
         ? null
         : CodeDietValidationError.invalid;

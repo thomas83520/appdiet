@@ -1,6 +1,6 @@
 import 'package:appdiet/data/models/models.dart';
+import 'package:appdiet/data/repository/authentication_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +9,10 @@ import 'package:formz/formz.dart';
 part 'sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
-  SignUpCubit(this._authenticationRepository, String email, )
-      : assert(_authenticationRepository != null),
-        super(const SignUpState());
+  SignUpCubit(
+    this._authenticationRepository,
+    String email,
+  ) : super(const SignUpState());
 
   final AuthenticationRepository _authenticationRepository;
 
@@ -48,7 +49,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   }
 
   void dateChanged(BuildContext context) async {
-    DateTime date = await showDatePicker(
+    DateTime? date = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(1900),
@@ -96,6 +97,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       linkFoodPlan: user.linkFoodPlan,
       linkStorageFolder: user.linkStorageFolder,
       birthDate: state.birthDate.value,
+      suivi: ""
     );
   }
 

@@ -8,17 +8,15 @@ class WellBeing extends Equatable {
   final int fatigue;
   final int sommeil;
   final int humeur;
-  
 
   const WellBeing(
-      {
-      this.stress,
-      this.ballonnements,
-      this.hydratation,
-      this.transit,
-      this.fatigue,
-      this.sommeil,
-      this.humeur});
+      {required this.stress,
+      required this.ballonnements,
+      required this.hydratation,
+      required this.transit,
+      required this.fatigue,
+      required this.sommeil,
+      required this.humeur});
 
   static WellBeing fromSnapshot(Map<String, dynamic> snapshot) {
     return WellBeing(
@@ -39,7 +37,7 @@ class WellBeing extends Equatable {
       "hydratation": hydratation,
       "transit": transit,
       "fatigue": fatigue,
-      "sommeil" : sommeil,
+      "sommeil": sommeil,
       "humeur": humeur,
     };
   }
@@ -56,5 +54,5 @@ class WellBeing extends Equatable {
 
   @override
   List<Object> get props =>
-      [ stress, ballonnements, hydratation, transit, fatigue,sommeil, humeur];
+      [stress, ballonnements, hydratation, transit, fatigue, sommeil, humeur];
 }

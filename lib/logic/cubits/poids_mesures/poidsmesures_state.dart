@@ -12,7 +12,7 @@ class PoidsMesuresInitial extends PoidsMesuresState {}
 class PoidsMesuresLoadInProgress extends PoidsMesuresState{}
 
 class PoidsMesuresLoadSuccess extends PoidsMesuresState{
-  const PoidsMesuresLoadSuccess({@required this.poidsMesures}) : assert (poidsMesures != null);
+  const PoidsMesuresLoadSuccess({required this.poidsMesures});
 
   final PoidsMesures poidsMesures;
 

@@ -17,7 +17,7 @@ class DetailWellBeingPage extends StatelessWidget {
   final WellBeing wellBeing;
 
 
-  const DetailWellBeingPage({Key key, @required this.wellBeing}) : super(key: key);
+  const DetailWellBeingPage({Key? key, required this.wellBeing}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -36,14 +36,14 @@ class SignUpState extends Equatable {
       ];
 
   SignUpState copyWith({
-    Email email,
-    Password password,
-    ConfirmedPassword confirmedPassword,
-    CodeDiet codeDiet,
-    FormzStatus status,
-    Name name,
-    FirstName firstName,
-    BirthDate birthDate,
+    Email? email,
+    Password? password,
+    ConfirmedPassword? confirmedPassword,
+    CodeDiet? codeDiet,
+    FormzStatus? status,
+    Name? name,
+    FirstName? firstName,
+    BirthDate? birthDate,
   }) {
     return SignUpState(
       email: email ?? this.email,

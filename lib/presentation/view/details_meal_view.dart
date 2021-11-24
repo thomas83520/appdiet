@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appdiet/data/models/journal/repas.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
@@ -5,6 +7,7 @@ import 'package:appdiet/logic/cubits/detailmeal_cubit/detailmeal_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DetailMealView extends StatelessWidget {
   @override
@@ -44,19 +47,18 @@ class DetailMealView extends StatelessWidget {
               },
             ),
           ),
-          title: InkWell(
-              child: BlocBuilder<JournalBloc, JournalState>(
+          title: BlocBuilder<JournalBloc, JournalState>(
             builder: (context, state) => state.repas == Repas.empty
                 ? Text("Nouveau Repas")
                 : Text("Modifier repas : " + state.repas.name),
-          )),
+          ),
         ),
         body: BlocListener<DetailmealCubit, DetailmealState>(
           listener: (context, state) {
             if (state.status == SubmissionStatus.failure)
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Erreur dans l'ajout du repas")),
-                );
+                const SnackBar(content: Text("Erreur dans l'ajout du repas")),
+              );
           },
           child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -67,6 +69,10 @@ class DetailMealView extends StatelessWidget {
                   child: Column(
                     children: [
                       _Titre(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _Photo(),
                       SizedBox(
                         height: 20,
                       ),
@@ -106,7 +112,6 @@ class DetailMealView extends StatelessWidget {
 class _Titre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final repas = context.select((DetailmealCubit cubit) => cubit.state.repas);
     return Material(
       elevation: 2,
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -128,7 +133,40 @@ class _Titre extends StatelessWidget {
               flex: 2,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
+                child: BlocBuilder<DetailmealCubit, DetailmealState>(
+                  builder: (context, state) {
+                    return DropdownButton<String>(
+                      value: state.repas.name == ''
+                          ? 'Petit déjeuner'
+                          : state.repas.name,
+                      icon: const Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.deepPurple),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onChanged: (String? newValue) {
+                        context.read<DetailmealCubit>().nameChanged(newValue!);
+                      },
+                      items: <String>[
+                        'Petit déjeuner',
+                        'Déjeuner',
+                        'Goûter',
+                        'Diner'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ], /*TextFormField(
                   initialValue: repas.name,
                   key: const Key('signUpForm_nameRepasInput_textField'),
                   onChanged: (nameRepas) =>
@@ -136,13 +174,74 @@ class _Titre extends StatelessWidget {
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(),
                   ),
-                ),
-              ),
-            ),
-          ],
+                ),*/
         ),
       ),
     );
+  }
+}
+
+class _Photo extends StatelessWidget {
+  const _Photo({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<DetailmealCubit, DetailmealState>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: () async {
+            XFile? file =
+                await ImagePicker().pickImage(source: ImageSource.gallery);
+            if (file != null) context.read<DetailmealCubit>().fileChanged(file);
+          },
+          child: Material(
+            elevation: 2,
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            child: Container(
+              constraints: BoxConstraints(minHeight: 70.0),
+              padding: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              width: double.infinity,
+              child: Row(
+                children: [
+                  Text(
+                    "Ajoutez une photo:",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(
+                    width: 50,
+                  ),
+                  BlocBuilder<DetailmealCubit, DetailmealState>(
+                    builder: (context, state) {
+                      return Container(
+                        height: 150,
+                        width: 100,
+                        color: Colors.transparent,
+                        child: photo(state),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget photo(DetailmealState state) {
+    if (state.photoUrl != '')
+      return Image.network(state.photoUrl);
+    else
+      return state.file.path == ''
+          ? Container()
+          : Image.file(File(state.file.path));
   }
 }
 
@@ -412,9 +511,12 @@ class _ValidateButton extends StatelessWidget {
                       'Valider',
                       style: TextStyle(color: Colors.white),
                     ),
-                    style: ElevatedButton.styleFrom(onSurface: theme.primaryColor,shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),),
+                    style: ElevatedButton.styleFrom(
+                      onSurface: theme.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
                     onPressed: () =>
                         context.read<DetailmealCubit>().validateRepas()),
               );

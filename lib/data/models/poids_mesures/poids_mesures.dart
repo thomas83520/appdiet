@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:equatable/equatable.dart';
 
 class PoidsMesures extends Equatable {
-  const PoidsMesures({this.mesures, this.poids,this.photos});
+  const PoidsMesures({required this.mesures,required  this.poids,required this.photos});
 
   final Map<MesureType,List<Mesures>> mesures;
   final List<Poids> poids;
@@ -17,7 +17,7 @@ class PoidsMesures extends Equatable {
 enum MesureType { taille,ventre,hanche,cuisses,bras, poitrine }
 
 class Mesures extends Equatable {
-  const Mesures({this.date, this.mesure});
+  const Mesures({required this.date,required  this.mesure});
 
   final DateTime date;
   final double mesure;
@@ -27,7 +27,7 @@ class Mesures extends Equatable {
 }
 
 class Poids extends Equatable {
-  const Poids({this.poids,this.date});
+  const Poids({required this.poids,required this.date});
 
   final double poids;
   final DateTime date;

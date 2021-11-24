@@ -1,7 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-class Repas extends Equatable{
-  const Repas({this.id,this.name, this.heure, this.before, this.satiete,this.contenu, this.commentaire});
+class Repas extends Equatable {
+  const Repas(
+      {required this.id,
+      required this.name,
+      required this.heure,
+      required this.before,
+      required this.satiete,
+      required this.contenu,
+      required this.commentaire,
+      required this.photoName});
 
   final String id;
   final String name;
@@ -10,34 +18,47 @@ class Repas extends Equatable{
   final int satiete;
   final String contenu;
   final String commentaire;
+  final String photoName;
 
-  static const empty = Repas(id:'',name: '',heure: '',before: 5,satiete: 5,contenu : '',commentaire: '' );
+  static const empty = Repas(
+      id: '',
+      name: '',
+      heure: '',
+      before: 5,
+      satiete: 5,
+      contenu: '',
+      commentaire: '',
+      photoName: '');
 
-  static List<Repas> fromSnapshot(List<dynamic> snapshot){
-    return snapshot.map((snap) => Repas(
-      id: snap["id"],
-      name: snap["nom"],
-      heure: snap["heure"],
-      before: 0,
-      satiete: 0,
-      contenu: snap["contenu"],
-      commentaire: "",
-    )).toList();
+  static List<Repas> fromSnapshot(List<dynamic> snapshot) {
+    return snapshot
+        .map((snap) => Repas(
+              id: snap["id"],
+              name: snap["nom"],
+              heure: snap["heure"],
+              before: 0,
+              satiete: 0,
+              contenu: (snap as Map<String,dynamic>).containsKey("contenu") ? snap["contenu"] : "",
+              commentaire: "",
+              photoName: '',
+            ))
+        .toList();
   }
 
-  Map<String,Object> toDocuments(){
+  Map<String, Object> toDocuments() {
     return {
-      "id" : id,
-      "name" : name,
-      "heure" : heure,
-      "before" : before,
-      "satiete" : satiete,
-      "contenu" : contenu,
-      "commentaire" : commentaire,
+      "id": id,
+      "name": name,
+      "heure": heure,
+      "before": before,
+      "satiete": satiete,
+      "contenu": contenu,
+      "commentaire": commentaire,
+      "photoName" : photoName,
     };
-  } 
-  
-  @override
-  List<Object> get props => [id,name,heure,before,satiete,contenu,commentaire];
+  }
 
+  @override
+  List<Object> get props =>
+      [id, name, heure, before, satiete, contenu, commentaire,photoName];
 }

@@ -4,14 +4,13 @@ import 'package:appdiet/data/models/goal/goals.dart';
 import 'package:appdiet/data/repository/goal_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 part 'goal_event.dart';
 part 'goal_state.dart';
 
 class GoalBloc extends Bloc<GoalEvent, GoalState> {
-  GoalBloc({@required GoalRepository goalRepository})
-      : assert(goalRepository != null),
+  GoalBloc({required GoalRepository goalRepository})
+      :
         _goalRepository = goalRepository,
         super(GoalState.unknown()) {
     _streamSubscription = _goalRepository.goals.listen((goals) {
@@ -20,7 +19,7 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
   }
 
   final GoalRepository _goalRepository;
-  StreamSubscription _streamSubscription;
+  late StreamSubscription _streamSubscription;
   @override
   Stream<GoalState> mapEventToState(
     GoalEvent event,
@@ -39,7 +38,7 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
 
   @override
   Future<void> close() {
-    _streamSubscription?.cancel();
+    _streamSubscription.cancel();
     return super.close();
   }
 }

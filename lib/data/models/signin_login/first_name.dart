@@ -11,7 +11,7 @@ class FirstName extends FormzInput<String, FirstNameValidationError> {
   );
 
   @override
-  FirstNameValidationError validator(String value) {
+  FirstNameValidationError? validator(String value) {
     return _firstNameRegExp.hasMatch(value) ? null : FirstNameValidationError.invalid;
   }
 }

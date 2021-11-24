@@ -29,7 +29,7 @@ class JournalUpdate extends JournalEvent {
 }
 
 class RepasClicked extends JournalEvent {
-  const RepasClicked({this.repas,this.journal,this.user,this.date});
+  const RepasClicked({required this.repas,required this.journal,required this.user,required this.date});
 
   final Repas repas;
   final Journal journal;
@@ -41,7 +41,7 @@ class RepasClicked extends JournalEvent {
 }
 
 class DayCommentsClicked extends JournalEvent {
-  const DayCommentsClicked({this.dayComments,this.journal,this.user,this.date});
+  const DayCommentsClicked({required this.dayComments,required this.journal,required this.user,required this.date});
 
   final DayComments dayComments;
   final Journal journal;
@@ -53,7 +53,7 @@ class DayCommentsClicked extends JournalEvent {
 }
 
 class WellBeingClicked extends JournalEvent {
-  const WellBeingClicked({this.wellBeing, this.journal,this.user,this.date});
+  const WellBeingClicked({required this.wellBeing, required this.journal,required this.user,required this.date});
 
   final WellBeing wellBeing;
   final Journal journal;

@@ -38,7 +38,8 @@ class GoalView extends StatelessWidget {
                           value: state.goals.pourcentageShort / 100,
                           strokeWidth: 15.0,
                           backgroundColor: Colors.green[100],
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.green),
                         ),
                         height: 120,
                         width: 120,
@@ -107,41 +108,33 @@ class GoalView extends StatelessWidget {
         .map(
           (index, goal) {
             return MapEntry(
-                index,
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: goal.isDone
-                      ? Container(
-                          color: Colors.grey,
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                value: true,
-                                onChanged: (bool) => context
-                                    .read<GoalBloc>()
-                                    .add(GoalSelected(
-                                        id: index, type: type, goals: goals)),
-                              ),
-                              Text(goal.goalName)
-                            ],
-                          ),
-                        )
-                      : Container(
-                          color: Colors.white,
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                value: false,
-                                onChanged: (bool) => context
-                                    .read<GoalBloc>()
-                                    .add(GoalSelected(
-                                        id: index, type: type, goals: goals)),
-                              ),
-                              Text(goal.goalName)
-                            ],
-                          ),
+              index,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: goal.isDone
+                    ? Container(
+                        color: Colors.grey,
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: true,
+                              onChanged: (bool) => true,
+                            ),
+                            Text(goal.goalName)
+                          ],
                         ),
-                ));
+                      )
+                    : Container(
+                        color: Colors.white,
+                        child: Row(
+                          children: [
+                            Checkbox(value: false, onChanged: (bool) => true),
+                            Text(goal.goalName)
+                          ],
+                        ),
+                      ),
+              ),
+            );
           },
         )
         .values
@@ -184,6 +177,7 @@ class GoalView extends StatelessWidget {
                       ? []
                       : _buildListObjectifs(listGoal, context, type, goals),
                 ),
+                collapsed: Container(),
                 builder: (_, collapsed, expanded) {
                   return Padding(
                     padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),

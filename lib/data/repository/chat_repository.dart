@@ -1,12 +1,10 @@
 import 'package:appdiet/data/models/chat/chat_message.dart';
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:appdiet/data/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 class ChatRepository {
-  ChatRepository({FirebaseFirestore firestore, User user})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
-        assert(user != null && user != User.empty),
+  ChatRepository({required User user})
+      : _firestore =FirebaseFirestore.instance,
         _user = user;
 
   final FirebaseFirestore _firestore;
@@ -25,14 +23,14 @@ class ChatRepository {
   }
 
   Future<void> sendMessage(String content) async {
-    return await _firestore
+    await _firestore
         .collection("chat")
         .doc(docId)
         .collection("messages")
         .add({
       "messageContent": content,
       "senderId" : _user.id,
-      "date" : DateFormat("dd-MM-yyyy HH:mm:ss").format(DateTime.now()),
+      "date" : Timestamp.fromDate(DateTime.now()),
     });
   }
 

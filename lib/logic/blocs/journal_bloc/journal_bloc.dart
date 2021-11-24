@@ -3,26 +3,22 @@ import 'package:appdiet/data/models/journal/Day_comments.dart';
 import 'package:appdiet/data/models/journal/journal.dart';
 import 'package:appdiet/data/models/journal/repas.dart';
 import 'package:appdiet/data/models/journal/wellbeing.dart';
+import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
-import 'package:meta/meta.dart';
 
 part 'journal_event.dart';
 part 'journal_state.dart';
 
 class JournalBloc extends Bloc<JournalEvent, JournalState> {
   JournalBloc(
-      {@required JournalRepository journalRepository,
-      @required User user,
-      @required String date})
-      : assert(journalRepository != null),
-        _journalRepository = journalRepository,
-        assert(user != null),
+      {required JournalRepository journalRepository,
+      required User user,
+      required String date})
+      : _journalRepository = journalRepository,
         //_user = user,
-        assert(date != null),
         super(JournalState.initial(date));
 
   final JournalRepository _journalRepository;

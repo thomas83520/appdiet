@@ -1,6 +1,6 @@
+import 'package:appdiet/data/repository/authentication_repository.dart';
 import 'package:appdiet/logic/cubits/login_cubit/login_cubit.dart';
 import 'package:appdiet/presentation/view/login_view.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

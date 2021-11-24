@@ -1,7 +1,7 @@
 part of 'navbar_cubit.dart';
 
 class NavbarState extends Equatable {
-  const NavbarState({this.index});
+  const NavbarState({required this.index});
 
   final int index;
   @override

@@ -8,7 +8,7 @@ abstract class ChatEvent extends Equatable {
 }
 
 class ChatNewMessage extends ChatEvent{
-  const ChatNewMessage({this.messages});
+  const ChatNewMessage({required this.messages});
 
   final List<ChatMessage> messages;
 
@@ -17,7 +17,7 @@ class ChatNewMessage extends ChatEvent{
 }
 
 class MessageSend extends ChatEvent{
-  const MessageSend({this.message});
+  const MessageSend({required this.message});
 
   final String message;
 

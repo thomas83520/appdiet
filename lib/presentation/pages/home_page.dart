@@ -1,3 +1,4 @@
+import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/chat_repository.dart';
 import 'package:appdiet/data/repository/goal_repository.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
@@ -12,7 +13,6 @@ import 'package:appdiet/presentation/view/journal_view.dart';
 import 'package:appdiet/presentation/view/messages_view.dart';
 import 'package:appdiet/presentation/widgets/drawer.dart';
 import 'package:appdiet/presentation/widgets/navBar.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,6 +48,7 @@ class HomePage extends StatelessWidget {
                     return titlefromindex(state.index, user);
                   },
                 ),
+                //backgroundColor: Theme.of(context).primaryColor,
               ),
               drawer: SideDrawer(),
               bottomNavigationBar: NavBar(),
@@ -68,25 +69,20 @@ class HomePage extends StatelessWidget {
     switch (index) {
       case 0:
         return JournalView();
-        break;
+      /*case 1:
+        return BuildingPage();*/
       case 1:
-        return BuildingPage();
-        break;
-      case 2:
         return BlocProvider(
           create: (context) =>
               ChatBloc(chatRepository: ChatRepository(user: user)),
           child: MessageView(),
         );
-        break;
-      case 3:
+      case 2:
         return BlocProvider(
             create: (_) => GoalBloc(goalRepository: GoalRepository(user: user)),
             child: GoalView());
-        break;
       default:
         return BuildingPage();
-        break;
     }
   }
 
@@ -94,19 +90,14 @@ class HomePage extends StatelessWidget {
     switch (index) {
       case 0:
         return Text("Journal");
-        break;
+      /*case 1:
+        return Text("Cuisine");*/
       case 1:
-        return Text("Cuisine");
-        break;
-      case 2:
         return Text("Messages");
-        break;
-      case 3:
+      case 2:
         return Text("Objectifs");
-        break;
       default:
         return Text("");
-        break;
     }
   }
 }

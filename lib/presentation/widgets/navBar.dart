@@ -13,8 +13,8 @@ class NavBar extends StatelessWidget {
               context.select((NavbarCubit cubit) => cubit.state.index),
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Accueil"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.kitchen), label: "Cuisine"),
+            /*BottomNavigationBarItem(
+                icon: Icon(Icons.kitchen), label: "Cuisine"),*/
             BottomNavigationBarItem(
                 icon: Icon(Icons.message), label: "Messages"),
             BottomNavigationBarItem(

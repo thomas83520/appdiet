@@ -38,7 +38,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Autorise l'accès à votre caméra pour votre améliorer votre suivi</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<true/>
+	<string>Autorise l'acces a votre microphone pour capter le son</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Acces gallery</string>
 	<key>UILaunchStoryboardName</key>

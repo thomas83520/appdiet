@@ -1,7 +1,7 @@
+import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/sign_up_cubit/sign_up_cubit.dart';
 import 'package:appdiet/presentation/pages/login_signup/sign_up_page.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +19,7 @@ class SignUpForm extends StatelessWidget {
           );
         }
         if (state.status.isSubmissionSuccess) {
-          signUpNavigatorKey.currentState.pushNamed('/infos_perso');
+          signUpNavigatorKey.currentState!.pushNamed('/infos_perso');
         }
       },
       child: Align(
@@ -166,7 +166,7 @@ class UpperCaseTextFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
-      text: newValue.text?.toUpperCase(),
+      text: newValue.text.toUpperCase(),
       selection: newValue.selection,
     );
   }

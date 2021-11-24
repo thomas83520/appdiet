@@ -1,9 +1,5 @@
 part of 'goal_bloc.dart';
 
-enum GoalType{
-  shortTerm,
-  longTerm,
-}
 
 abstract class GoalEvent extends Equatable {
   const GoalEvent();
@@ -14,7 +10,7 @@ abstract class GoalEvent extends Equatable {
 
 
 class GoalLoaded extends GoalEvent{
-  const GoalLoaded({this.goals});
+  const GoalLoaded({required this.goals});
 
   final Goals goals;
 
@@ -23,7 +19,7 @@ class GoalLoaded extends GoalEvent{
 }
 
 class GoalSelected extends GoalEvent{
-  const GoalSelected({this.id,this.type,this.goals});
+  const GoalSelected({required this.id,required this.type,required this.goals});
 
   final int id;
   final GoalType type;

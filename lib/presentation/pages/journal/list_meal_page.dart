@@ -45,7 +45,7 @@ class ListMealPage extends StatelessWidget {
 }
 
 class _ListRepas extends StatelessWidget {
-  const _ListRepas({Key key, this.listRepas}) : super(key: key);
+  const _ListRepas({Key? key,required this.listRepas}) : super(key: key);
 
   final List<Repas> listRepas;
 
@@ -75,7 +75,7 @@ class _ListRepas extends StatelessWidget {
 }
 
 class _Repas extends StatelessWidget {
-  const _Repas({this.repas});
+  const _Repas({required this.repas});
 
   final Repas repas;
   @override

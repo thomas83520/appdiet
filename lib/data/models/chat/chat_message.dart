@@ -2,16 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class ChatMessage extends Equatable {
-  const ChatMessage({this.messageContent, this.senderId, this.date});
+  const ChatMessage(
+      {required this.messageContent,
+      required this.senderId,
+      required this.date});
 
   final String messageContent;
   final String senderId;
-  final String date;
+  final Timestamp date;
 
   ChatMessage.fromJson(Map<String, dynamic> parsedJSON)
       : messageContent = parsedJSON['messageContent'],
         senderId = parsedJSON['senderId'],
-        date = parsedJSON['date'].substring(0,parsedJSON['date'].length-3);
+        date = parsedJSON['date'];
 
   static ChatMessage fromDocumentSnapshot(DocumentSnapshot snapshot) {
     return ChatMessage(
@@ -21,5 +24,5 @@ class ChatMessage extends Equatable {
   }
 
   @override
-  List<Object> get props => [messageContent, senderId,date];
+  List<Object> get props => [messageContent, senderId, date];
 }

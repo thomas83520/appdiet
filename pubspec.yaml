@@ -6,51 +6,40 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 0.0.1+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.13.0 <3.0.0"
+  flutter_sdk: ">=2.2.0"
 
 dependencies:
+  bloc: ^7.2.1
+  cloud_firestore: ^2.5.3
+  cloud_functions: ^3.0.3
+  equatable: ^2.0.3
+  expandable: ^5.0.1
+  firebase_analytics: ^8.3.2
+  firebase_auth: ^3.1.1
+  firebase_core: ^1.6.0
+  firebase_storage: ^10.0.3
   flutter:
     sdk: flutter
-  authentication_repository:
-    path: packages/authentication_repository
-  advance_pdf_viewer: ^1.2.2
-  apple_sign_in: ^0.1.0
-  bloc: ^6.0.0
-  calendar_strip: ^1.0.6
-  cloud_firestore: ^0.14.3+1
-  equatable: ^2.0.0
-  expandable: ^4.1.4
-  firebase_analytics: ^6.2.0
-  firebase_auth: ^0.18.3+1
-  firebase_core: ^0.5.2+1
-  cloud_functions: ^0.7.0
-  firebase_storage: ^5.2.0
-  flutter_bloc: ^6.0.0
-  flutter_datetime_picker: ^1.5.0
-  folding_cell: ^1.0.0
-  font_awesome_flutter: ^8.4.0
-  formz: ^0.3.0
-  google_fonts: ^1.1.0
-  google_sign_in: ^4.5.6
-  intl: ^0.16.1
-  meta: ^1.1.8
-  multi_image_picker: ^4.7.15
-  pedantic: ^1.9.0
-  provider: ^4.3.3
-  sign_button: ^1.0.0
-  syncfusion_flutter_charts: ^18.4.49
-  table_calendar: ^2.3.3
-  image_picker: ^0.6.7+22
-  flutter_svg: ^0.19.3
-
-dev_dependencies:
-  integration_test:
-    sdk: flutter
-  flutter_test:
-    sdk: flutter
-  test: ^1.15.7
-  bloc_test: ^7.1.0
-  mockito : ^4.1.2
+  flutter_bloc: ^7.3.0
+  flutter_datetime_picker: ^1.5.1
+  flutter_svg: ^0.22.0
+  folding_cell: ^1.0.2
+  font_awesome_flutter: ^9.1.0
+  formz: ^0.4.0
+  google_fonts: ^2.1.0
+  google_sign_in: ^5.1.1
+  image_picker: ^0.8.4+2
+  intl: ^0.17.0
+  meta: ^1.7.0
+  multi_image_picker: ^4.8.01
+  pedantic: ^1.11.1
+  provider: ^6.0.1
+  sign_button: ^2.0.1
+  syncfusion_flutter_charts: ^19.2.62
+  syncfusion_flutter_pdfviewer: ^19.3.55-beta
+  table_calendar: ^3.0.2
+  the_apple_sign_in: ^1.1.1
 
 flutter:
   uses-material-design: true

@@ -1,7 +1,6 @@
 import 'package:appdiet/logic/cubits/login_cubit/login_cubit.dart';
 import 'package:appdiet/presentation/pages/login_signup/sign_up_page.dart';
-import 'package:apple_sign_in/apple_sign_in.dart';
-import 'package:apple_sign_in/apple_sign_in_button.dart' as applebutton;
+import 'package:the_apple_sign_in/apple_sign_in_button.dart' as applebutton;
 import 'package:appdiet/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:formz/formz.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_button/sign_button.dart' as signin_button;
+import 'package:the_apple_sign_in/apple_sign_in_button.dart';
 
 class LoginForm extends StatelessWidget {
   @override

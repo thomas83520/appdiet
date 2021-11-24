@@ -12,7 +12,7 @@ class PhotoDetailInitial extends PhotoDetailState {}
 class PhotoDetailLoadInProgress extends PhotoDetailState{}
 
 class PhotoDetailLoadSuccess extends PhotoDetailState{
-  PhotoDetailLoadSuccess({@required this.detailPhoto});
+  PhotoDetailLoadSuccess({required this.detailPhoto});
 
   final DetailPhoto detailPhoto;
 

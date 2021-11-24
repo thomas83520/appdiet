@@ -4,14 +4,13 @@ import 'package:appdiet/data/models/chat/chat_message.dart';
 import 'package:appdiet/data/repository/chat_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  ChatBloc({@required ChatRepository chatRepository})
-      : assert(chatRepository != null),
+  ChatBloc({required ChatRepository chatRepository})
+      : 
         _chatRepository = chatRepository,
         super(ChatState.unknown()) {
     _streamSubscription = _chatRepository.streamMessage
@@ -19,7 +18,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   final ChatRepository _chatRepository;
-  StreamSubscription<List<ChatMessage>> _streamSubscription;
+  late StreamSubscription<List<ChatMessage>> _streamSubscription;
   @override
   Stream<ChatState> mapEventToState(
     ChatEvent event,
@@ -38,7 +37,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   @override
   Future<void> close() {
-    _streamSubscription?.cancel();
+    _streamSubscription.cancel();
     return super.close();
   }
 }

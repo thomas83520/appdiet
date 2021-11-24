@@ -16,7 +16,7 @@ static Route route(DayComments dayComments) {
   }
   final DayComments dayComments;
 
-  const DetailDayCommentsPage({Key key, @required this.dayComments}) : super(key: key);
+  const DetailDayCommentsPage({Key? key, required this.dayComments}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);

@@ -49,7 +49,7 @@ class ListDayCommentsPage extends StatelessWidget {
 }
 
 class _ListDayComments extends StatelessWidget {
-  const _ListDayComments({Key key, this.listCommentaires}) : super(key: key);
+  const _ListDayComments({Key? key,required this.listCommentaires}) : super(key: key);
 
   final List<DayComments> listCommentaires;
 
@@ -81,7 +81,7 @@ class _ListDayComments extends StatelessWidget {
 }
 
 class _DayComment extends StatelessWidget {
-  const _DayComment({this.dayComment});
+  const _DayComment({required this.dayComment});
 
   final DayComments dayComment;
   @override

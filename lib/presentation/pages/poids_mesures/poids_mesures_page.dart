@@ -1,10 +1,10 @@
+import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/models/poids_mesures/poids_mesures.dart';
 import 'package:appdiet/data/repository/poids_mesures_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/poids_mesures/poidsmesures_cubit.dart';
 import 'package:appdiet/presentation/pages/photos/photos_page.dart';
 import 'package:appdiet/presentation/pages/poids_mesures/add_poids_mesures.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,7 +77,7 @@ class PoidsMesuresPage extends StatelessWidget {
 }
 
 class _Poids extends StatelessWidget {
-  const _Poids({Key key, this.poids}) : super(key: key);
+  const _Poids({Key? key,required this.poids}) : super(key: key);
 
   final List<Poids> poids;
 
@@ -121,7 +121,7 @@ class _Poids extends StatelessWidget {
 }
 
 class _Mesures extends StatelessWidget {
-  const _Mesures({Key key, this.mesures}) : super(key: key);
+  const _Mesures({Key? key,required this.mesures}) : super(key: key);
 
   final Map<MesureType, List<Mesures>> mesures;
 
@@ -143,7 +143,7 @@ class _Mesures extends StatelessWidget {
               tooltipBehavior: TooltipBehavior(enable: true),
               series: <LineSeries<Mesures, DateTime>>[
                 LineSeries<Mesures, DateTime>(
-                  dataSource: mesures[MesureType.taille],
+                  dataSource: mesures[MesureType.taille]!,
                   xValueMapper: (Mesures mesures, _) => mesures.date,
                   yValueMapper: (Mesures mesures, _) => mesures.mesure,
                   name: "taille",
@@ -151,7 +151,7 @@ class _Mesures extends StatelessWidget {
                   dataLabelSettings: DataLabelSettings(isVisible: true),
                 ),
                 LineSeries<Mesures, DateTime>(
-                  dataSource: mesures[MesureType.ventre],
+                  dataSource: mesures[MesureType.ventre]!,
                   xValueMapper: (Mesures mesures, _) => mesures.date,
                   yValueMapper: (Mesures mesures, _) => mesures.mesure,
                   name: "ventre",
@@ -159,7 +159,7 @@ class _Mesures extends StatelessWidget {
                   dataLabelSettings: DataLabelSettings(isVisible: true),
                 ),
                 LineSeries<Mesures, DateTime>(
-                  dataSource: mesures[MesureType.hanche],
+                  dataSource: mesures[MesureType.hanche]!,
                   xValueMapper: (Mesures mesures, _) => mesures.date,
                   yValueMapper: (Mesures mesures, _) => mesures.mesure,
                   name: "hanche",
@@ -167,7 +167,7 @@ class _Mesures extends StatelessWidget {
                   dataLabelSettings: DataLabelSettings(isVisible: true),
                 ),
                 LineSeries<Mesures, DateTime>(
-                  dataSource: mesures[MesureType.cuisses],
+                  dataSource: mesures[MesureType.cuisses]!,
                   xValueMapper: (Mesures mesures, _) => mesures.date,
                   yValueMapper: (Mesures mesures, _) => mesures.mesure,
                   name: "cuisses",
@@ -175,7 +175,7 @@ class _Mesures extends StatelessWidget {
                   dataLabelSettings: DataLabelSettings(isVisible: true),
                 ),
                 LineSeries<Mesures, DateTime>(
-                  dataSource: mesures[MesureType.bras],
+                  dataSource: mesures[MesureType.bras]!,
                   xValueMapper: (Mesures mesures, _) => mesures.date,
                   yValueMapper: (Mesures mesures, _) => mesures.mesure,
                   name: "bras",
@@ -183,7 +183,7 @@ class _Mesures extends StatelessWidget {
                   dataLabelSettings: DataLabelSettings(isVisible: true),
                 ),
                 LineSeries<Mesures, DateTime>(
-                  dataSource: mesures[MesureType.poitrine],
+                  dataSource: mesures[MesureType.poitrine]!,
                   xValueMapper: (Mesures mesures, _) => mesures.date,
                   yValueMapper: (Mesures mesures, _) => mesures.mesure,
                   name: "poitrine",
@@ -202,9 +202,8 @@ class _Mesures extends StatelessWidget {
 }
 
 class _PhotosButton extends StatelessWidget {
-  const _PhotosButton({this.photos});
+  const _PhotosButton();
 
-  final List<String> photos;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

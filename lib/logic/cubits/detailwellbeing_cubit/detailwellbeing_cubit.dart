@@ -1,23 +1,20 @@
 import 'package:appdiet/data/models/journal/wellbeing.dart';
+import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 part 'detailwellbeing_state.dart';
 
 class DetailwellbeingCubit extends Cubit<DetailwellBeingState> {
   DetailwellbeingCubit(
-      {@required JournalRepository journalRepository,
-      @required WellBeing wellBeing,
-      @required User user,
-      @required String date})
-      : assert(journalRepository != null),
+      {required JournalRepository journalRepository,
+      required WellBeing wellBeing,
+      required User user,
+      required String date}):
         _journalRepository = journalRepository,
         assert(user != User.empty),
         _user = user,
-        assert(date != null),
         _date = date,
         super(DetailwellBeingState(wellBeing: wellBeing));
 

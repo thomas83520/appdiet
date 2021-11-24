@@ -16,7 +16,7 @@ static Route route(Repas repas) {
   }
   final Repas repas;
 
-  const DetailmealPage({Key key, @required this.repas}) : super(key: key);
+  const DetailmealPage({Key? key, required this.repas}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
@@ -27,7 +27,7 @@ static Route route(Repas repas) {
         journalRepository: JournalRepository(),
         user: user,
         repas: repas,
-      ),
+      )..loadData(),
       child: DetailMealView(),
     );
   }

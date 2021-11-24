@@ -3,10 +3,11 @@ import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart
 import 'package:appdiet/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class MessageView extends StatelessWidget {
   const MessageView({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -34,7 +35,7 @@ class MessageView extends StatelessWidget {
 class ListMessage extends StatelessWidget {
   final List<ChatMessage> messages;
 
-  const ListMessage({Key key, this.messages}) : super(key: key);
+  const ListMessage({Key? key,required this.messages}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +53,11 @@ class ListMessage extends StatelessWidget {
             child: messages[index].senderId == user.id
                 ? UserMessage(
                     content: messages[index].messageContent,
-                    date: messages[index].date,
+                    date: DateFormat('dd-MM-yy HH:mm').format(messages[index].date.toDate()),
                   )
                 : DietMessage(
                     content: messages[index].messageContent,
-                    date: messages[index].date,
+                    date: DateFormat('dd-MM-yy HH:mm').format(messages[index].date.toDate()),
                   ),
           );
         },
@@ -142,7 +143,7 @@ class DietMessage extends StatelessWidget {
   final String content;
   final String date;
 
-  const DietMessage({Key key, this.content, this.date}) : super(key: key);
+  const DietMessage({Key? key,required this.content,required this.date}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -176,7 +177,7 @@ class UserMessage extends StatelessWidget {
   final String content;
   final String date;
 
-  const UserMessage({Key key, this.content, this.date}) : super(key: key);
+  const UserMessage({Key? key,required this.content,required this.date}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

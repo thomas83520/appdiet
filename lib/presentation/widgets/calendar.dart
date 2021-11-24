@@ -4,105 +4,91 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:flutter/material.dart';
-//import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
+final kToday = DateTime.now();
+final kFirstDay = DateTime(kToday.year, kToday.month - 12, kToday.day);
+final kLastDay = DateTime(kToday.year, kToday.month + 2, kToday.day);
 
 class Calendar extends StatefulWidget {
-  Calendar({Key key}) : super(key: key);
-
+  Calendar({Key? key}) : super(key: key);
 
   @override
   _CalendarState createState() => _CalendarState();
 }
 
 class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
-  AnimationController _animationController;
-  CalendarController _calendarController = CalendarController();
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
+  CalendarFormat _calendarFormat = CalendarFormat.week;
 
   @override
   void initState() {
     super.initState();
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _calendarController.dispose();
-    super.dispose();
-  }
-
-
-  void _onVisibleDaysChanged(
-      DateTime first, DateTime last, CalendarFormat format) {
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          // Switch out 2 lines below to play with TableCalendar's settings
-          //-----------------------
-          _buildTableCalendar(context),
-        ],
-      );
   }
 
   // Simple TableCalendar configuration (using Styles)
   Widget _buildTableCalendar(BuildContext contetx) {
-    final user = context.select((AuthenticationBloc bloc ) => bloc.state.user);
-    final theme = Theme.of(context);
+    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return TableCalendar(
-      calendarController: _calendarController,
-      startingDayOfWeek: StartingDayOfWeek.monday,
-      initialCalendarFormat: CalendarFormat.week,
-      availableCalendarFormats: const {
-        CalendarFormat.week : "Semaine",
-        CalendarFormat.month : "Mois",
-        CalendarFormat.twoWeeks : "2 semaines"
-      },
-      calendarStyle: CalendarStyle(
-        selectedColor: theme.primaryColor,
-        todayColor: Colors.green[200],
-        markersColor: Colors.brown[700],
-        weekendStyle: TextStyle(color: Colors.green),
-        outsideDaysVisible: false,
-      ),
-      headerStyle: HeaderStyle(
-        formatButtonTextStyle:
-            TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-        formatButtonDecoration: BoxDecoration(
-          color: Colors.green[400],
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-      ),
-      daysOfWeekStyle: DaysOfWeekStyle(
-        weekendStyle: TextStyle().copyWith(color: Colors.green[600]),
-      ),
-      onDaySelected: (date,event,holiday) {
-        context.read<JournalBloc>().add(
-          JournalDateChange(date,user)
+          locale: 'fr_FR',
+          availableCalendarFormats: {
+            CalendarFormat.month: 'Mois',
+            CalendarFormat.twoWeeks: '2 semaines',
+            CalendarFormat.week: 'semaine'
+          },
+          firstDay: kFirstDay,
+          lastDay: kLastDay,
+          focusedDay: _focusedDay,
+          calendarFormat: _calendarFormat,
+          selectedDayPredicate: (day) {
+            // Use `selectedDayPredicate` to determine which day is currently selected.
+            // If this returns true, then `day` will be marked as selected.
+
+            // Using `isSameDay` is recommended to disregard
+            // the time-part of compared DateTime objects.
+            return isSameDay(_selectedDay, day);
+          },
+          onDaySelected: (selectedDay, focusedDay) {
+            if (!isSameDay(_selectedDay, selectedDay)) {
+              context.read<JournalBloc>().add(JournalDateChange(selectedDay, user));
+              // Call `setState()` when updating the selected day
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+                _calendarFormat = CalendarFormat.week;
+              });
+            }
+          },
+          onFormatChanged: (format) {
+            if (_calendarFormat != format) {
+              // Call `setState()` when updating calendar format
+              setState(() {
+                _calendarFormat = format;
+              });
+            }
+          },
+          onPageChanged: (focusedDay) {
+            // No need to call `setState()` here
+            _focusedDay = focusedDay;
+          },
+          onCalendarCreated: (PageController pageController){
+            context.read<JournalBloc>().add(JournalDateChange(_focusedDay, user));
+          },
         );
-      },
-      onVisibleDaysChanged: _onVisibleDaysChanged,
-      onCalendarCreated: (first,last,format) {
-        context.read<JournalBloc>().add(
-          JournalDateChange(DateTime.now(),user)
-        );
-      },
-    );
   }
 
-
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        // Switch out 2 lines below to play with TableCalendar's settings
+        //-----------------------
+        _buildTableCalendar(context),
+      ],
+    );
+  }
 }

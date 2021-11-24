@@ -1,11 +1,16 @@
 import 'package:equatable/equatable.dart';
 
+enum GoalType{
+  shortTerm,
+  longTerm,
+}
+
 class Goals extends Equatable {
   const Goals(
-      {this.shortTerm,
-      this.longTerm,
-      this.pourcentageLong,
-      this.pourcentageShort});
+      {required this.shortTerm,
+      required this.longTerm,
+      required this.pourcentageLong,
+      required this.pourcentageShort});
 
   final List<Goal> shortTerm;
   final List<Goal> longTerm;
@@ -15,7 +20,7 @@ class Goals extends Equatable {
   static const empty = Goals(
       shortTerm: [], longTerm: [], pourcentageLong: 0, pourcentageShort: 0);
 
-  Goals copyWith({List<Goal> shortTerm, List<Goal> longTerm}) {
+  Goals copyWith({List<Goal>? shortTerm, List<Goal>? longTerm}) {
     double pourcentageShort = calculatePourcentage(shortTerm ?? this.shortTerm);
     double pourcentageLong = calculatePourcentage(longTerm ?? this.longTerm);
     return Goals(
@@ -25,30 +30,27 @@ class Goals extends Equatable {
         pourcentageLong: pourcentageLong);
   }
 
-  Map<String,dynamic> toJson()
-  {
+  Map<String, dynamic> toJson() {
     return {
-      "pourcentageShort" : this.pourcentageShort,
-      "pourcentageLong" : this.pourcentageLong,
-      "shortTerm" : goalListToJson(this.shortTerm),
-      "longTerm" : goalListToJson(this.longTerm)
+      "pourcentageShort": this.pourcentageShort,
+      "pourcentageLong": this.pourcentageLong,
+      "shortTerm": goalListToJson(this.shortTerm),
+      "longTerm": goalListToJson(this.longTerm)
     };
   }
 
-  List<Map<String,dynamic>> goalListToJson(List<Goal> goals){
-    return goals.map((goal) => {
-      "goalName" : goal.goalName,
-      "isDone" : goal.isDone,
-    }).toList();
+  List<Map<String, dynamic>> goalListToJson(List<Goal> goals) {
+    return goals
+        .map((goal) => {
+              "goalName": goal.goalName,
+              "isDone": goal.isDone,
+            })
+        .toList();
   }
 
-  
   double calculatePourcentage(List<Goal> goals) {
     double nb = 0;
-    if(goals.isEmpty)
-      return 0;
-    if(goals == null)
-      return 0;
+    if (goals.isEmpty) return 0;
     goals.forEach((goal) {
       if (goal.isDone) nb++;
     });
@@ -61,23 +63,22 @@ class Goals extends Equatable {
 }
 
 class Goal extends Equatable {
-  const Goal({this.goalName, this.isDone});
+  const Goal({required this.goalName, required this.isDone});
 
   final String goalName;
   final bool isDone;
 
   static List<Goal> fromSnapshot(List<dynamic> snapshot) {
-    List<Goal> test = snapshot
-        .map((snapshot) {
-            return Goal(goalName: snapshot["goalName"], isDone: snapshot["isDone"]);})
-        .toList();
+    List<Goal> test = snapshot.map((snapshot) {
+      return Goal(goalName: snapshot["goalName"], isDone: snapshot["isDone"]);
+    }).toList();
 
-        return test;
+    return test;
   }
 
   Goal copywith({
-    bool isDone,
-    String goalName,
+    bool? isDone,
+    String? goalName,
   }) {
     return Goal(
       goalName: goalName ?? this.goalName,

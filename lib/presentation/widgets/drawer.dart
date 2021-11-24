@@ -1,7 +1,6 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:appdiet/presentation/pages/building_page.dart';
+import 'package:appdiet/presentation/pages/documents/documents_page.dart';
 import 'package:appdiet/presentation/pages/photos/photos_page.dart';
-import 'package:appdiet/presentation/pages/plan_alimentaire/plan_alimentaire.dart';
 import 'package:appdiet/presentation/pages/poids_mesures/poids_mesures_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +28,7 @@ class SideDrawer extends StatelessWidget {
               ],
             ),
           ),
-          ListTile(
+          /*ListTile(
             leading: Icon(Icons.event),
             title: Text("Rendez-vous"),
             trailing: Icon(Icons.arrow_forward_ios),
@@ -38,7 +37,7 @@ class SideDrawer extends StatelessWidget {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => BuildingPage()));
             },
-          ),
+          ),*/
           ListTile(
             leading: Icon(Icons.collections),
             title: Text("Photos"),
@@ -60,13 +59,13 @@ class SideDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.menu_book),
-            title: Text("Plan alimentaire"),
+            leading: Icon(Icons.folder_open),
+            title: Text("Documents"),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.pop(context);
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PlanAlimentaire()));
+                  MaterialPageRoute(builder: (context) => DocumentsPage()));
             },
           ),
           ListTile(

@@ -1,72 +1,103 @@
 import 'dart:async';
 import 'package:appdiet/data/models/journal/repas.dart';
+import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 part 'detailmeal_state.dart';
 
 class DetailmealCubit extends Cubit<DetailmealState> {
   DetailmealCubit(
-      {@required JournalRepository journalRepository,
-      @required Repas repas,
-      @required User user,
-      @required String date})
-      : assert(journalRepository != null),
-        _journalRepository = journalRepository,
+      {required JournalRepository journalRepository,
+      required Repas repas,
+      required User user,
+      required String date})
+      : _journalRepository = journalRepository,
         assert(user != User.empty),
         _user = user,
-        assert(date != null),
         _date = date,
-        super(DetailmealState(repas: repas));
+        super(DetailmealState(repas: repas, file: XFile('')));
 
   final String _date;
   final User _user;
   final JournalRepository _journalRepository;
 
-
-  void nameChanged(String name){
-    emit(state.copyWith(nameRepas: name));
+  Future<void> loadData() async {
+    if (state.repas == Repas.empty) {
+      int heure = int.parse(DateFormat('HH').format(DateTime.now()));
+      int minutes = int.parse(DateFormat('mm').format(DateTime.now()));
+      emit(state.copyWith(
+          nameRepas: 'Petit déjeuner',
+          heure: heure.toString() + ":" + _formatMinute(minutes)));
+    } else {
+      if(state.repas.photoName!='')
+      {  
+        String url = await _journalRepository.getPhotoUrl(_user, state.repas.photoName);
+        emit(state.copyWith(photoUrl: url));
+      } 
+    }
   }
 
-  void timeChanged(int heure,int minutes){
-    emit(state.copyWith(heure: heure.toString()+":"+_formatMinute(minutes)));
+  void nameChanged(String name) {
+    if (state.file.path == '')
+      emit(state.copyWith(nameRepas: name));
+    else
+      emit(state.copyWith(nameRepas: name, photoName: fileName(state.repas)));
   }
 
-  void contenuChanged(String value){
+  void timeChanged(int heure, int minutes) {
+    if (state.file.path == '')
+      emit(state.copyWith(
+          heure: heure.toString() + ":" + _formatMinute(minutes)));
+    else
+      emit(state.copyWith(
+          heure: heure.toString() + ":" + _formatMinute(minutes),
+          photoName: fileName(state.repas)));
+  }
+
+  void contenuChanged(String value) {
     emit(state.copyWith(contenu: value));
   }
 
-  void beforeChanged(double value){
+  void beforeChanged(double value) {
     emit(state.copyWith(before: value.toInt()));
   }
 
-  void satieteChanged(double value){
+  void satieteChanged(double value) {
     emit(state.copyWith(satiete: value.toInt()));
   }
 
-  void commentaireChanged(String value){
+  void commentaireChanged(String value) {
     emit(state.copyWith(commentaire: value));
   }
 
-  Future<void> validateRepas() async{
+  void fileChanged(XFile file) {
+    emit(state.copyWith(file: file, photoName: fileName(state.repas)));
+  }
+
+  Future<void> validateRepas() async {
     emit(state.copyWith(status: SubmissionStatus.loading));
-    try{
-      await _journalRepository.validateRepas(state.repas,_user,_date);
+    try {
+      if (state.file.path != '')
+        await _journalRepository.uploadPhoto(
+            _user, state.file.path, state.repas.photoName);
+      await _journalRepository.validateRepas(state.repas, _user, _date);
       emit(state.copyWith(status: SubmissionStatus.success));
-    }
-    on Exception{
+    } on Exception {
       emit(state.copyWith(status: SubmissionStatus.failure));
     }
   }
 
+  String fileName(Repas repas) {
+    return repas.name + '-' + repas.heure + '-' + _date;
+  }
 
-  String _formatMinute(int minute){
-    if(minute < 10){
-      return "0"+minute.toString();
-    }
-    else return minute.toString();
+  String _formatMinute(int minute) {
+    if (minute < 10) {
+      return "0" + minute.toString();
+    } else
+      return minute.toString();
   }
 }

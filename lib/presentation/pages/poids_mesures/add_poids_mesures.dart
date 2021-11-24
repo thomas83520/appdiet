@@ -1,10 +1,10 @@
 import 'dart:io';
 
+import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/photos_repository.dart';
 import 'package:appdiet/data/repository/poids_mesures_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/add_mesures_cubits/add_mesures_cubit.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +17,8 @@ class AddPoidsMesures extends StatelessWidget {
         context.select((AuthenticationBloc bloc) => bloc.state.user);
     return BlocProvider(
       create: (context) => AddMesuresCubit(
-          PhotosRepository(user: user), PoidsMesuresRepository(user: user))..dateChange(DateTime.now()),
+          PhotosRepository(user: user), PoidsMesuresRepository(user: user))
+        ..dateChange(DateTime.now()),
       child: BlocListener<AddMesuresCubit, AddMesuresState>(
         listener: (context, state) {
           if (state.formState == AddMesureFormState.complete)
@@ -71,7 +72,7 @@ class AddPoidsMesures extends StatelessWidget {
 
 class _MesuresInput extends StatelessWidget {
   const _MesuresInput({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -265,7 +266,7 @@ class _MesuresInput extends StatelessWidget {
 
 class _PoidsMesureInput extends StatelessWidget {
   const _PoidsMesureInput({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -316,7 +317,7 @@ class _PoidsMesureInput extends StatelessWidget {
 
 class _PhotoMesure extends StatelessWidget {
   const _PhotoMesure({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -325,8 +326,9 @@ class _PhotoMesure extends StatelessWidget {
       builder: (context, state) {
         return InkWell(
           onTap: () async {
-            PickedFile file = await ImagePicker().getImage(source: ImageSource.gallery);
-            context.read<AddMesuresCubit>().fileChanged(file);
+            XFile? file =
+                await ImagePicker().pickImage(source: ImageSource.gallery);
+            if (file != null) context.read<AddMesuresCubit>().fileChanged(file);
           },
           child: Material(
             elevation: 2,
@@ -348,13 +350,16 @@ class _PhotoMesure extends StatelessWidget {
                   SizedBox(
                     width: 50,
                   ),
-                  Container(
-                    height: 150,
-                    width: 100,
-                    color: Colors.grey[300],
-                    child: state.file == null
-                        ? Container()
-                        : Image.file(File(state.file.path)),
+                  BlocBuilder<AddMesuresCubit, AddMesuresState>(
+                    builder: (context, state) {
+                      return Container(
+                        height: 150,
+                        width: 100,
+                        child: state.file.path == ''
+                            ? Container()
+                            : Image.file(File(state.file.path)),
+                      );
+                    },
                   )
                 ],
               ),
@@ -368,7 +373,7 @@ class _PhotoMesure extends StatelessWidget {
 
 class _DateMesureInput extends StatelessWidget {
   const _DateMesureInput({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -396,24 +401,29 @@ class _DateMesureInput extends StatelessWidget {
                   flex: 2,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: TextEditingController(
-                          text: state.date.toString().length > 10
-                              ? state.date.toString().substring(0, 10)
-                              : null),
-                      key: const Key('signUpForm_dateInput_textField'),
-                      onTap: () async {
-                        DateTime date = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime.now());
-                        print(date.toString());
-                        context.read<AddMesuresCubit>().dateChange(date);
+                    child: BlocBuilder<AddMesuresCubit, AddMesuresState>(
+                      builder: (context, state) {
+                        return TextFormField(
+                          readOnly: true,
+                          controller: TextEditingController(
+                              text: state.date.toString().length > 10
+                                  ? state.date.toString().substring(0, 10)
+                                  : null),
+                          key: const Key('signUpForm_dateInput_textField'),
+                          onTap: () async {
+                            DateTime? date = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime.now());
+                            if (date != null)
+                              context.read<AddMesuresCubit>().dateChange(date);
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        );
                       },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                      ),
                     ),
                   ),
                 ),
@@ -429,7 +439,7 @@ class _DateMesureInput extends StatelessWidget {
 class _AddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-        final theme = Theme.of(context);
+    final theme = Theme.of(context);
     return Row(
       children: [
         SizedBox(
@@ -438,19 +448,29 @@ class _AddButton extends StatelessWidget {
         Expanded(
           child: SizedBox(
             height: 60.0,
-            child: ElevatedButton(
-              child: Text(
-                'Ajoutez les mesures',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: theme.primaryColor,
-                onSurface: theme.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-              onPressed: () => context.read<AddMesuresCubit>().addMesures(),
+            child: BlocBuilder<AddMesuresCubit, AddMesuresState>(
+              builder: (context, state) {
+                if (state.formState == AddMesureFormState.loadInProgress)
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                else
+                  return ElevatedButton(
+                    child: Text(
+                      'Ajoutez les mesures',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: theme.primaryColor,
+                      onSurface: theme.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    onPressed: () =>
+                        context.read<AddMesuresCubit>().addMesures(),
+                  );
+              },
             ),
           ),
         ),

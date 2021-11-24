@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:appdiet/data/models/journal/Day_comments.dart';
 import 'package:appdiet/data/models/journal/journal.dart';
 import 'package:appdiet/data/models/journal/repas.dart';
 import 'package:appdiet/data/models/journal/wellbeing.dart';
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:appdiet/data/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ValidateRepasFailure implements Exception {}
 
@@ -12,10 +15,12 @@ class AddRepasFailure implements Exception {}
 class AddDayCommentsFailure implements Exception {}
 
 class JournalRepository {
-  JournalRepository({FirebaseFirestore firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  JournalRepository()
+      : _firestore = FirebaseFirestore.instance,
+        _firebaseStorage = FirebaseStorage.instance;
 
   final FirebaseFirestore _firestore;
+  final FirebaseStorage _firebaseStorage;
 
   Future<Journal> journalByDate(String date, String uid) async {
     return await _firestore
@@ -54,7 +59,8 @@ class JournalRepository {
             snapshot.exists ? snapshot.toComments : DayComments.empty);
   }
 
-  Future<void> validateRepas(Repas repas, User user, String date) async {
+  Future<void> validateRepas(
+      Repas repas, User user, String date) async {
     try {
       repas.id == Repas.empty.id
           ? await _firestore
@@ -117,7 +123,7 @@ class JournalRepository {
           .doc(date)
           .get()
           .then((snapshot) async {
-        List<dynamic> mealsList = snapshot.data()['Meals'];
+        List<dynamic> mealsList = snapshot.get('Meals');
         var index;
         mealsList.asMap().forEach((key, value) {
           if (value['id'] == repasId) index = key;
@@ -225,7 +231,7 @@ class JournalRepository {
           .doc(date)
           .get()
           .then((snapshot) async {
-        List<dynamic> dayCommentsList = snapshot.data()['Comments'];
+        List<dynamic> dayCommentsList = snapshot.get('Comments');
         var index;
         dayCommentsList.asMap().forEach((key, value) {
           if (value['id'] == dayCommentsId) index = key;
@@ -256,30 +262,50 @@ class JournalRepository {
       throw AddRepasFailure();
     }
   }
+
+  Future<void> uploadPhoto(
+      User user, String filePath, String fileName) async {
+    File file = File(filePath);
+
+    await _firebaseStorage
+        .ref(user.id + '/repas/' + fileName + '.png')
+        .putFile(file);
+  }
+
+  Future<String> getPhotoUrl(User user, String fileName) async {
+    String url = await _firebaseStorage
+        .ref(user.id + '/repas/' + fileName + '.png')
+        .getDownloadURL();
+    return url;
+  }
 }
 
 extension on DocumentSnapshot {
   Journal get toJournal {
+    Map<String, dynamic> data = (this.data() as Map<String, dynamic>);
+    
+
     List<Repas> listRepas;
-    this.data()["Meals"] == null
+    this.get("Meals") == null
         ? listRepas = []
-        : this.data()["Meals"] == ""
+        : this.get("Meals") == ""
             ? listRepas = []
-            : listRepas = Repas.fromSnapshot(this.data()["Meals"]);
+            : listRepas = Repas.fromSnapshot(this.get("Meals"));
 
     List<DayComments> listCommentaires;
-    this.data()["Comments"] == null
-        ? listCommentaires = []
-        : this.data()["Comments"] == ""
+
+    data.containsKey("Comments")
+        ? this.get("Comments") == ""
             ? listCommentaires = []
-            : listCommentaires =
-                DayComments.fromSnapshot(this.data()["Comments"]);
+            : listCommentaires = DayComments.fromSnapshot(this.get("Comments"))
+        : listCommentaires = [];
     String date;
-    this.data()["date"] == null ? date = "" : date = this.data()["date"];
+    data.containsKey("date") ? date = this.get("date") : date = "";
+
     WellBeing wellBeing;
-    this.data()["Wellbeing"] == null
-        ? wellBeing = WellBeing.empty
-        : wellBeing = WellBeing.fromSnapshot(this.data()["Wellbeing"]);
+    data.containsKey("Wellbeing")
+        ? wellBeing = WellBeing.fromSnapshot(this.get("Wellbeing"))
+        : wellBeing = WellBeing.empty;
     return Journal(
         mapCommentaires: listCommentaires,
         mapRepas: listRepas,
@@ -289,22 +315,22 @@ extension on DocumentSnapshot {
 
   Repas get toRepas {
     return Repas(
-      id: this.data()["id"],
-      name: this.data()["name"],
-      heure: this.data()["heure"],
-      before: this.data()["before"],
-      satiete: this.data()["satiete"],
-      contenu: this.data()["contenu"],
-      commentaire: this.data()["commentaire"],
-    );
+        id: this.get("id"),
+        name: this.get("name"),
+        heure: this.get("heure"),
+        before: this.get("before"),
+        satiete: this.get("satiete"),
+        contenu: this.get("contenu"),
+        commentaire: this.get("commentaire"),
+        photoName: this.get('photoName'));
   }
 
   DayComments get toComments {
     return DayComments(
-      id: this.data()["id"],
-      titre: this.data()["titre"],
-      heure: this.data()["heure"],
-      contenu: this.data()["contenu"],
+      id: this.get("id"),
+      titre: this.get("titre"),
+      heure: this.get("heure"),
+      contenu: this.get("contenu"),
     );
   }
 }

@@ -7,7 +7,7 @@ class BirthDate extends FormzInput<String, BirthDateValidationError> {
   const BirthDate.dirty([String value = '']) : super.dirty(value);
 
   @override
-  BirthDateValidationError validator(String value) {
-    return value?.isNotEmpty == true ? null : BirthDateValidationError.invalid;
+  BirthDateValidationError? validator(String value) {
+    return value.isNotEmpty == true ? null : BirthDateValidationError.invalid;
   }
 }

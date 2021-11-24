@@ -2,24 +2,23 @@ import 'package:appdiet/data/models/poids_mesures/poids_mesures.dart';
 import 'package:appdiet/data/repository/poids_mesures_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 part 'poidsmesures_state.dart';
 
 class PoidsMesuresCubit extends Cubit<PoidsMesuresState> {
-  PoidsMesuresCubit({@required PoidsMesuresRepository poidsMesuresRepository})
-      : assert(poidsMesuresRepository != null),
-        _poidsMesuresRepository = poidsMesuresRepository,
+  PoidsMesuresCubit({required PoidsMesuresRepository poidsMesuresRepository})
+      : _poidsMesuresRepository = poidsMesuresRepository,
         super(PoidsMesuresInitial());
 
   final PoidsMesuresRepository _poidsMesuresRepository;
 
   Future<void> loadPoidsMesures() async {
     emit(PoidsMesuresLoadInProgress());
-    try{
-      PoidsMesures poidsMesures = await _poidsMesuresRepository.loadPoidsMesures();
+    try {
+      PoidsMesures poidsMesures =
+          await _poidsMesuresRepository.loadPoidsMesures();
       emit(PoidsMesuresLoadSuccess(poidsMesures: poidsMesures));
-    }catch (e){
+    } catch (e) {
       emit(PoidsMesuresLoadFailure());
     }
   }

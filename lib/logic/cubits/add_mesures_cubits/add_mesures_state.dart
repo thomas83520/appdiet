@@ -4,11 +4,11 @@ enum AddMesureFormState {writing,loadInProgress,complete,error}
 
 class AddMesuresState extends Equatable {
   const AddMesuresState(
-      {this.date,
+      {required this.date,
       this.bras = 0,
       this.poids = 0,
       this.cuisses = 0,
-      this.file,
+      required this.file,
       this.hanches = 0,
       this.poitrine = 0,
       this.taille = 0,
@@ -18,7 +18,7 @@ class AddMesuresState extends Equatable {
       });
 
   final DateTime date;
-  final PickedFile file;
+  final XFile file;
   final double poids;
   final double taille;
   final double ventre;
@@ -27,19 +27,19 @@ class AddMesuresState extends Equatable {
   final double bras;
   final double poitrine;
   final AddMesureFormState formState;
-  final String url;
+  final String? url;
 
   AddMesuresState copyWith({
-    DateTime date,
-    PickedFile file,
-    double poids,
-    double taille,
-    double ventre,
-    double hanches,
-    double cuisses,
-    double bras,
-    double poitrine,
-    AddMesureFormState formState,
+    DateTime? date,
+    XFile? file,
+    double? poids,
+    double? taille,
+    double? ventre,
+    double? hanches,
+    double? cuisses,
+    double? bras,
+    double? poitrine,
+    AddMesureFormState? formState,
   }) {
     return AddMesuresState(
       date: date ?? this.date,
@@ -57,5 +57,5 @@ class AddMesuresState extends Equatable {
 
   @override
   List<Object> get props =>
-      [date, file, poids, taille, ventre, hanches, cuisses, bras, poitrine,formState];
+      [poids, taille, ventre, hanches, cuisses, bras, poitrine,formState,file,date];
 }

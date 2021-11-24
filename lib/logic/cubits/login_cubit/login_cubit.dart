@@ -1,15 +1,15 @@
 import 'package:appdiet/data/models/models.dart';
-import 'package:apple_sign_in/apple_sign_in.dart';
-import 'package:authentication_repository/authentication_repository.dart';
+import 'package:appdiet/data/repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit(this._authenticationRepository)
-      : assert(_authenticationRepository != null),
+      : 
         super(const LoginState());
 
   final AuthenticationRepository _authenticationRepository;
