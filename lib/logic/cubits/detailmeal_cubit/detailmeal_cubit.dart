@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:appdiet/data/models/journal/repas.dart';
 import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
+import 'package:appdiet/logic/tools/stringformatter.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,11 +33,11 @@ class DetailmealCubit extends Cubit<DetailmealState> {
           nameRepas: 'Petit déjeuner',
           heure: heure.toString() + ":" + _formatMinute(minutes)));
     } else {
-      if(state.repas.photoName!='')
-      {  
-        String url = await _journalRepository.getPhotoUrl(_user, state.repas.photoName);
+      if (state.repas.photoName != '') {
+        String url =
+            await _journalRepository.getPhotoUrl(_user, state.repas.photoName);
         emit(state.copyWith(photoUrl: url));
-      } 
+      }
     }
   }
 
@@ -91,7 +92,9 @@ class DetailmealCubit extends Cubit<DetailmealState> {
   }
 
   String fileName(Repas repas) {
-    return repas.name + '-' + repas.heure + '-' + _date;
+    String name = StringFormatter.removeDiacritics(
+        (repas.name + '-' + repas.heure + '-' + _date)).replaceAll(new RegExp(r'[^\w]+'), '_');
+    return name;
   }
 
   String _formatMinute(int minute) {

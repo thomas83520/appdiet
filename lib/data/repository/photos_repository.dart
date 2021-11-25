@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/models/photos/photos_detail.dart';
+import 'package:appdiet/logic/tools/stringformatter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -89,7 +90,7 @@ class PhotosRepository {
 
   Future<String> uploadPhoto(String filePath, String fileName) async {
     File file = File(filePath);
-
+    fileName = StringFormatter.removeDiacritics(fileName.replaceAll(new RegExp(r'[^\w]+'),'_'));
     await firebase_storage.FirebaseStorage.instance
         .ref(_user.id + '/photos/' + fileName + '.png')
         .putFile(file);

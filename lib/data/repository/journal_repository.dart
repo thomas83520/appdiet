@@ -5,6 +5,7 @@ import 'package:appdiet/data/models/journal/journal.dart';
 import 'package:appdiet/data/models/journal/repas.dart';
 import 'package:appdiet/data/models/journal/wellbeing.dart';
 import 'package:appdiet/data/models/models.dart';
+import 'package:appdiet/logic/tools/stringformatter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -266,7 +267,7 @@ class JournalRepository {
   Future<void> uploadPhoto(
       User user, String filePath, String fileName) async {
     File file = File(filePath);
-
+    fileName = StringFormatter.removeDiacritics(fileName).replaceAll(new RegExp(r'[^\w]+'),'_');
     await _firebaseStorage
         .ref(user.id + '/repas/' + fileName + '.png')
         .putFile(file);
