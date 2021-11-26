@@ -107,7 +107,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     try {
       if (user.id != "") {
         User completeUser = await _authenticationRepository
-            .completeUserSubscription(getUserFromState(user));
+            .completeUserSubscription(getUserFromState(user),user.id);
         bloc.add(AuthenticationUserChanged(completeUser));
       } else {
         await _authenticationRepository

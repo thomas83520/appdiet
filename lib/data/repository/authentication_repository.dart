@@ -172,24 +172,24 @@ class AuthenticationRepository {
         ));
   }
 
-  Future<User> completeUserSubscription(User user) async {
-    await _firestore.collection('patient').doc(user.id).set({
+  Future<User> completeUserSubscription(User user,String uidUser) async {
+    await _firestore.collection('patient').doc(uidUser).set({
       'name': user.name,
       'firstName': user.firstName,
       'email': user.email,
-      'id': user.id,
+      'id': uidUser,
       'linkFoodPlan': user.linkFoodPlan,
       'linkStorageFolder': user.linkStorageFolder,
       'uidDiet': user.uidDiet,
       'creatingAccount': false,
       'birthDate': user.birthDate,
-      'suivi' : user.suivi
+      'suivi' : "Suivi en cours"
     });
     return User(
       name: user.name,
       firstName: user.firstName,
       email: user.email,
-      id: user.id,
+      id: uidUser,
       linkFoodPlan: user.linkFoodPlan,
       linkStorageFolder: user.linkStorageFolder,
       uidDiet: user.uidDiet,
@@ -208,9 +208,14 @@ class AuthenticationRepository {
       'linkFoodPlan': user.linkFoodPlan,
       'linkStorageFolder': user.linkStorageFolder,
       'uidDiet': user.uidDiet,
-      'creatingAccount': false,
+      'creatingAccount': true,
       'birthDate': user.birthDate,
+      'suivi' :"Suivi en cours",
     });
+  }
+
+  Future<void> deleteUserFromWaiting(String id) async {
+    await _firestore.collection('accountwaiting').doc(id).delete();
   }
 
   Future<bool> isUserInFirestore(String uid) {
@@ -229,7 +234,7 @@ class AuthenticationRepository {
         .get()
         .then((doc) {
       if (doc.size == 1)
-        return _userFromSnapshot(doc.docs.elementAt(0));
+        return _userFromSnapshot(doc.docs.first);
       else
         return User.empty;
     });

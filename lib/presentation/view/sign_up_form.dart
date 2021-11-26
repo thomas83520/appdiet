@@ -22,29 +22,32 @@ class SignUpForm extends StatelessWidget {
           signUpNavigatorKey.currentState!.pushNamed('/infos_perso');
         }
       },
-      child: Align(
-        alignment: const Alignment(0, -1.25 / 3),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 10.0),
-              _LogoAndName(),
-              const SizedBox(height: 26.0),
-              _InfoText(),
-              const SizedBox(height: 30.0),
-              _EmailInput(),
-              const SizedBox(height: 8.0),
-              _PasswordInput(),
-              const SizedBox(height: 8.0),
-              _ConfirmPasswordInput(),
-              const SizedBox(height: 8.0),
-              _DietCodeInput(),
-              const SizedBox(height: 8.0),
-              _SignUpButton(),
-              const SizedBox(height: 20.0),
-              _LoginButton(),
-            ],
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Align(
+          alignment: const Alignment(0, -1.25 / 3),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 10.0),
+                _LogoAndName(),
+                const SizedBox(height: 26.0),
+                _InfoText(),
+                const SizedBox(height: 30.0),
+                _EmailInput(),
+                const SizedBox(height: 8.0),
+                _PasswordInput(),
+                const SizedBox(height: 8.0),
+                _ConfirmPasswordInput(),
+                const SizedBox(height: 8.0),
+                _DietCodeInput(),
+                const SizedBox(height: 8.0),
+                _SignUpButton(),
+                const SizedBox(height: 20.0),
+                _LoginButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -67,7 +70,7 @@ class _EmailInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'email',
             helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            errorText: state.email.invalid ? state.email.value.isEmpty ? 'Champ Email vide' : 'Caractères non valide' : null
           ),
         );
       },

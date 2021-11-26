@@ -19,28 +19,29 @@ class InfoPersoPage extends StatelessWidget {
           );
         }
       },
-      child: Align(
-        alignment: const Alignment(0, -2.5 / 3),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _BackButton(),
-              const SizedBox(height: 50.0),
-              _InfoText(),
-              const SizedBox(height: 30.0),
-              _NameInput(),
-              const SizedBox(height: 8.0),
-              _FirstNameInput(),
-              const SizedBox(height: 8.0),
-              _DateInput(),
-              const SizedBox(height: 8.0),
-              //_DietCodeInput(),
-              const SizedBox(height: 8.0),
-              _SignUpButton(),
-              const SizedBox(height: 20.0),
-              //_LoginButton(),
-            ],
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Align(
+          alignment: const Alignment(0, -2.5 / 3),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _BackButton(),
+                const SizedBox(height: 50.0),
+                _InfoText(),
+                const SizedBox(height: 30.0),
+                _NameInput(),
+                const SizedBox(height: 8.0),
+                _FirstNameInput(),
+                const SizedBox(height: 8.0),
+                _DateInput(),
+                const SizedBox(height: 8.0),
+                _SignUpButton(),
+                const SizedBox(height: 20.0),
+                //_LoginButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -97,7 +98,7 @@ class _NameInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Nom',
             helperText: '',
-            errorText: state.name.invalid ? 'invalid email' : null,
+            errorText: state.name.invalid ? state.name.value.isEmpty ? 'Champ Nom vide' : 'Caractères non valide' : null,
           ),
         );
       },
@@ -120,7 +121,7 @@ class _FirstNameInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Prénom',
             helperText: '',
-            errorText: state.firstName.invalid ? 'Caractères non valide' : null,
+            errorText: state.firstName.invalid ? state.firstName.value.isEmpty ? 'Champ Prénom vide' : 'Caractères non valide' : null,
           ),
         );
       },

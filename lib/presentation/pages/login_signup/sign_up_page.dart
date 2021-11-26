@@ -17,12 +17,12 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final email =
-        context.select((AuthenticationBloc bloc) => bloc.state.user.email);
+    final user =
+        context.select((AuthenticationBloc bloc) => bloc.state.user);
     return Scaffold(
       body: BlocProvider<SignUpCubit>(
         create: (_) =>
-            SignUpCubit(context.read<AuthenticationRepository>(), email),
+            SignUpCubit(context.read<AuthenticationRepository>(), user.email)..emailChanged(user.email)..firstNameChanged(user.firstName)..nameChanged(user.name),
         child: Navigator(
           key: signUpNavigatorKey,
           onGenerateRoute: (settings) {
