@@ -409,7 +409,7 @@ class _DateMesureInput extends StatelessWidget {
                               text: state.date.toString().length > 10
                                   ? state.date.toString().substring(0, 10)
                                   : null),
-                          key: const Key('signUpForm_dateInput_textField'),
+                          key: const Key('AddMesures_dateInput_textField'),
                           onTap: () async {
                             DateTime? date = await showDatePicker(
                                 context: context,

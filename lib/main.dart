@@ -26,7 +26,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   EquatableConfig.stringify = kDebugMode;
-  Bloc.observer = SimpleBlocObserver();
+  //Bloc.observer = SimpleBlocObserver();
   final appleSignInAvailable = await AppleSignInAvailable.check();
   initializeDateFormatting('fr_FR', null).then((_) => runApp(Provider<AppleSignInAvailable>.value(
       value: appleSignInAvailable,

@@ -132,7 +132,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
 class _DietCodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _controller = TextEditingController();
+        var _controller = TextEditingController();
 
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.codeDiet != current.codeDiet,

@@ -149,7 +149,7 @@ class _DateInput extends StatelessWidget {
         }
         return TextField(
           controller: txt,
-          key: const Key('signUpForm_dateInput_textField'),
+          key: const Key('signUpForm_BirthDateInput_textField'),
           onTap: () => context.read<SignUpCubit>().dateChanged(context),
           decoration: InputDecoration(
             labelText: 'Date de naissance',
