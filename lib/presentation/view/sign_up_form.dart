@@ -64,9 +64,10 @@ class _EmailInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return TextFormField(
+          textCapitalization: TextCapitalization.none,
           initialValue: user.email,
           key: const Key('signUpForm_emailInput_textField'),
-          onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
+          onChanged: (email) => context.read<SignUpCubit>().emailChanged(email.toLowerCase()),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: 'email',

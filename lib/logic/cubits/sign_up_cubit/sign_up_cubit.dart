@@ -91,7 +91,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       id: user.id,
       name: state.name.value,
       firstName: state.firstName.value,
-      email: state.email.value,
+      email: state.email.value.toLowerCase(),
       uidDiet: state.codeDiet.value,
       creatingAccount: user.creatingAccount,
       linkFoodPlan: user.linkFoodPlan,
