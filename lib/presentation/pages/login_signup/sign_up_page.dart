@@ -6,7 +6,7 @@ import 'package:appdiet/presentation/view/sign_up_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-var signUpNavigatorKey = GlobalKey<NavigatorState>();
+var _signUpNavigatorKey = GlobalKey<NavigatorState>();
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -26,7 +26,7 @@ class SignUpPage extends StatelessWidget {
               ..firstNameChanged(user.firstName)
               ..nameChanged(user.name),
         child: Navigator(
-          key: signUpNavigatorKey,
+          key: _signUpNavigatorKey,
           onGenerateRoute: (settings) {
             if (settings.name == '/infos_perso') {
               return MaterialPageRoute(builder: (context) => _InfosPage());

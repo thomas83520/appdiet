@@ -1,7 +1,6 @@
 import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/sign_up_cubit/sign_up_cubit.dart';
-import 'package:appdiet/presentation/pages/login_signup/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +18,9 @@ class SignUpForm extends StatelessWidget {
           );
         }
         if (state.status.isSubmissionSuccess) {
-          signUpNavigatorKey.currentState!.pushNamed('/infos_perso');
+
+          Navigator.of(context).pushNamed('/infos_perso');
+          //signUpNavigatorKey.currentState!.pushNamed('/infos_perso');
         }
       },
       child: GestureDetector(
@@ -143,7 +144,6 @@ class _DietCodeInput extends StatelessWidget {
               _controller.clear();
           },
           child: TextField(
-            controller: _controller,
             key: const Key('signUpForm_codeDietInput_textField'),
             onChanged: (codeDiet) =>
                 context.read<SignUpCubit>().codeDietChanged(codeDiet),
