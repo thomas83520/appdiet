@@ -146,6 +146,7 @@ class _Heure extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       child: InkWell(
         onTap: () => DatePicker.showTimePicker(context,
+        locale: LocaleType.fr,
             showTitleActions: true,
             showSecondsColumn: false, onChanged: (date) {
           context

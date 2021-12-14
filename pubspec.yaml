@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 0.0.2+8
+version: 0.0.2+10
 
 environment:
   sdk: ">=2.13.0 <3.0.0"
@@ -20,6 +20,8 @@ dependencies:
   firebase_core: ^1.6.0
   firebase_storage: ^10.0.3
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   flutter_bloc: ^7.3.0
   flutter_datetime_picker: ^1.5.1

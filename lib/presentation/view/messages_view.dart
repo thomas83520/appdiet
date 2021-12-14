@@ -105,7 +105,7 @@ class ChatInput extends StatelessWidget {
                 controller: _controller,
                 maxLines: null,
                 decoration: InputDecoration(
-                  hintText: "Write message...",
+                  hintText: "Message",
                   hintStyle: TextStyle(color: Colors.black54),
                   border: InputBorder.none,
                 ),

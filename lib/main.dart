@@ -7,11 +7,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
-FirebaseAnalytics analytics  = FirebaseAnalytics();
+FirebaseAnalytics analytics = FirebaseAnalytics();
 
 class AppleSignInAvailable {
   AppleSignInAvailable(this.isAvailable);
@@ -26,9 +25,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   EquatableConfig.stringify = kDebugMode;
-  //Bloc.observer = SimpleBlocObserver();
+  Bloc.observer = SimpleBlocObserver();
   final appleSignInAvailable = await AppleSignInAvailable.check();
-  initializeDateFormatting('fr_FR', null).then((_) => runApp(Provider<AppleSignInAvailable>.value(
+  runApp(Provider<AppleSignInAvailable>.value(
       value: appleSignInAvailable,
-      child: App(authenticationRepository: AuthenticationRepository()))));
+      child: App(authenticationRepository: AuthenticationRepository())));
 }

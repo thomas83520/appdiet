@@ -40,7 +40,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Autorise l'acces a votre microphone pour capter le son</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Acces gallery</string>
+	<string>Permet d'acceder à votre galerie afin de pouvoir envoyer vos photos à votre diététicien.ne</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

@@ -29,10 +29,17 @@ class ListDocumentsPage extends StatelessWidget {
           builder: (context, state) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: ListView.separated(
-                  itemBuilder: (context,index) => _DocumentsListItem(doc: state.documents[index]),
-                  separatorBuilder: (context,index) => SizedBox(height: 10,),
-                  itemCount: state.documents.length),
+              child: state.documents.isEmpty
+                  ? Center(
+                      child: Text('Aucun document partagé pour le moment.'),
+                    )
+                  : ListView.separated(
+                      itemBuilder: (context, index) =>
+                          _DocumentsListItem(doc: state.documents[index]),
+                      separatorBuilder: (context, index) => SizedBox(
+                            height: 10,
+                          ),
+                      itemCount: state.documents.length),
             );
           },
         ),
@@ -92,7 +99,10 @@ class _DocumentsListItem extends StatelessWidget {
           ),
         ),
         onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) => DocumentView(document: doc,)),
+          MaterialPageRoute(
+              builder: (BuildContext context) => DocumentView(
+                    document: doc,
+                  )),
         ),
       ),
     );

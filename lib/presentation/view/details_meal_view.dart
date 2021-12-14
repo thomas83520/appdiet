@@ -254,6 +254,7 @@ class _Heure extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       child: InkWell(
         onTap: () => DatePicker.showTimePicker(context,
+            locale: LocaleType.fr,
             showTitleActions: true,
             showSecondsColumn: false, onChanged: (date) {
           context.read<DetailmealCubit>().timeChanged(date.hour, date.minute);
@@ -331,8 +332,8 @@ class _Contenu extends StatelessWidget {
               initialValue: repas.contenu,
               onChanged: (commentaire) =>
                   context.read<DetailmealCubit>().contenuChanged(commentaire),
-              decoration:
-                  InputDecoration(hintText: "Ecrivez ce que vous avez mangé.."),
+              decoration: InputDecoration(
+                  hintText: "Décrivez ce que vous avez mangé.."),
               minLines: 1,
               maxLines: 15,
             )
@@ -367,7 +368,7 @@ class _Before extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text("Exprimer votre niveau de faim avant le repas"),
+            Text("Exprimez votre niveau de faim avant le repas"),
             SizedBox(
               height: 30,
             ),
@@ -421,7 +422,7 @@ class _Satiete extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text("Avez-vous suffisement manger ?"),
+            Text("Avez-vous suffisement mangé ?"),
             SizedBox(
               height: 30,
             ),

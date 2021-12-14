@@ -22,17 +22,21 @@ class PhotosPage extends StatelessWidget {
         ),
         body: BlocBuilder<PhotosCubit, PhotosState>(
           builder: (context, state) {
-            if (state is PhotosLoadSuccess)
-              return Container(
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 3,
-                  crossAxisSpacing: 3,
-                  padding: EdgeInsets.all(5),
-                  children: loadImage(state.photosUrl, context),
-                ),
-              );
-            else
+            if (state is PhotosLoadSuccess) {
+              return state.photosUrl.isEmpty
+                  ? Center(
+                      child: Text('Aucune photo ajouté pour le moment.'),
+                    )
+                  : Container(
+                      child: GridView.count(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 3,
+                        crossAxisSpacing: 3,
+                        padding: EdgeInsets.all(5),
+                        children: loadImage(state.photosUrl, context),
+                      ),
+                    );
+            } else
               return Center(child: CircularProgressIndicator());
           },
         ),

@@ -8,14 +8,13 @@ import 'package:appdiet/presentation/pages/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class App extends StatelessWidget {
   const App({
     Key? key,
     required this.authenticationRepository,
-  })  : 
-        super(key: key);
+  }) : super(key: key);
 
   final AuthenticationRepository authenticationRepository;
 
@@ -50,6 +49,8 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [GlobalMaterialLocalizations.delegate,GlobalWidgetsLocalizations.delegate,],
+      supportedLocales: [const Locale('en'), const Locale('fr')],
       theme: theme,
       debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
