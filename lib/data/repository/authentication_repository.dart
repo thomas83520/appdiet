@@ -219,6 +219,7 @@ class AuthenticationRepository {
   }
 
   Future<bool> isUserInFirestore(String uid) {
+    print(uid);
     return _firestore.collection('patient').doc(uid).get().then((doc) {
       if (doc.exists)
         return true;

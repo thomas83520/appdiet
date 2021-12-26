@@ -24,6 +24,7 @@ class JournalRepository {
   final FirebaseStorage _firebaseStorage;
 
   Future<Journal> journalByDate(String date, String uid) async {
+    print(uid);
     return await _firestore
         .collection('patient')
         .doc(uid)

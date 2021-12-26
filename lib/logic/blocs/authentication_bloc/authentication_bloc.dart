@@ -45,6 +45,7 @@ class AuthenticationBloc
     AuthenticationUserChanged event,
   ) async {
     if (event.user != User.empty) {
+      print(event.user);
       if (await _authenticationRepository.isUserInFirestore(event.user.id)) {
         final User user =
             await _authenticationRepository.getUserFromUid(event.user.id);
@@ -53,12 +54,12 @@ class AuthenticationBloc
         else
           return AuthenticationState.authenticated(user);
       } else {
-        final User user = await _authenticationRepository.getUserFromWaiting(event.user.email);
-        if (user != User.empty)
+        final User userWaiting = await _authenticationRepository.getUserFromWaiting(event.user.email);
+        if (userWaiting != User.empty)
         {
-          await _authenticationRepository.completeUserSubscription(user,event.user.id);
-          await _authenticationRepository.deleteUserFromWaiting(user.id);
-          return AuthenticationState.authenticated(user);
+          final User authenticateUser = await _authenticationRepository.completeUserSubscription(userWaiting,event.user.id);
+          await _authenticationRepository.deleteUserFromWaiting(userWaiting.id);
+          return AuthenticationState.authenticated(authenticateUser);
         }
         else {
           final User user = await _authenticationRepository.initUserInFirestore(
