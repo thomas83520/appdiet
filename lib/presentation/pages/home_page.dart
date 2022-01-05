@@ -1,5 +1,6 @@
 import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/chat_repository.dart';
+import 'package:appdiet/data/repository/config_repository.dart';
 import 'package:appdiet/data/repository/goal_repository.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';

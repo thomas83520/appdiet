@@ -10,28 +10,28 @@ part 'goal_state.dart';
 
 class GoalBloc extends Bloc<GoalEvent, GoalState> {
   GoalBloc({required GoalRepository goalRepository})
-      :
-        _goalRepository = goalRepository,
+      : _goalRepository = goalRepository,
         super(GoalState.unknown()) {
     _streamSubscription = _goalRepository.goals.listen((goals) {
       add(GoalLoaded(goals: goals));
     });
+    on<GoalEvent>((event,emit) => mapEventToState(event,emit));
   }
 
   final GoalRepository _goalRepository;
   late StreamSubscription _streamSubscription;
-  @override
-  Stream<GoalState> mapEventToState(
-    GoalEvent event,
-  ) async* {
+
+  Future<void> mapEventToState(
+    GoalEvent event,Emitter<GoalState> emit
+  ) async {
     if (event is GoalLoaded) {
-      yield GoalState.complete(event.goals);
+      emit(GoalState.complete(event.goals));
     }
     if (event is GoalSelected) {
       try {
-        _goalRepository.goalClicked(event.id, event.type, event.goals);
+        await _goalRepository.goalClicked(event.id, event.type, event.goals);
       } catch (e) {
-        yield GoalState.error();
+        emit(GoalState.error());
       }
     }
   }

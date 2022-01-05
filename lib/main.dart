@@ -25,9 +25,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   EquatableConfig.stringify = kDebugMode;
-  Bloc.observer = SimpleBlocObserver();
   final appleSignInAvailable = await AppleSignInAvailable.check();
-  runApp(Provider<AppleSignInAvailable>.value(
-      value: appleSignInAvailable,
-      child: App(authenticationRepository: AuthenticationRepository())));
+  BlocOverrides.runZoned(
+    () {
+      runApp(Provider<AppleSignInAvailable>.value(
+          value: appleSignInAvailable,
+          child: App(authenticationRepository: AuthenticationRepository())));
+    },
+    blocObserver: SimpleBlocObserver(),
+  );
 }

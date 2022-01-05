@@ -10,27 +10,27 @@ part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc({required ChatRepository chatRepository})
-      : 
-        _chatRepository = chatRepository,
+      : _chatRepository = chatRepository,
         super(ChatState.unknown()) {
     _streamSubscription = _chatRepository.streamMessage
         .listen((messages) => add(ChatNewMessage(messages: messages)));
+        on<ChatEvent>((event,emit)=>mapEventToState(event,emit));
   }
 
   final ChatRepository _chatRepository;
   late StreamSubscription<List<ChatMessage>> _streamSubscription;
-  @override
-  Stream<ChatState> mapEventToState(
-    ChatEvent event,
-  ) async* {
+
+  Future<void> mapEventToState(
+    ChatEvent event,Emitter<ChatState> emit
+  ) async {
     if (event is ChatNewMessage) {
-      yield ChatState.complete(event.messages);
+      emit(ChatState.complete(event.messages));
     }
     if (event is MessageSend) {
       try {
-        _chatRepository.sendMessage(event.message);
+        await _chatRepository.sendMessage(event.message);
       } catch (e) {
-        yield ChatState.error();
+        emit(ChatState.error());
       }
     }
   }

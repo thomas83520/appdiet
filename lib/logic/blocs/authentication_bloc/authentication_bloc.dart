@@ -13,23 +13,23 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
     required AuthenticationRepository authenticationRepository,
-  })  :
-        _authenticationRepository = authenticationRepository,
+  })  : _authenticationRepository = authenticationRepository,
         super(const AuthenticationState.unknown()) {
     _userSubscription = _authenticationRepository.user.listen(
       (user) => add(AuthenticationUserChanged(user)),
     );
+    on<AuthenticationLogoutRequested>((event,emit) => unawaited(_authenticationRepository.logOut()));
+    on<AuthenticationUserChanged>((event,emit) => _mapAuthenticationUserChangedToState(event,emit));
   }
 
   final AuthenticationRepository _authenticationRepository;
   late StreamSubscription<User> _userSubscription;
 
-  @override
   Stream<AuthenticationState> mapEventToState(
     AuthenticationEvent event,
   ) async* {
     if (event is AuthenticationUserChanged) {
-      yield await _mapAuthenticationUserChangedToState(event);
+      //yield await _mapAuthenticationUserChangedToState(event);
     } else if (event is AuthenticationLogoutRequested) {
       unawaited(_authenticationRepository.logOut());
     }
@@ -41,36 +41,36 @@ class AuthenticationBloc
     return super.close();
   }
 
-  Future<AuthenticationState> _mapAuthenticationUserChangedToState(
-    AuthenticationUserChanged event,
+  Future<void> _mapAuthenticationUserChangedToState(
+    AuthenticationUserChanged event, Emitter<AuthenticationState> emit
   ) async {
+    print("user changeed");
     if (event.user != User.empty) {
-      print(event.user);
       if (await _authenticationRepository.isUserInFirestore(event.user.id)) {
         final User user =
             await _authenticationRepository.getUserFromUid(event.user.id);
         if (user.creatingAccount)
-          return AuthenticationState.creatingAccount(user);
+          emit(AuthenticationState.creatingAccount(user));
         else
-          return AuthenticationState.authenticated(user);
+          emit(AuthenticationState.authenticated(user));
       } else {
-        final User userWaiting = await _authenticationRepository.getUserFromWaiting(event.user.email);
-        if (userWaiting != User.empty)
-        {
-          final User authenticateUser = await _authenticationRepository.completeUserSubscription(userWaiting,event.user.id);
+        final User userWaiting = await _authenticationRepository
+            .getUserFromWaiting(event.user.email);
+        if (userWaiting != User.empty) {
+          final User authenticateUser = await _authenticationRepository
+              .completeUserSubscription(userWaiting, event.user.id);
           await _authenticationRepository.deleteUserFromWaiting(userWaiting.id);
-          return AuthenticationState.authenticated(authenticateUser);
-        }
-        else {
+          emit(AuthenticationState.authenticated(authenticateUser));
+        } else {
           final User user = await _authenticationRepository.initUserInFirestore(
               event.user.id,
               event.user.email,
               event.user.name,
               event.user.firstName);
-          return AuthenticationState.creatingAccount(user);
+          emit(AuthenticationState.creatingAccount(user));
         }
       }
     } else
-      return const AuthenticationState.unauthenticated();
+      emit(const AuthenticationState.unauthenticated());
   }
 }
