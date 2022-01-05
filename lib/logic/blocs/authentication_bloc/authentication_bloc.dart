@@ -43,7 +43,6 @@ class AuthenticationBloc
   Future<void> _mapAuthenticationUserChangedToState(
     AuthenticationUserChanged event, Emitter<AuthenticationState> emit
   ) async {
-    print("user changeed");
     if (event.user != User.empty) {
       if (await _authenticationRepository.isUserInFirestore(event.user.id)) {
         final User user =

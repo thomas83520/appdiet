@@ -3,14 +3,14 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 class ConfigRepository {
   static Future<bool> get needUpdate async {
-    final String packageVersion = await _packageVersion;
-    final String enforcedVersion = await _enforcedVersion;
+    final String packageVersionString = await packageVersion;
+    final String enforcedVersionString = await enforcedVersion;
 
-    final List<int> currentVersion = packageVersion
+    final List<int> currentVersion = packageVersionString
         .split('.')
         .map((String number) => int.parse(number))
         .toList();
-    final List<int> minimalVersion = enforcedVersion
+    final List<int> minimalVersion = enforcedVersionString
         .split('.')
         .map((String number) => int.parse(number))
         .toList();
@@ -23,7 +23,7 @@ class ConfigRepository {
     return false;
   }
 
-  static Future<String> get _enforcedVersion async {
+  static Future<String> get enforcedVersion async {
     final RemoteConfig remoteConfig = RemoteConfig.instance;
 
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
@@ -34,7 +34,7 @@ class ConfigRepository {
     return remoteConfig.getString('ENFORCED_VERSION');
   }
 
-  static Future<String> get _packageVersion async {
+  static Future<String> get packageVersion async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;
   }
