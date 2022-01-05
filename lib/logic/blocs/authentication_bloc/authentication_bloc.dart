@@ -4,7 +4,6 @@ import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:pedantic/pedantic.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';

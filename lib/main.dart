@@ -10,7 +10,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
-FirebaseAnalytics analytics = FirebaseAnalytics();
+//FirebaseAnalytics analytics = FirebaseAnalytics();
 
 class AppleSignInAvailable {
   AppleSignInAvailable(this.isAvailable);

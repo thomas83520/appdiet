@@ -354,7 +354,7 @@ PODS:
     - BSGridCollectionViewLayout (= 1.2.5)
     - BSImageView (= 1.0.3)
   - BSImageView (1.0.3)
-  - cloud_firestore (2.5.4):
+  - cloud_firestore (3.1.5):
     - Firebase/Firestore (= 8.9.0)
     - firebase_core
     - Flutter
@@ -384,7 +384,7 @@ PODS:
   - Firebase/Storage (8.9.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 8.9.0)
-  - firebase_analytics (8.3.4):
+  - firebase_analytics (9.0.4):
     - Firebase/Analytics (= 8.9.0)
     - firebase_core
     - Flutter
@@ -654,10 +654,10 @@ SPEC CHECKSUMS:
   BSGridCollectionViewLayout: 333dcb457a5a3bdd9212607ab5756553dcfe06cb
   BSImagePicker: 07404254f2fcdaf5a2eb403c0f8c337267ce8738
   BSImageView: a149459433a2687157d034c78e059d30ac7f2544
-  cloud_firestore: 0c744725c0d1544d77db2c8eb35ef919cb19a176
+  cloud_firestore: 338122a6149c14ca376ad363626b5bf3037a5056
   cloud_functions: d06612b3b0f30419e8305620f1382df43bdf4003
   Firebase: 13d8d96499e2635428d5bf0ec675df21f95d9a95
-  firebase_analytics: 7a7528bb2abf4ca22cff7a57bbf909dcab73e13d
+  firebase_analytics: cc1ab30e479b7089c0a952c0cae7ba286d464c68
   firebase_auth: e875a50b81aefb20f305dfede425647e9675c19e
   firebase_core: c263d7daf1dc92fcd9895e6abdc04872b0ee07ff
   firebase_remote_config: fad608e4093070bc3759f2d2beb566d4259451b2
