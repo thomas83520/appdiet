@@ -41,6 +41,11 @@
 	<string>Autorise l'acces a votre microphone pour capter le son</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Permet d'acceder à votre galerie afin de pouvoir envoyer vos photos à votre diététicien.ne</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

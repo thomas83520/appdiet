@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/data/repository/authentication_repository.dart';
+import 'package:appdiet/data/repository/cloudMessaging_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -13,6 +15,7 @@ class AuthenticationBloc
   AuthenticationBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
+        _cloudMessagingRepository = CloudMessagingRepository(),
         super(const AuthenticationState.unknown()) {
     _userSubscription = _authenticationRepository.user.listen(
       (user) => add(AuthenticationUserChanged(user)),
@@ -23,6 +26,7 @@ class AuthenticationBloc
 
   final AuthenticationRepository _authenticationRepository;
   late StreamSubscription<User> _userSubscription;
+  final CloudMessagingRepository _cloudMessagingRepository;
 
   Stream<AuthenticationState> mapEventToState(
     AuthenticationEvent event,
@@ -49,8 +53,15 @@ class AuthenticationBloc
             await _authenticationRepository.getUserFromUid(event.user.id);
         if (user.creatingAccount)
           emit(AuthenticationState.creatingAccount(user));
-        else
+        else{
+          final String? token = await FirebaseMessaging.instance.getToken();
+          if(token != null)
+          {
+            print(token);
+            await _cloudMessagingRepository.saveTokenToDataBase(user, token);
+          }
           emit(AuthenticationState.authenticated(user));
+        }
       } else {
         final User userWaiting = await _authenticationRepository
             .getUserFromWaiting(event.user.email);
