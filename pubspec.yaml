@@ -44,6 +44,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^19.3.55-beta
   table_calendar: ^3.0.2
   the_apple_sign_in: ^1.1.1
+  url_launcher: ^6.0.17
 
 flutter:
   uses-material-design: true
