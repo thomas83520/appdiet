@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1031145394228",
+    "project_id": "dietup--dev",
+    "storage_bucket": "dietup--dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031145394228:android:f4523d9a44627d4c60fa61",
+        "android_client_info": {
+          "package_name": "fr.dietup.mobileapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1031145394228-dnr1eldrbqr1bv1gpr7tinrrqffuc63h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaYPdCEa6HnEmzgJTwrcvX3hfZBeTqsLY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031145394228-dnr1eldrbqr1bv1gpr7tinrrqffuc63h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1031145394228-991cvl9hpmegigjbp0mv5oouqu5ied25.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "fr.dietup.mobileapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

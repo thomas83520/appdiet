@@ -67,6 +67,21 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
         }
+
+        flavorDimensions "app"
+
+        productFlavors{
+            dev{
+                dimension "app"
+                resValue "string", "app_name", "Dev FlavorTest"
+                versionNameSuffix "-dev"
+            }
+            prod{
+                dimension "app"
+                resValue "string", "app_name", "FlavorTest"
+                applicationId "fr.dietup.mobileapp"
+            }
+        }
     }
 }
 
