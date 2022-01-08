@@ -5,10 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "appdiet_debug",
+            "name": "appdiet_debug_dev",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "debug"
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
+        },
+        {
+            "name": "appdiet_debug_prod",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         },
         {
             "name": "appdiet_release",
@@ -16,11 +30,5 @@
             "type": "dart",
             "flutterMode": "release"
         },
-        {
-            "name": "authentication_repository",
-            "cwd": "packages/authentication_repository",
-            "request": "launch",
-            "type": "dart"
-        }
     ]
 }
