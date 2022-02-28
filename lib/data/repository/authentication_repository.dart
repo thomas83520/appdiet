@@ -58,6 +58,7 @@ class AuthenticationRepository {
     required String password,
   }) async {
     try {
+      print("signup");
       await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -291,6 +292,17 @@ class AuthenticationRepository {
 
 extension on firebase_auth.User {
   User get toUser {
+    String prenom = "";//displayName!.substring(0, displayName!.indexOf(" "))
+    String nom =""; //displayName!.substring(displayName!.indexOf(" ") + 1),
+
+
+    if(this.displayName!=null)
+    {
+      if(this.displayName!.length>0){
+        prenom = displayName!.substring(0, displayName!.indexOf(" "));
+        nom = displayName!.substring(displayName!.indexOf(" ") + 1);
+      }
+    }
     return email == null
         ? User(
             id: uid,
@@ -307,12 +319,8 @@ extension on firebase_auth.User {
         : User(
             id: uid,
             email: email == null ? '' : email!,
-            name: displayName == null
-                ? ""
-                : displayName!.substring(displayName!.indexOf(" ") + 1),
-            firstName: displayName == null
-                ? ""
-                : displayName!.substring(0, displayName!.indexOf(" ")),
+            name: nom,
+            firstName: prenom,
             creatingAccount: false,
             linkStorageFolder: "null",
             linkFoodPlan: "null",

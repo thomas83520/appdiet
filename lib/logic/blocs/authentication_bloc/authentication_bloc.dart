@@ -57,7 +57,6 @@ class AuthenticationBloc
           final String? token = await FirebaseMessaging.instance.getToken();
           if(token != null)
           {
-            print(token);
             await _cloudMessagingRepository.saveTokenToDataBase(user, token);
           }
           emit(AuthenticationState.authenticated(user));
@@ -69,6 +68,11 @@ class AuthenticationBloc
           final User authenticateUser = await _authenticationRepository
               .completeUserSubscription(userWaiting, event.user.id);
           await _authenticationRepository.deleteUserFromWaiting(userWaiting.id);
+          final String? token = await FirebaseMessaging.instance.getToken();
+          if(token != null)
+          {
+            await _cloudMessagingRepository.saveTokenToDataBase(authenticateUser, token);
+          }
           emit(AuthenticationState.authenticated(authenticateUser));
         } else {
           final User user = await _authenticationRepository.initUserInFirestore(
