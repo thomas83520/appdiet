@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:appdiet/data/models/journal/repas.dart';
@@ -192,8 +193,40 @@ class _Photo extends StatelessWidget {
       builder: (context, state) {
         return InkWell(
           onTap: () async {
+            final String? value = await showModalBottomSheet<String>(
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20))),
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    height: 250,
+                    child: Center(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Flexible(child: Text("Prendre une photo ou choisir depuis la galerie : ",style: TextStyle(fontSize: 16),overflow: TextOverflow.fade,)),
+                            SizedBox(height: 15,),
+                            _ModalButton(
+                              iconData: Icons.camera_alt_outlined,
+                              text: "Appareil photo",
+                              returnValue: "camera",
+                            ),
+                            Divider(),
+                            _ModalButton(
+                                iconData: Icons.photo,
+                                text: "Gallerie photo",
+                                returnValue: "gallerie"),
+
+                            SizedBox(height: 15,),
+                          ]),
+                    ),
+                  );
+                });
+            if(value == null) return;
             XFile? file =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
+                await ImagePicker().pickImage(source: value == "gallerie" ? ImageSource.gallery : ImageSource.camera);
             if (file != null) context.read<DetailmealCubit>().fileChanged(file);
           },
           child: Material(
@@ -242,6 +275,50 @@ class _Photo extends StatelessWidget {
       return state.file.path == ''
           ? Container()
           : Image.file(File(state.file.path));
+  }
+}
+
+class _ModalButton extends StatelessWidget {
+  final String text;
+  final IconData iconData;
+  final String returnValue;
+
+  const _ModalButton(
+      {Key? key,
+      required this.text,
+      required this.iconData,
+      required this.returnValue})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Navigator.pop(context, returnValue),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+        child: Container(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Icon(
+                  iconData,
+                  size: 30,
+                  color: Colors.blue[500],
+                ),
+                Text(
+                  text,
+                  style: TextStyle(fontSize: 24, color: Colors.blue[500]),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

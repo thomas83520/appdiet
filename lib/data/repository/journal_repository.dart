@@ -60,36 +60,33 @@ class JournalRepository {
             snapshot.exists ? snapshot.toComments : DayComments.empty);
   }
 
-  Future<void> validateRepas(
-      Repas repas, User user, String date) async {
+  Future<void> validateRepas(Repas repas, User user, String date) async {
     try {
       repas.id == Repas.empty.id
-          ? await _firestore
-              .collection("patient")
-              .doc(user.id)
-              .collection("Journal")
-              .doc(date)
-              .collection("Repas")
-              .add(repas.toDocuments())
-              .then(
-                  (docRef) => ajoutRepasToJournal(repas, user, docRef.id, date))
-          : await _firestore
-              .collection("patient")
-              .doc(user.id)
-              .collection("Journal")
-              .doc(date)
-              .collection("Repas")
-              .doc(repas.id)
-              .set(repas.toDocuments())
-              .then((_) => updateRepasToJournal(repas, user, repas.id, date));
+          ? ajoutRepasToJournal(repas, user, date)
+          : updateRepasToJournal(repas, user, repas.id, date);
     } on Exception {
       throw ValidateRepasFailure();
     }
   }
 
-  Future<void> ajoutRepasToJournal(
-      Repas repas, User user, String repasId, String date) async {
+  Future<void> ajoutRepasToJournal(Repas repas, User user, String date) async {
     try {
+      final docRef = await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(date)
+          .collection("Repas")
+          .add(repas.toDocuments());
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(date)
+          .collection("Repas")
+          .doc(docRef.id)
+          .update({"id": docRef.id});
       await _firestore
           .collection("patient")
           .doc(user.id)
@@ -97,18 +94,31 @@ class JournalRepository {
           .doc(date)
           .set({
         "Meals": FieldValue.arrayUnion([
-          {"nom": repas.name, "id": repasId, "heure": repas.heure}
+          {"nom": repas.name, "id": docRef.id, "heure": repas.heure}
         ]),
         "date": date,
       }, SetOptions(merge: true));
+
+
+      //Dashboard diet
+      final querySnap = await _firestore
+          .collection("dieteticien")
+          .where("uidDiet", isEqualTo: user.uidDiet)
+          .get();
+      final dietID = querySnap.docs.first.id;
       await _firestore
-          .collection("patient")
-          .doc(user.id)
-          .collection("Journal")
-          .doc(date)
-          .collection("Repas")
-          .doc(repasId)
-          .update({"id": repasId});
+          .collection("dieteticien")
+          .doc(dietID)
+          .collection("notificationRepas")
+          .add({
+        "patientId": user.id,
+        "patientName": user.completeName,
+        "type": "add",
+        "repasId": docRef.id,
+        "repasName" : repas.name,
+        "dateRepas": date,
+        "dateAjout": DateTime.now(),
+      });
     } on Exception {
       throw AddRepasFailure();
     }
@@ -117,6 +127,14 @@ class JournalRepository {
   Future<void> updateRepasToJournal(
       Repas repas, User user, String repasId, String date) async {
     try {
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(date)
+          .collection("Repas")
+          .doc(repas.id)
+          .set(repas.toDocuments());
       await _firestore
           .collection("patient")
           .doc(user.id)
@@ -143,6 +161,28 @@ class JournalRepository {
             .doc(date)
             .update({"Meals": mealsList});
       });
+
+
+      //Dashboard diet
+      final querySnap = await _firestore
+          .collection("dieteticien")
+          .where("uidDiet", isEqualTo: user.uidDiet)
+          .get();
+      final dietID = querySnap.docs.first.id;
+      await _firestore
+          .collection("dieteticien")
+          .doc(dietID)
+          .collection("notificationRepas")
+          .add({
+        "patientId": user.id,
+        "patientName": user.completeName,
+        "type": "update",
+        "repasId": repasId,
+        "repasName" : repas.name,
+        "dateRepas": date,
+        "dateAjout": DateTime.now(),
+      });
+
     } on Exception {
       throw AddRepasFailure();
     }
@@ -264,10 +304,10 @@ class JournalRepository {
     }
   }
 
-  Future<void> uploadPhoto(
-      User user, String filePath, String fileName) async {
+  Future<void> uploadPhoto(User user, String filePath, String fileName) async {
     File file = File(filePath);
-    fileName = StringFormatter.removeDiacritics(fileName).replaceAll(new RegExp(r'[^\w]+'),'_');
+    fileName = StringFormatter.removeDiacritics(fileName)
+        .replaceAll(new RegExp(r'[^\w]+'), '_');
     await _firebaseStorage
         .ref(user.id + '/repas/' + fileName + '.png')
         .putFile(file);
@@ -284,7 +324,6 @@ class JournalRepository {
 extension on DocumentSnapshot {
   Journal get toJournal {
     Map<String, dynamic> data = (this.data() as Map<String, dynamic>);
-    
 
     List<Repas> listRepas;
     this.get("Meals") == null

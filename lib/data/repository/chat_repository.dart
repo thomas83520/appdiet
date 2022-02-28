@@ -32,6 +32,16 @@ class ChatRepository {
       "senderId" : _user.id,
       "date" : Timestamp.fromDate(DateTime.now()),
     });
+    final querySnap = await _firestore
+          .collection("dieteticien")
+          .where("uidDiet", isEqualTo: _user.uidDiet)
+          .get();
+      final dietID = querySnap.docs.first.id;
+      await _firestore.collection("dieteticien").doc(dietID).collection("notificationMessages").add({
+        "patientId": _user.id,
+        "patientName": _user.completeName,
+        "dateAjout": DateTime.now(),
+      });
   }
 
   String get docId => _user.id + "_" + _user.uidDiet;

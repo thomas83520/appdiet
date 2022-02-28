@@ -29,7 +29,7 @@ class ListMealPage extends StatelessWidget {
               state.journalStateStatus == JournalStateStatus.loading
                   ? Center(child: CircularProgressIndicator())
                   : Container(
-                      child: _ListRepas(listRepas: state.journal.mapRepas),
+                      child: SingleChildScrollView(child: _ListRepas(listRepas: state.journal.mapRepas)),
                     ),
         ),
         floatingActionButton: FloatingActionButton(

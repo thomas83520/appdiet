@@ -92,10 +92,28 @@ class PoidsMesuresRepository {
   Future<void> addPoidsMesures(Map<String, dynamic> map, String url,String photoName) async {
     map.putIfAbsent("photoUrl", () => url);
     map.putIfAbsent("photoName", () => photoName);
-    await _firestore
+    var docRef = await _firestore
         .collection("patient")
         .doc(_user.id)
         .collection("poids_mesures")
         .add(map);
+
+    //Dashboard diet
+    final querySnap = await _firestore
+          .collection("dieteticien")
+          .where("uidDiet", isEqualTo: _user.uidDiet)
+          .get();
+      final dietID = querySnap.docs.first.id;
+      await _firestore
+          .collection("dieteticien")
+          .doc(dietID)
+          .collection("notificationPoidsMesures")
+          .add({
+        "patientId": _user.id,
+        "patientName": _user.completeName,
+        "type": "add",
+        "poidsMesureId": docRef.id,
+        "dateAjout": DateTime.now(),
+      });
   }
 }
