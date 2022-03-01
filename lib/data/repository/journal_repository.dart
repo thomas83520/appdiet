@@ -101,21 +101,14 @@ class JournalRepository {
 
 
       //Dashboard diet
-      final querySnap = await _firestore
-          .collection("dieteticien")
-          .where("uidDiet", isEqualTo: user.uidDiet)
-          .get();
-      final dietID = querySnap.docs.first.id;
       await _firestore
-          .collection("dieteticien")
-          .doc(dietID)
-          .collection("notificationRepas")
+          .collection("patient")
+          .doc(user.id)
+          .collection("nouveautes")
           .add({
         "patientId": user.id,
         "patientName": user.completeName,
-        "type": "add",
-        "repasId": docRef.id,
-        "repasName" : repas.name,
+        "type": "repas",
         "dateRepas": date,
         "dateAjout": DateTime.now(),
       });
@@ -164,21 +157,14 @@ class JournalRepository {
 
 
       //Dashboard diet
-      final querySnap = await _firestore
-          .collection("dieteticien")
-          .where("uidDiet", isEqualTo: user.uidDiet)
-          .get();
-      final dietID = querySnap.docs.first.id;
-      await _firestore
-          .collection("dieteticien")
-          .doc(dietID)
-          .collection("notificationRepas")
+       await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("nouveautes")
           .add({
         "patientId": user.id,
         "patientName": user.completeName,
-        "type": "update",
-        "repasId": repasId,
-        "repasName" : repas.name,
+        "type": "repas",
         "dateRepas": date,
         "dateAjout": DateTime.now(),
       });

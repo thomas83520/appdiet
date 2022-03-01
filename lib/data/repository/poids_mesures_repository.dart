@@ -99,20 +99,14 @@ class PoidsMesuresRepository {
         .add(map);
 
     //Dashboard diet
-    final querySnap = await _firestore
-          .collection("dieteticien")
-          .where("uidDiet", isEqualTo: _user.uidDiet)
-          .get();
-      final dietID = querySnap.docs.first.id;
-      await _firestore
-          .collection("dieteticien")
-          .doc(dietID)
-          .collection("notificationPoidsMesures")
+     await _firestore
+          .collection("patient")
+          .doc(_user.id)
+          .collection("nouveautes")
           .add({
         "patientId": _user.id,
         "patientName": _user.completeName,
-        "type": "add",
-        "poidsMesureId": docRef.id,
+        "type": "poidsMesures",
         "dateAjout": DateTime.now(),
       });
   }
