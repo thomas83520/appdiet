@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
           ),
           BlocProvider<JournalBloc>(
             create: (context) => JournalBloc(
-                date: "", journalRepository: JournalRepository(), user: user),
+                date: DateTime.now(), journalRepository: JournalRepository(), user: user),
           )
         ],
         child: Navigator(

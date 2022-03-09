@@ -14,14 +14,14 @@ class DetailmealCubit extends Cubit<DetailmealState> {
       {required JournalRepository journalRepository,
       required Repas repas,
       required User user,
-      required String date})
+      required DateTime date})
       : _journalRepository = journalRepository,
         assert(user != User.empty),
         _user = user,
         _date = date,
         super(DetailmealState(repas: repas, file: XFile('')));
 
-  final String _date;
+  final DateTime _date;
   final User _user;
   final JournalRepository _journalRepository;
 
@@ -93,7 +93,7 @@ class DetailmealCubit extends Cubit<DetailmealState> {
 
   String fileName(Repas repas) {
     String name = StringFormatter.removeDiacritics(
-        (repas.name + '-' + repas.heure + '-' + _date)).replaceAll(new RegExp(r'[^\w]+'), '_');
+        (repas.name + '-' + repas.heure + '-' + DateFormat('d_M_y').format(_date))).replaceAll(new RegExp(r'[^\w]+'), '_');
     return name;
   }
 

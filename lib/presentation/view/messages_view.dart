@@ -53,11 +53,11 @@ class ListMessage extends StatelessWidget {
             child: messages[index].senderId == user.id
                 ? UserMessage(
                     content: messages[index].messageContent,
-                    date: DateFormat('dd-MM-yy HH:mm').format(messages[index].date.toDate()),
+                    date: messages[index].date,
                   )
                 : DietMessage(
                     content: messages[index].messageContent,
-                    date: DateFormat('dd-MM-yy HH:mm').format(messages[index].date.toDate()),
+                    date: messages[index].date,
                   ),
           );
         },
@@ -141,7 +141,7 @@ class ChatInput extends StatelessWidget {
 
 class DietMessage extends StatelessWidget {
   final String content;
-  final String date;
+  final DateTime date;
 
   const DietMessage({Key? key,required this.content,required this.date}) : super(key: key);
   @override
@@ -164,7 +164,7 @@ class DietMessage extends StatelessWidget {
         Align(
           alignment: Alignment.bottomLeft,
           child: Text(
-            date,
+            DateFormat('d/M/y').format(date),
             style: TextStyle(fontSize: 8),
           ),
         )
@@ -175,7 +175,7 @@ class DietMessage extends StatelessWidget {
 
 class UserMessage extends StatelessWidget {
   final String content;
-  final String date;
+  final DateTime date;
 
   const UserMessage({Key? key,required this.content,required this.date}) : super(key: key);
 
@@ -199,7 +199,7 @@ class UserMessage extends StatelessWidget {
         Align(
           alignment: Alignment.bottomRight,
           child: Text(
-            date,
+            DateFormat('d/M/y').format(date),
             style: TextStyle(fontSize: 8),
           ),
         )

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:intl/intl.dart';
 
 class Document extends Equatable {
   Document(
@@ -14,7 +13,7 @@ class Document extends Equatable {
 
   final String name;
   final String visibility;
-  final String date;
+  final DateTime date;
   final String idPatient;
   final String id;
   final String downloadUrl;
@@ -24,8 +23,7 @@ class Document extends Equatable {
     var doc = Document(
       name: snapshot.get('name'),
       visibility: snapshot.get('visibilite'),
-      date: DateFormat('yyyy-MM-dd')
-          .format((snapshot.get('date') as Timestamp).toDate()),
+      date: (snapshot.get('date') as Timestamp).toDate(),
       idPatient: snapshot.get('idPatient'),
       downloadUrl: snapshot.get('downloadUrl'),
       extension: snapshot.get('extension'),

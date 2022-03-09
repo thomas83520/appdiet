@@ -12,14 +12,14 @@ class DetailDayCommentsCubit extends Cubit<DetailDayCommentsState> {
       {required JournalRepository journalRepository,
       required DayComments dayComments,
       required User user,
-      required String date})
+      required DateTime date})
       : 
         _journalRepository = journalRepository,
         _user = user,
         _date = date,
         super(DetailDayCommentsState(dayComments: dayComments));
 
-  final String _date;
+  final DateTime _date;
   final User _user;
   final JournalRepository _journalRepository;
 

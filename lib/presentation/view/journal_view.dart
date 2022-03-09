@@ -1,11 +1,9 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
 import 'package:appdiet/presentation/pages/journal/detail_wellbeing_page.dart';
-import 'package:appdiet/presentation/pages/journal/list_day_comments_page.dart';
 import 'package:appdiet/presentation/pages/journal/list_meal_page.dart';
 import 'package:appdiet/presentation/widgets/bien_etre.dart';
 import 'package:appdiet/presentation/widgets/calendar.dart';
-import 'package:appdiet/presentation/widgets/comments.dart';
 import 'package:appdiet/presentation/widgets/meals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,14 +61,14 @@ class JournalView extends StatelessWidget {
                     },
                   ),
                 ),
-                Padding(
+                /*Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: InkWell(
                     child: Comments(),
                     onTap: () =>
                         Navigator.of(context).push(ListDayCommentsPage.route()),
                   ),
-                ),
+                ),*/
               ],
             ),
           ),

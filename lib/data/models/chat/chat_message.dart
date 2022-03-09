@@ -9,12 +9,12 @@ class ChatMessage extends Equatable {
 
   final String messageContent;
   final String senderId;
-  final Timestamp date;
+  final DateTime date;
 
   ChatMessage.fromJson(Map<String, dynamic> parsedJSON)
       : messageContent = parsedJSON['messageContent'],
         senderId = parsedJSON['senderId'],
-        date = parsedJSON['date'];
+        date = (parsedJSON['date'] as Timestamp).toDate();
 
   static ChatMessage fromDocumentSnapshot(DocumentSnapshot snapshot) {
     return ChatMessage(

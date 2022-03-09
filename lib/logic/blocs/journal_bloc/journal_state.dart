@@ -12,27 +12,27 @@ enum JournalStateStatus {
 
 class JournalState extends Equatable {
   const JournalState._({
-    this.journal = Journal.empty,
-    this.date = 'test',
+    required this.journal,
+    required this.date,
     this.journalStateStatus = JournalStateStatus.initial,
     this.repas = Repas.empty,
     this.dayComments = DayComments.empty,
     this.wellBeing = WellBeing.empty,
   });
 
-  const JournalState.fail()
-      : this._(journalStateStatus: JournalStateStatus.fail);
+  const JournalState.fail(DateTime date,Journal journal)
+      : this._(journalStateStatus: JournalStateStatus.fail,date : date,journal : journal);
 
-  const JournalState.initial(String date) : this._(date : date);
+  const JournalState.initial(DateTime date,Journal journal) : this._(date : date,journal : journal);
 
-  const JournalState.loading()
-      : this._(journalStateStatus: JournalStateStatus.loading);
+  const JournalState.loading(DateTime date, Journal journal)
+      : this._(journalStateStatus: JournalStateStatus.loading,date : date,journal : journal);
 
-  const JournalState.complete(Journal journal,String date)
+  const JournalState.complete(Journal journal,DateTime date)
       : this._(
             journalStateStatus: JournalStateStatus.complete, journal: journal,date: date);
 
-  const JournalState.modifyRepas(Repas repas, Journal journal,String date)
+  const JournalState.modifyRepas(Repas repas, Journal journal,DateTime date)
       : this._(
           journalStateStatus: JournalStateStatus.modifyRepas,
           repas: repas,
@@ -40,7 +40,7 @@ class JournalState extends Equatable {
           date : date
         );
 
-  const JournalState.modifyDayComment(DayComments dayComments, Journal journal,String date)
+  const JournalState.modifyDayComment(DayComments dayComments, Journal journal,DateTime date)
       : this._(
           journalStateStatus: JournalStateStatus.modifyDayComment,
           dayComments: dayComments,
@@ -48,7 +48,7 @@ class JournalState extends Equatable {
           date: date,
         );
 
-  const JournalState.modifyWellBeing(WellBeing wellBeing, Journal journal,String date)
+  const JournalState.modifyWellBeing(WellBeing wellBeing, Journal journal,DateTime date)
       : this._(
           journalStateStatus: JournalStateStatus.modifyWellBeing,
           wellBeing: wellBeing,
@@ -59,7 +59,7 @@ class JournalState extends Equatable {
   final WellBeing wellBeing;
   final JournalStateStatus journalStateStatus;
   final Journal journal;
-  final String date;
+  final DateTime date;
   final Repas repas;
   final DayComments dayComments;
 

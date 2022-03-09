@@ -13,13 +13,7 @@ class Journal extends Equatable {
   final List<Repas> mapRepas;
   final List<DayComments> mapCommentaires;
   final WellBeing wellBeing;
-  final String date;
-
-  static const empty = Journal(
-      mapRepas: [],
-      mapCommentaires: [],
-      wellBeing: WellBeing.empty,
-      date: 'idk');
+  final DateTime date;
 
   @override
   List<Object> get props => [mapRepas, mapCommentaires, wellBeing, date];

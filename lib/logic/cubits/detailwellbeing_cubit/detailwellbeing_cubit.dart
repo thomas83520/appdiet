@@ -11,14 +11,14 @@ class DetailwellbeingCubit extends Cubit<DetailwellBeingState> {
       {required JournalRepository journalRepository,
       required WellBeing wellBeing,
       required User user,
-      required String date}):
+      required DateTime date}):
         _journalRepository = journalRepository,
         assert(user != User.empty),
         _user = user,
         _date = date,
         super(DetailwellBeingState(wellBeing: wellBeing));
 
-  final String _date;
+  final DateTime _date;
   final User _user;
   final JournalRepository _journalRepository;
 
