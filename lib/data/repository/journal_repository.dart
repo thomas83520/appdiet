@@ -69,18 +69,18 @@ class JournalRepository {
             snapshot.exists ? snapshot.toComments : DayComments.empty);
   }
 
-  Future<void> validateRepas(Repas repas, User user, DateTime date) async {
+  Future<void> validateRepas(Repas repas, User user, DateTime date,String photoUrl) async {
     try {
       repas.id == Repas.empty.id
-          ? ajoutRepasToJournal(repas, user, date)
-          : updateRepasToJournal(repas, user, repas.id, date);
+          ? ajoutRepasToJournal(repas, user, date,photoUrl)
+          : updateRepasToJournal(repas, user, repas.id, date,photoUrl);
     } on Exception {
       throw ValidateRepasFailure();
     }
   }
 
   Future<void> ajoutRepasToJournal(
-      Repas repas, User user, DateTime date) async {
+      Repas repas, User user, DateTime date,String photoUrl) async {
     String dateString = stringDate(date);
     try {
       final docRef = await _firestore
@@ -89,7 +89,7 @@ class JournalRepository {
           .collection("Journal")
           .doc(dateString)
           .collection("Repas")
-          .add(repas.toDocuments());
+          .add(repas.toDocuments(photoUrl));
       await _firestore
           .collection("patient")
           .doc(user.id)
@@ -118,8 +118,10 @@ class JournalRepository {
           .add({
         "patientId": user.id,
         "patientName": user.completeName,
-        "type": "repas",
+        "type": "NewRepas",
         "dateRepas": date,
+        "photoUrl" : photoUrl,
+        "repasId" : docRef.id,
         "dateAjout": DateTime.now(),
       });
     } on Exception {
@@ -128,7 +130,7 @@ class JournalRepository {
   }
 
   Future<void> updateRepasToJournal(
-      Repas repas, User user, String repasId, DateTime date) async {
+      Repas repas, User user, String repasId, DateTime date,String photoUrl) async {
     String dateString = stringDate(date);
     try {
       await _firestore
@@ -138,7 +140,7 @@ class JournalRepository {
           .doc(dateString)
           .collection("Repas")
           .doc(repas.id)
-          .set(repas.toDocuments());
+          .set(repas.toDocuments(photoUrl));
       await _firestore
           .collection("patient")
           .doc(user.id)
@@ -174,8 +176,10 @@ class JournalRepository {
           .add({
         "patientId": user.id,
         "patientName": user.completeName,
-        "type": "repas",
+        "type": "ModifyRepas",
         "dateRepas": date,
+        "repasId" : repasId,
+        "photoUrl" : photoUrl,
         "dateAjout": DateTime.now(),
       });
     } on Exception {
@@ -303,13 +307,15 @@ class JournalRepository {
     }
   }
 
-  Future<void> uploadPhoto(User user, String filePath, String fileName) async {
+  Future<String> uploadPhoto(User user, String filePath, String fileName) async {
     File file = File(filePath);
     fileName = StringFormatter.removeDiacritics(fileName)
         .replaceAll(new RegExp(r'[^\w]+'), '_');
-    await _firebaseStorage
-        .ref(user.id + '/repas/' + fileName + '.png')
-        .putFile(file);
+    Reference ref =
+        _firebaseStorage.ref(user.id + '/repas/' + fileName + '.png');
+
+    await ref.putFile(file);
+    return await ref.getDownloadURL(); 
   }
 
   Future<String> getPhotoUrl(User user, String fileName) async {
@@ -327,7 +333,7 @@ class JournalRepository {
 extension on DocumentSnapshot {
   Journal get toJournal {
     Map<String, dynamic> data = (this.data() as Map<String, dynamic>);
-
+    print(data);
     List<Repas> listRepas;
     this.get("Meals") == null
         ? listRepas = []
@@ -343,7 +349,9 @@ extension on DocumentSnapshot {
             : listCommentaires = DayComments.fromSnapshot(this.get("Comments"))
         : listCommentaires = [];
     DateTime date;
-    data.containsKey("date") ? date = (this.get("date") as Timestamp).toDate() : date = DateTime.now();
+    data.containsKey("date")
+        ? date = (this.get("date") as Timestamp).toDate()
+        : date = DateTime.now();
 
     WellBeing wellBeing;
     data.containsKey("Wellbeing")
@@ -357,6 +365,9 @@ extension on DocumentSnapshot {
   }
 
   Repas get toRepas {
+    Map<String, dynamic> data = (this.data() as Map<String, dynamic>);
+    print(this.data());
+
     return Repas(
         id: this.get("id"),
         name: this.get("name"),
@@ -365,7 +376,8 @@ extension on DocumentSnapshot {
         satiete: this.get("satiete"),
         contenu: this.get("contenu"),
         commentaire: this.get("commentaire"),
-        photoName: this.get('photoName'));
+        photoName: this.get('photoName'),
+        photoUrl: data.containsKey('photoUrl') ? this.get('photoUrl') : '');
   }
 
   DayComments get toComments {

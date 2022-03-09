@@ -268,8 +268,8 @@ class _Photo extends StatelessWidget {
   }
 
   Widget photo(DetailmealState state) {
-    if (state.photoUrl != '')
-      return Image.network(state.photoUrl);
+    if (state.repas.photoUrl != '')
+      return Image.network(state.repas.photoUrl);
     else
       return state.file.path == ''
           ? Container()

@@ -108,7 +108,7 @@ class PoidsMesuresRepository {
           .add({
         "patientId": _user.id,
         "patientName": _user.completeName,
-        "type": "poidsMesures",
+        "type": "NewPoidsMesures",
         "dateAjout": DateTime.now(),
       });
   }

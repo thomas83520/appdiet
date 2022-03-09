@@ -81,10 +81,11 @@ class DetailmealCubit extends Cubit<DetailmealState> {
   Future<void> validateRepas() async {
     emit(state.copyWith(status: SubmissionStatus.loading));
     try {
+      String photoUrl = "";
       if (state.file.path != '')
-        await _journalRepository.uploadPhoto(
+        photoUrl = await _journalRepository.uploadPhoto(
             _user, state.file.path, state.repas.photoName);
-      await _journalRepository.validateRepas(state.repas, _user, _date);
+      await _journalRepository.validateRepas(state.repas, _user, _date,photoUrl);
       emit(state.copyWith(status: SubmissionStatus.success));
     } on Exception {
       emit(state.copyWith(status: SubmissionStatus.failure));
@@ -92,8 +93,12 @@ class DetailmealCubit extends Cubit<DetailmealState> {
   }
 
   String fileName(Repas repas) {
-    String name = StringFormatter.removeDiacritics(
-        (repas.name + '-' + repas.heure + '-' + DateFormat('d_M_y').format(_date))).replaceAll(new RegExp(r'[^\w]+'), '_');
+    String name = StringFormatter.removeDiacritics((repas.name +
+            '-' +
+            repas.heure +
+            '-' +
+            DateFormat('d_M_y').format(_date)))
+        .replaceAll(new RegExp(r'[^\w]+'), '_');
     return name;
   }
 

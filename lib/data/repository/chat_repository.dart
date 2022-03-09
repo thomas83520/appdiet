@@ -33,6 +33,7 @@ class ChatRepository {
       "date" : Timestamp.fromDate(DateTime.now()),
     });
 
+    //Dashboard diet
      await _firestore
           .collection("patient")
           .doc(_user.id)
@@ -40,7 +41,7 @@ class ChatRepository {
           .add({
         "patientId": _user.id,
         "patientName": _user.completeName,
-        "type": "message",
+        "type": "NewMessage",
         "dateAjout": DateTime.now(),
       });
   }
