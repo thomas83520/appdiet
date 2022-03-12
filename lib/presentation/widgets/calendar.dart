@@ -19,7 +19,7 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
-  DateTime _focusedDay = DateTime.now();
+  DateTime _focusedDay = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);
   DateTime? _selectedDay;
 
   CalendarFormat _calendarFormat = CalendarFormat.week;

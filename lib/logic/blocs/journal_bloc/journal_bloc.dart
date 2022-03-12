@@ -19,35 +19,70 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
       required DateTime date})
       : _journalRepository = journalRepository,
         //_user = user,
-        super(JournalState.initial(date,Journal(date: date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: []))){
-          on<JournalEvent>((event,emit)=>mapEventToState(event,emit));
-        }
+        super(JournalState.initial(
+            date,
+            Journal(
+                date: date,
+                wellBeing: WellBeing.empty,
+                mapCommentaires: [],
+                mapRepas: []))) {
+    on<JournalEvent>((event, emit) => mapEventToState(event, emit));
+  }
 
   final JournalRepository _journalRepository;
 
   Future<void> mapEventToState(
-    JournalEvent event,Emitter<JournalState> emit
-  ) async {
+      JournalEvent event, Emitter<JournalState> emit) async {
     if (event is JournalDateChange) {
-      emit(JournalState.loading(event.date,Journal(date: event.date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: [])));
-      try {
-        Journal journal = await _journalRepository.journalByDate(
-            event.date, event.user.id);
-        emit(JournalState.complete(journal,event.date));
-      } catch (e) {
-        emit(JournalState.fail(event.date,Journal(date: event.date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: [])));
-      }
-    } else if (event is JournalUpdate) {
-      emit(JournalState.loading(event.date,Journal(date: event.date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: [])));
+      emit(JournalState.loading(
+          event.date,
+          Journal(
+              date: event.date,
+              wellBeing: WellBeing.empty,
+              mapCommentaires: [],
+              mapRepas: [])));
       try {
         Journal journal =
             await _journalRepository.journalByDate(event.date, event.user.id);
         emit(JournalState.complete(journal, event.date));
       } catch (e) {
-        emit(JournalState.fail(event.date,Journal(date: event.date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: [])));
+        emit(JournalState.fail(
+            event.date,
+            Journal(
+                date: event.date,
+                wellBeing: WellBeing.empty,
+                mapCommentaires: [],
+                mapRepas: [])));
+      }
+    } else if (event is JournalUpdate) {
+      emit(JournalState.loading(
+          event.date,
+          Journal(
+              date: event.date,
+              wellBeing: WellBeing.empty,
+              mapCommentaires: [],
+              mapRepas: [])));
+      try {
+        Journal journal =
+            await _journalRepository.journalByDate(event.date, event.user.id);
+        emit(JournalState.complete(journal, event.date));
+      } catch (e) {
+        emit(JournalState.fail(
+            event.date,
+            Journal(
+                date: event.date,
+                wellBeing: WellBeing.empty,
+                mapCommentaires: [],
+                mapRepas: [])));
       }
     } else if (event is RepasClicked) {
-      emit(JournalState.loading(event.date,Journal(date: event.date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: [])));
+      emit(JournalState.loading(
+          event.date,
+          Journal(
+              date: event.date,
+              wellBeing: WellBeing.empty,
+              mapCommentaires: [],
+              mapRepas: [])));
       if (event.repas == Repas.empty)
         emit(JournalState.modifyRepas(Repas.empty, event.journal, event.date));
       else {
@@ -56,11 +91,23 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
               event.journal.date, event.user.id, event.repas.id);
           emit(JournalState.modifyRepas(repas, event.journal, event.date));
         } catch (e) {
-          emit(JournalState.fail(event.date,Journal(date: event.date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: [])));
+          emit(JournalState.fail(
+              event.date,
+              Journal(
+                  date: event.date,
+                  wellBeing: WellBeing.empty,
+                  mapCommentaires: [],
+                  mapRepas: [])));
         }
       }
     } else if (event is DayCommentsClicked) {
-      emit(JournalState.loading(event.date,Journal(date: event.date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: [])));
+      emit(JournalState.loading(
+          event.date,
+          Journal(
+              date: event.date,
+              wellBeing: WellBeing.empty,
+              mapCommentaires: [],
+              mapRepas: [])));
       if (event.dayComments == DayComments.empty)
         emit(JournalState.modifyDayComment(
             DayComments.empty, event.journal, event.date));
@@ -71,11 +118,23 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
           emit(JournalState.modifyDayComment(
               dayComments, event.journal, event.date));
         } catch (e) {
-          emit(JournalState.fail(event.date,Journal(date: event.date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: [])));
+          emit(JournalState.fail(
+              event.date,
+              Journal(
+                  date: event.date,
+                  wellBeing: WellBeing.empty,
+                  mapCommentaires: [],
+                  mapRepas: [])));
         }
       }
     } else if (event is WellBeingClicked) {
-      emit(JournalState.loading(event.date,Journal(date: event.date,wellBeing: WellBeing.empty,mapCommentaires: [],mapRepas: [])));
+      emit(JournalState.loading(
+          event.date,
+          Journal(
+              date: event.date,
+              wellBeing: WellBeing.empty,
+              mapCommentaires: [],
+              mapRepas: [])));
       emit(JournalState.modifyWellBeing(
           event.wellBeing, event.journal, event.date));
     }

@@ -8,6 +8,7 @@ import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/logic/tools/stringformatter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 class ValidateRepasFailure implements Exception {}
 
@@ -24,7 +25,9 @@ class JournalRepository {
   final FirebaseStorage _firebaseStorage;
 
   Future<Journal> journalByDate(DateTime date, String uid) async {
+    print("date " + date.toString());
     String dateString = stringDate(date);
+    print("dateString " + dateString);
     return await _firestore
         .collection('patient')
         .doc(uid)
@@ -42,7 +45,9 @@ class JournalRepository {
   }
 
   Future<Repas> repasById(DateTime date, String userId, String repasId) async {
+    print("date " + date.toString());
     String dateString = stringDate(date);
+    print("dateString " + dateString);
     return await _firestore
         .collection('patient')
         .doc(userId)
@@ -69,19 +74,22 @@ class JournalRepository {
             snapshot.exists ? snapshot.toComments : DayComments.empty);
   }
 
-  Future<void> validateRepas(Repas repas, User user, DateTime date,String photoUrl) async {
+  Future<void> validateRepas(
+      Repas repas, User user, DateTime date, String photoUrl) async {
     try {
       repas.id == Repas.empty.id
-          ? ajoutRepasToJournal(repas, user, date,photoUrl)
-          : updateRepasToJournal(repas, user, repas.id, date,photoUrl);
+          ? await ajoutRepasToJournal(repas, user, date, photoUrl)
+          : await updateRepasToJournal(repas, user, repas.id, date, photoUrl);
     } on Exception {
       throw ValidateRepasFailure();
     }
   }
 
   Future<void> ajoutRepasToJournal(
-      Repas repas, User user, DateTime date,String photoUrl) async {
+      Repas repas, User user, DateTime date, String photoUrl) async {
+    print("date " + date.toString());
     String dateString = stringDate(date);
+    print("dateString " + dateString);
     try {
       final docRef = await _firestore
           .collection("patient")
@@ -105,7 +113,7 @@ class JournalRepository {
           .doc(dateString)
           .set({
         "Meals": FieldValue.arrayUnion([
-          {"nom": repas.name, "id": docRef.id, "heure": repas.heure}
+          {"nom": repas.name, "id": docRef.id, "heure": repas.heure,"date" : date,"photoUrl":photoUrl}
         ]),
         "date": date,
       }, SetOptions(merge: true));
@@ -120,8 +128,9 @@ class JournalRepository {
         "patientName": user.completeName,
         "type": "NewRepas",
         "dateRepas": date,
-        "photoUrl" : photoUrl,
-        "repasId" : docRef.id,
+        "photoUrl": photoUrl,
+        "repasId": docRef.id,
+        "repasName": repas.name,
         "dateAjout": DateTime.now(),
       });
     } on Exception {
@@ -129,9 +138,11 @@ class JournalRepository {
     }
   }
 
-  Future<void> updateRepasToJournal(
-      Repas repas, User user, String repasId, DateTime date,String photoUrl) async {
+  Future<void> updateRepasToJournal(Repas repas, User user, String repasId,
+      DateTime date, String photoUrl) async {
+    print("date " + date.toString());
     String dateString = stringDate(date);
+    print("dateString " + dateString);
     try {
       await _firestore
           .collection("patient")
@@ -155,10 +166,10 @@ class JournalRepository {
         });
         mealsList.length == 1
             ? mealsList = [
-                {"heure": repas.heure, "id": repasId, "nom": repas.name}
+                {"heure": repas.heure, "id": repasId, "nom": repas.name,"date": date,photoUrl:photoUrl}
               ]
             : mealsList.replaceRange(index, index + 1, [
-                {"heure": repas.heure, "id": repasId, "nom": repas.name}
+                {"heure": repas.heure, "id": repasId, "nom": repas.name,"date": date,photoUrl:photoUrl}
               ]);
         await _firestore
             .collection("patient")
@@ -178,8 +189,9 @@ class JournalRepository {
         "patientName": user.completeName,
         "type": "ModifyRepas",
         "dateRepas": date,
-        "repasId" : repasId,
-        "photoUrl" : photoUrl,
+        "repasId": repasId,
+        "photoUrl": photoUrl,
+        "repasName": repas.name,
         "dateAjout": DateTime.now(),
       });
     } on Exception {
@@ -307,7 +319,8 @@ class JournalRepository {
     }
   }
 
-  Future<String> uploadPhoto(User user, String filePath, String fileName) async {
+  Future<String> uploadPhoto(
+      User user, String filePath, String fileName) async {
     File file = File(filePath);
     fileName = StringFormatter.removeDiacritics(fileName)
         .replaceAll(new RegExp(r'[^\w]+'), '_');
@@ -315,7 +328,7 @@ class JournalRepository {
         _firebaseStorage.ref(user.id + '/repas/' + fileName + '.png');
 
     await ref.putFile(file);
-    return await ref.getDownloadURL(); 
+    return await ref.getDownloadURL();
   }
 
   Future<String> getPhotoUrl(User user, String fileName) async {
@@ -326,7 +339,17 @@ class JournalRepository {
   }
 
   String stringDate(DateTime date) {
-    return Timestamp.fromDate(date).millisecondsSinceEpoch.toString();
+    print("Function string date" +
+        DateFormat("yyyy-MM-dd HH:mm:ss.S'Z'").format(date));
+    print("Function string date" +
+        Timestamp.fromDate(DateTime.parse(
+                DateFormat("yyyy-MM-dd HH:mm:ss.S'Z'").format(date)))
+            .millisecondsSinceEpoch
+            .toString());
+    return Timestamp.fromDate(DateTime.parse(
+                DateFormat("yyyy-MM-dd HH:mm:ss.S'Z'").format(date)))
+            .millisecondsSinceEpoch
+            .toString();
   }
 }
 
