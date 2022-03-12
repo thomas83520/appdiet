@@ -43,7 +43,7 @@ class DetailWellbeingView extends StatelessWidget {
             ),
           ),
           title: InkWell(
-            child: Text("Bien-être"),
+            child: Text("Mood du jour"),
           ),
         ),
         body: BlocListener<DetailwellbeingCubit, DetailwellBeingState>(

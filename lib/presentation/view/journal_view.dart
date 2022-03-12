@@ -22,10 +22,10 @@ class JournalView extends StatelessWidget {
         if (state.journalStateStatus == JournalStateStatus.modifyWellBeing) {
           Navigator.of(context)
               .push(DetailWellBeingPage.route(state.wellBeing));
-        }else if (state.journalStateStatus == JournalStateStatus.fail)
+        } else if (state.journalStateStatus == JournalStateStatus.fail)
           ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Une erreur est surevenue")),
-            );
+            const SnackBar(content: Text("Une erreur est surevenue")),
+          );
       },
       child: Container(
         child: SingleChildScrollView(
@@ -36,13 +36,6 @@ class JournalView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Calendar(),
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: InkWell(
-                    child: Meals(),
-                    onTap: () => Navigator.of(context).push(ListMealPage.route()),
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: BlocBuilder<JournalBloc, JournalState>(
@@ -61,14 +54,14 @@ class JournalView extends StatelessWidget {
                     },
                   ),
                 ),
-                /*Padding(
+                Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: InkWell(
-                    child: Comments(),
+                    child: Meals(),
                     onTap: () =>
-                        Navigator.of(context).push(ListDayCommentsPage.route()),
+                        Navigator.of(context).push(ListMealPage.route()),
                   ),
-                ),*/
+                ),
               ],
             ),
           ),
