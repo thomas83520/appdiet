@@ -339,13 +339,6 @@ class JournalRepository {
   }
 
   String stringDate(DateTime date) {
-    print("Function string date" +
-        DateFormat("yyyy-MM-dd HH:mm:ss.S'Z'").format(date));
-    print("Function string date" +
-        Timestamp.fromDate(DateTime.parse(
-                DateFormat("yyyy-MM-dd HH:mm:ss.S'Z'").format(date)))
-            .millisecondsSinceEpoch
-            .toString());
     return Timestamp.fromDate(DateTime.parse(
                 DateFormat("yyyy-MM-dd HH:mm:ss.S'Z'").format(date)))
             .millisecondsSinceEpoch
