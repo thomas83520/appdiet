@@ -8,6 +8,7 @@ import 'package:appdiet/data/models/models.dart';
 import 'package:appdiet/logic/tools/stringformatter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 class ValidateRepasFailure implements Exception {}
 
@@ -23,23 +24,35 @@ class JournalRepository {
   final FirebaseFirestore _firestore;
   final FirebaseStorage _firebaseStorage;
 
-  Future<Journal> journalByDate(String date, String uid) async {
+  Future<Journal> journalByDate(DateTime date, String uid) async {
+    print("date " + date.toString());
+    String dateString = stringDate(date);
+    print("dateString " + dateString);
     return await _firestore
         .collection('patient')
         .doc(uid)
         .collection('Journal')
-        .doc(date)
+        .doc(dateString)
         .get()
-        .then(
-            (snapshot) => snapshot.exists ? snapshot.toJournal : Journal.empty);
+        .then((snapshot) => snapshot.exists
+            ? snapshot.toJournal
+            : Journal(
+                date: date,
+                mapCommentaires: [],
+                mapRepas: [],
+                wellBeing: WellBeing.empty,
+              ));
   }
 
-  Future<Repas> repasById(String date, String userId, String repasId) async {
+  Future<Repas> repasById(DateTime date, String userId, String repasId) async {
+    print("date " + date.toString());
+    String dateString = stringDate(date);
+    print("dateString " + dateString);
     return await _firestore
         .collection('patient')
         .doc(userId)
         .collection('Journal')
-        .doc(date)
+        .doc(dateString)
         .collection('Repas')
         .doc(repasId)
         .get()
@@ -47,12 +60,13 @@ class JournalRepository {
   }
 
   Future<DayComments> commentsById(
-      String date, String userId, String commentsId) async {
+      DateTime date, String userId, String commentsId) async {
+    String dateString = stringDate(date);
     return await _firestore
         .collection('patient')
         .doc(userId)
         .collection('Journal')
-        .doc(date)
+        .doc(dateString)
         .collection('Comments')
         .doc(commentsId)
         .get()
@@ -61,67 +75,88 @@ class JournalRepository {
   }
 
   Future<void> validateRepas(
-      Repas repas, User user, String date) async {
+      Repas repas, User user, DateTime date, String photoUrl) async {
     try {
       repas.id == Repas.empty.id
-          ? await _firestore
-              .collection("patient")
-              .doc(user.id)
-              .collection("Journal")
-              .doc(date)
-              .collection("Repas")
-              .add(repas.toDocuments())
-              .then(
-                  (docRef) => ajoutRepasToJournal(repas, user, docRef.id, date))
-          : await _firestore
-              .collection("patient")
-              .doc(user.id)
-              .collection("Journal")
-              .doc(date)
-              .collection("Repas")
-              .doc(repas.id)
-              .set(repas.toDocuments())
-              .then((_) => updateRepasToJournal(repas, user, repas.id, date));
+          ? await ajoutRepasToJournal(repas, user, date, photoUrl)
+          : await updateRepasToJournal(repas, user, repas.id, date, photoUrl);
     } on Exception {
       throw ValidateRepasFailure();
     }
   }
 
   Future<void> ajoutRepasToJournal(
-      Repas repas, User user, String repasId, String date) async {
+      Repas repas, User user, DateTime date, String photoUrl) async {
+    print("date " + date.toString());
+    String dateString = stringDate(date);
+    print("dateString " + dateString);
     try {
+      final docRef = await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(dateString)
+          .collection("Repas")
+          .add(repas.toDocuments(photoUrl));
       await _firestore
           .collection("patient")
           .doc(user.id)
           .collection("Journal")
-          .doc(date)
+          .doc(dateString)
+          .collection("Repas")
+          .doc(docRef.id)
+          .update({"id": docRef.id});
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(dateString)
           .set({
         "Meals": FieldValue.arrayUnion([
-          {"nom": repas.name, "id": repasId, "heure": repas.heure}
+          {"nom": repas.name, "id": docRef.id, "heure": repas.heure,"date" : date,"photoUrl":photoUrl}
         ]),
         "date": date,
       }, SetOptions(merge: true));
+
+      //Dashboard diet
       await _firestore
           .collection("patient")
           .doc(user.id)
-          .collection("Journal")
-          .doc(date)
-          .collection("Repas")
-          .doc(repasId)
-          .update({"id": repasId});
+          .collection("nouveautes")
+          .add({
+        "patientId": user.id,
+        "patientName": user.completeName,
+        "type": "NewRepas",
+        "dateRepas": date,
+        "photoUrl": photoUrl,
+        "repasId": docRef.id,
+        "repasName": repas.name,
+        "dateAjout": DateTime.now(),
+      });
     } on Exception {
       throw AddRepasFailure();
     }
   }
 
-  Future<void> updateRepasToJournal(
-      Repas repas, User user, String repasId, String date) async {
+  Future<void> updateRepasToJournal(Repas repas, User user, String repasId,
+      DateTime date, String photoUrl) async {
+    print("date " + date.toString());
+    String dateString = stringDate(date);
+    print("dateString " + dateString);
     try {
       await _firestore
           .collection("patient")
           .doc(user.id)
           .collection("Journal")
-          .doc(date)
+          .doc(dateString)
+          .collection("Repas")
+          .doc(repas.id)
+          .set(repas.toDocuments(photoUrl));
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(dateString)
           .get()
           .then((snapshot) async {
         List<dynamic> mealsList = snapshot.get('Meals');
@@ -131,17 +166,33 @@ class JournalRepository {
         });
         mealsList.length == 1
             ? mealsList = [
-                {"heure": repas.heure, "id": repasId, "nom": repas.name}
+                {"heure": repas.heure, "id": repasId, "nom": repas.name,"date": date,photoUrl:photoUrl}
               ]
             : mealsList.replaceRange(index, index + 1, [
-                {"heure": repas.heure, "id": repasId, "nom": repas.name}
+                {"heure": repas.heure, "id": repasId, "nom": repas.name,"date": date,photoUrl:photoUrl}
               ]);
         await _firestore
             .collection("patient")
             .doc(user.id)
             .collection("Journal")
-            .doc(date)
+            .doc(dateString)
             .update({"Meals": mealsList});
+      });
+
+      //Dashboard diet
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("nouveautes")
+          .add({
+        "patientId": user.id,
+        "patientName": user.completeName,
+        "type": "ModifyRepas",
+        "dateRepas": date,
+        "repasId": repasId,
+        "photoUrl": photoUrl,
+        "repasName": repas.name,
+        "dateAjout": DateTime.now(),
       });
     } on Exception {
       throw AddRepasFailure();
@@ -149,14 +200,15 @@ class JournalRepository {
   }
 
   Future<void> validateDayComments(
-      DayComments dayComments, User user, String date) async {
+      DayComments dayComments, User user, DateTime date) async {
+    String dateString = stringDate(date);
     try {
       dayComments.id == DayComments.empty.id
           ? await _firestore
               .collection("patient")
               .doc(user.id)
               .collection("Journal")
-              .doc(date)
+              .doc(dateString)
               .collection("Comments")
               .add(dayComments.toDocuments())
               .then((docRef) =>
@@ -165,7 +217,7 @@ class JournalRepository {
               .collection("patient")
               .doc(user.id)
               .collection("Journal")
-              .doc(date)
+              .doc(dateString)
               .collection("Comments")
               .doc(dayComments.id)
               .set(dayComments.toDocuments())
@@ -177,13 +229,14 @@ class JournalRepository {
   }
 
   Future<void> validateWellbeing(
-      WellBeing wellBeing, User user, String date) async {
+      WellBeing wellBeing, User user, DateTime date) async {
+    String dateString = stringDate(date);
     try {
       await _firestore
           .collection("patient")
           .doc(user.id)
           .collection("Journal")
-          .doc(date)
+          .doc(dateString)
           .set({"Wellbeing": wellBeing.toDocuments(), "date": date},
               SetOptions(merge: true));
     } on Exception {
@@ -192,13 +245,14 @@ class JournalRepository {
   }
 
   Future<void> ajoutDayCommentsToJournal(DayComments dayComments, User user,
-      String dayCommentsId, String date) async {
+      String dayCommentsId, DateTime date) async {
+    String dateString = stringDate(date);
     try {
       await _firestore
           .collection("patient")
           .doc(user.id)
           .collection("Journal")
-          .doc(date)
+          .doc(dateString)
           .set({
         "Comments": FieldValue.arrayUnion([
           {
@@ -213,7 +267,7 @@ class JournalRepository {
           .collection("patient")
           .doc(user.id)
           .collection("Journal")
-          .doc(date)
+          .doc(dateString)
           .collection("Comments")
           .doc(dayCommentsId)
           .update({"id": dayCommentsId});
@@ -223,13 +277,14 @@ class JournalRepository {
   }
 
   Future<void> updateDayCommentsToJournal(DayComments dayComments, User user,
-      String dayCommentsId, String date) async {
+      String dayCommentsId, DateTime date) async {
+    String dateString = stringDate(date);
     try {
       await _firestore
           .collection("patient")
           .doc(user.id)
           .collection("Journal")
-          .doc(date)
+          .doc(dateString)
           .get()
           .then((snapshot) async {
         List<dynamic> dayCommentsList = snapshot.get('Comments');
@@ -256,7 +311,7 @@ class JournalRepository {
             .collection("patient")
             .doc(user.id)
             .collection("Journal")
-            .doc(date)
+            .doc(dateString)
             .update({"Comments": dayCommentsList});
       });
     } on Exception {
@@ -264,13 +319,16 @@ class JournalRepository {
     }
   }
 
-  Future<void> uploadPhoto(
+  Future<String> uploadPhoto(
       User user, String filePath, String fileName) async {
     File file = File(filePath);
-    fileName = StringFormatter.removeDiacritics(fileName).replaceAll(new RegExp(r'[^\w]+'),'_');
-    await _firebaseStorage
-        .ref(user.id + '/repas/' + fileName + '.png')
-        .putFile(file);
+    fileName = StringFormatter.removeDiacritics(fileName)
+        .replaceAll(new RegExp(r'[^\w]+'), '_');
+    Reference ref =
+        _firebaseStorage.ref(user.id + '/repas/' + fileName + '.png');
+
+    await ref.putFile(file);
+    return await ref.getDownloadURL();
   }
 
   Future<String> getPhotoUrl(User user, String fileName) async {
@@ -279,13 +337,19 @@ class JournalRepository {
         .getDownloadURL();
     return url;
   }
+
+  String stringDate(DateTime date) {
+    return Timestamp.fromDate(DateTime.parse(
+                DateFormat("yyyy-MM-dd HH:mm:ss.S'Z'").format(date)))
+            .millisecondsSinceEpoch
+            .toString();
+  }
 }
 
 extension on DocumentSnapshot {
   Journal get toJournal {
     Map<String, dynamic> data = (this.data() as Map<String, dynamic>);
-    
-
+    print(data);
     List<Repas> listRepas;
     this.get("Meals") == null
         ? listRepas = []
@@ -300,8 +364,10 @@ extension on DocumentSnapshot {
             ? listCommentaires = []
             : listCommentaires = DayComments.fromSnapshot(this.get("Comments"))
         : listCommentaires = [];
-    String date;
-    data.containsKey("date") ? date = this.get("date") : date = "";
+    DateTime date;
+    data.containsKey("date")
+        ? date = (this.get("date") as Timestamp).toDate()
+        : date = DateTime.now();
 
     WellBeing wellBeing;
     data.containsKey("Wellbeing")
@@ -315,6 +381,9 @@ extension on DocumentSnapshot {
   }
 
   Repas get toRepas {
+    Map<String, dynamic> data = (this.data() as Map<String, dynamic>);
+    print(this.data());
+
     return Repas(
         id: this.get("id"),
         name: this.get("name"),
@@ -323,7 +392,8 @@ extension on DocumentSnapshot {
         satiete: this.get("satiete"),
         contenu: this.get("contenu"),
         commentaire: this.get("commentaire"),
-        photoName: this.get('photoName'));
+        photoName: this.get('photoName'),
+        photoUrl: data.containsKey('photoUrl') ? this.get('photoUrl') : '');
   }
 
   DayComments get toComments {

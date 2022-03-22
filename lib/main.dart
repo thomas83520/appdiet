@@ -23,7 +23,7 @@ class AppleSignInAvailable {
 Future<void>_firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  print("handling a background message: ${message.messageId}");
+  print("handling a background message: ${message.notification}");
 }
 
 void main() async {

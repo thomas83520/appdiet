@@ -25,30 +25,10 @@ class BienEtre extends StatelessWidget {
             ),
             Expanded(
               flex: 8,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Bien-être",
-                    style:
-                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Niveau de stress"),
-                      Text("Ballonnements"),
-                      Text("Hydratation"),
-                      Text("Transit"),
-                      Text("Fatigue"),
-                      Text("Humeur du jour"),
-                    ],
-                  ),
-                ],
+              child: Text(
+                "Mon mood du jour",
+                style:
+                    TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
               ),
             ),
           ],

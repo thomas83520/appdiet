@@ -9,7 +9,8 @@ class Repas extends Equatable {
       required this.satiete,
       required this.contenu,
       required this.commentaire,
-      required this.photoName});
+      required this.photoName,
+      required this.photoUrl});
 
   final String id;
   final String name;
@@ -19,6 +20,7 @@ class Repas extends Equatable {
   final String contenu;
   final String commentaire;
   final String photoName;
+  final String photoUrl;
 
   static const empty = Repas(
       id: '',
@@ -28,7 +30,8 @@ class Repas extends Equatable {
       satiete: 5,
       contenu: '',
       commentaire: '',
-      photoName: '');
+      photoName: '',
+      photoUrl: '');
 
   static List<Repas> fromSnapshot(List<dynamic> snapshot) {
     return snapshot
@@ -41,11 +44,12 @@ class Repas extends Equatable {
               contenu: (snap as Map<String,dynamic>).containsKey("contenu") ? snap["contenu"] : "",
               commentaire: "",
               photoName: '',
+              photoUrl: '',
             ))
         .toList();
   }
 
-  Map<String, Object> toDocuments() {
+  Map<String, Object> toDocuments(String newphotoUrl) {
     return {
       "id": id,
       "name": name,
@@ -55,10 +59,11 @@ class Repas extends Equatable {
       "contenu": contenu,
       "commentaire": commentaire,
       "photoName" : photoName,
+      "photoUrl" : newphotoUrl
     };
   }
 
   @override
   List<Object> get props =>
-      [id, name, heure, before, satiete, contenu, commentaire,photoName];
+      [id, name, heure, before, satiete, contenu, commentaire,photoName,photoUrl];
 }

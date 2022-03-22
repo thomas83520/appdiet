@@ -32,6 +32,18 @@ class ChatRepository {
       "senderId" : _user.id,
       "date" : Timestamp.fromDate(DateTime.now()),
     });
+
+    //Dashboard diet
+     await _firestore
+          .collection("patient")
+          .doc(_user.id)
+          .collection("nouveautes")
+          .add({
+        "patientId": _user.id,
+        "patientName": _user.completeName,
+        "type": "NewMessage",
+        "dateAjout": DateTime.now(),
+      });
   }
 
   String get docId => _user.id + "_" + _user.uidDiet;

@@ -21,7 +21,7 @@ class JournalUpdate extends JournalEvent {
   const JournalUpdate(this.journal,this.date,this.user);
   
   final Journal journal;
-  final String date;
+  final DateTime date;
   final User user;
   
   @override
@@ -34,7 +34,7 @@ class RepasClicked extends JournalEvent {
   final Repas repas;
   final Journal journal;
   final User user;
-  final String date;
+  final DateTime date;
 
   @override
   List<Object> get props => [repas,journal,user,date];
@@ -46,7 +46,7 @@ class DayCommentsClicked extends JournalEvent {
   final DayComments dayComments;
   final Journal journal;
   final User user;
-  final String date;
+  final DateTime date;
 
   @override
   List<Object> get props => [dayComments,journal,user,date];
@@ -58,7 +58,7 @@ class WellBeingClicked extends JournalEvent {
   final WellBeing wellBeing;
   final Journal journal;
   final User user;
-  final String date;
+  final DateTime date;
 
   @override
   List<Object> get props => [wellBeing,journal,user,date];

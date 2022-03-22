@@ -14,15 +14,28 @@ class DocumentsRepository {
         .where('uidDiet', isEqualTo: user.uidDiet)
         .get();
     String idDiet = docDiet.docs.first.id;
+    if (type == "partage") {
+      var listDocPatient = await _firebaseFirestore
+          .collection('dieteticien')
+          .doc(idDiet)
+          .collection('documents')
+          .where('visibilite', isEqualTo: type)
+          .get();
+      return listDocPatient.docs.map((element) {
+        return Document.fromSnapshot(element);
+      }).toList();
+    } else {
+      var listDocPatient = await _firebaseFirestore
+          .collection('dieteticien')
+          .doc(idDiet)
+          .collection('documents')
+          .where('visibilite', isEqualTo: type)
+          .where('idPatient',isEqualTo: user.id)
+          .get();
 
-    var listDocPatient = await _firebaseFirestore
-        .collection('dieteticien')
-        .doc(idDiet)
-        .collection('documents')
-        .where('visibilite', isEqualTo: type)
-        .get();
-    return listDocPatient.docs.map((element) {
-      return Document.fromSnapshot(element);
-    }).toList();
+      return listDocPatient.docs.map((element) {
+        return Document.fromSnapshot(element);
+      }).toList();
+    }
   }
 }

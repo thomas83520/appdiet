@@ -6,13 +6,11 @@ class DetailmealState extends Equatable {
   const DetailmealState(
       {required this.repas,
       this.status = SubmissionStatus.dirty,
-      required this.file,
-      this.photoUrl = ''});
+      required this.file,});
 
   final Repas repas;
   final SubmissionStatus status;
   final XFile file;
-  final String photoUrl;
 
   @override
   List<Object> get props => [repas, status];
@@ -25,9 +23,9 @@ class DetailmealState extends Equatable {
     String? commentaire,
     String? contenu,
     String? photoName,
+    String? photoUrl,
     SubmissionStatus? status,
     XFile? file,
-    String? photoUrl,
   }) {
     return DetailmealState(
         repas: Repas(
@@ -39,9 +37,9 @@ class DetailmealState extends Equatable {
           contenu: contenu ?? this.repas.contenu,
           commentaire: commentaire ?? this.repas.commentaire,
           photoName: photoName ?? this.repas.photoName,
+          photoUrl: photoUrl ?? this.repas.photoUrl,
         ),
         status: status ?? this.status,
-        file: file ?? this.file,
-        photoUrl: photoUrl ?? this.photoUrl);
+        file: file ?? this.file,);
   }
 }

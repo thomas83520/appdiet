@@ -120,7 +120,7 @@ class GoalView extends StatelessWidget {
                               value: true,
                               onChanged: (bool) => true,
                             ),
-                            Text(goal.goalName)
+                            Flexible(child: Text(goal.goalName,overflow: TextOverflow.visible,))
                           ],
                         ),
                       )
@@ -129,7 +129,7 @@ class GoalView extends StatelessWidget {
                         child: Row(
                           children: [
                             Checkbox(value: false, onChanged: (bool) => true),
-                            Text(goal.goalName)
+                            Flexible(child: Text(goal.goalName,overflow: TextOverflow.visible,))
                           ],
                         ),
                       ),
