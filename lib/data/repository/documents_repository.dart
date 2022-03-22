@@ -30,8 +30,9 @@ class DocumentsRepository {
           .doc(idDiet)
           .collection('documents')
           .where('visibilite', isEqualTo: type)
-          .where('patientId',isEqualTo: user.id)
+          .where('idPatient',isEqualTo: user.id)
           .get();
+
       return listDocPatient.docs.map((element) {
         return Document.fromSnapshot(element);
       }).toList();
