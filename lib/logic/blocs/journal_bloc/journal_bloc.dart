@@ -46,6 +46,8 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
             await _journalRepository.journalByDate(event.date, event.user.id);
         emit(JournalState.complete(journal, event.date));
       } catch (e) {
+        print("journal by date, date changed");
+          print(e);
         emit(JournalState.fail(
             event.date,
             Journal(
@@ -67,6 +69,9 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
             await _journalRepository.journalByDate(event.date, event.user.id);
         emit(JournalState.complete(journal, event.date));
       } catch (e) {
+
+        print("journal by date journal update");
+          print(e);
         emit(JournalState.fail(
             event.date,
             Journal(
@@ -91,6 +96,9 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
               event.journal.date, event.user.id, event.repas.id);
           emit(JournalState.modifyRepas(repas, event.journal, event.date));
         } catch (e) {
+
+        print("journal by repas by id, repas clicked");
+          print(e);
           emit(JournalState.fail(
               event.date,
               Journal(
@@ -118,6 +126,9 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
           emit(JournalState.modifyDayComment(
               dayComments, event.journal, event.date));
         } catch (e) {
+
+        print("comment by id");
+          print(e);
           emit(JournalState.fail(
               event.date,
               Journal(

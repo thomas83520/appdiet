@@ -113,7 +113,13 @@ class JournalRepository {
           .doc(dateString)
           .set({
         "Meals": FieldValue.arrayUnion([
-          {"nom": repas.name, "id": docRef.id, "heure": repas.heure,"date" : date,"photoUrl":photoUrl}
+          {
+            "nom": repas.name,
+            "id": docRef.id,
+            "heure": repas.heure,
+            "date": date,
+            "photoUrl": photoUrl
+          }
         ]),
         "date": date,
       }, SetOptions(merge: true));
@@ -166,10 +172,22 @@ class JournalRepository {
         });
         mealsList.length == 1
             ? mealsList = [
-                {"heure": repas.heure, "id": repasId, "nom": repas.name,"date": date,photoUrl:photoUrl}
+                {
+                  "heure": repas.heure,
+                  "id": repasId,
+                  "nom": repas.name,
+                  "date": date,
+                  photoUrl: photoUrl
+                }
               ]
             : mealsList.replaceRange(index, index + 1, [
-                {"heure": repas.heure, "id": repasId, "nom": repas.name,"date": date,photoUrl:photoUrl}
+                {
+                  "heure": repas.heure,
+                  "id": repasId,
+                  "nom": repas.name,
+                  "date": date,
+                  photoUrl: photoUrl
+                }
               ]);
         await _firestore
             .collection("patient")
@@ -339,10 +357,10 @@ class JournalRepository {
   }
 
   String stringDate(DateTime date) {
-    return Timestamp.fromDate(DateTime.parse(
-                DateFormat("yyyy-MM-dd HH:mm:ss.S'Z'").format(date)))
-            .millisecondsSinceEpoch
-            .toString();
+    return Timestamp.fromDate(
+            DateTime.parse(DateFormat("yyyy-MM-dd HH:mm:ss.S'Z'").format(date)))
+        .millisecondsSinceEpoch
+        .toString();
   }
 }
 
@@ -351,11 +369,9 @@ extension on DocumentSnapshot {
     Map<String, dynamic> data = (this.data() as Map<String, dynamic>);
     print(data);
     List<Repas> listRepas;
-    this.get("Meals") == null
-        ? listRepas = []
-        : this.get("Meals") == ""
-            ? listRepas = []
-            : listRepas = Repas.fromSnapshot(this.get("Meals"));
+    data.containsKey("Meals")
+        ? listRepas = Repas.fromSnapshot(this.get("Meals"))
+        : listRepas = [];
 
     List<DayComments> listCommentaires;
 
