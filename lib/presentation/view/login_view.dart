@@ -1,4 +1,5 @@
 import 'package:appdiet/logic/cubits/login_cubit/login_cubit.dart';
+import 'package:appdiet/logic/cubits/reset_password_cubit/reset_password_cubit.dart';
 import 'package:appdiet/presentation/pages/login_signup/sign_up_page.dart';
 import 'package:the_apple_sign_in/apple_sign_in_button.dart' as applebutton;
 import 'package:appdiet/main.dart';
@@ -16,14 +17,38 @@ class LoginForm extends StatelessWidget {
     final appleSignInAvailable =
         Provider.of<AppleSignInAvailable>(context, listen: false);
 
-    return BlocListener<LoginCubit, LoginState>(
-      listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Authentication Failure')),
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LoginCubit, LoginState>(
+          listener: (context, state) {
+            if (state.status.isSubmissionFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Authentication Failure')),
+              );
+            }
+          },
+        ),
+        BlocListener<ResetPasswordCubit, ResetPasswordState>(
+          listener: (context, state) {
+            if (state.status.isSubmissionSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                content: Text('Email envoyé'),
+                behavior: SnackBarBehavior.floating,
+              ));
+            }
+            if (state.status.isSubmissionFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.code),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Theme.of(context).errorColor,
+                ),
+              );
+            }
+          },
+        ),
+      ],
       child: Align(
         alignment: const Alignment(0, -2 / 3),
         child: SingleChildScrollView(
@@ -40,6 +65,21 @@ class LoginForm extends StatelessWidget {
               _PasswordInput(),
               const SizedBox(height: 8.0),
               _LoginButton(),
+              const SizedBox(height: 8.0),
+              TextButton(
+                onPressed: () => {
+                  showDialog(
+                    context: context,
+                    builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<ResetPasswordCubit>(context),
+                      child: ResetPasswordDialog(),
+                    ),
+                  ),
+                },
+                child: Text("Mot de passe oublié ?"),
+                style: TextButton.styleFrom(
+                    primary: Theme.of(context).primaryColor),
+              ),
               const SizedBox(height: 8.0),
               _Separation(),
               const SizedBox(height: 8.0),
@@ -249,9 +289,53 @@ class _LogoAndName extends StatelessWidget {
         ),
         Text(
           "DietUp!",
-          style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
+          style:
+              TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
         ),
       ],
+    );
+  }
+}
+
+class ResetPasswordDialog extends StatelessWidget {
+  const ResetPasswordDialog({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      scrollable: true,
+      title: Center(child: Text("Mot de passe oublié")),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
+            builder: (context, state) {
+              return TextField(
+                key: const Key('addPatient_emailInput_textField'),
+                onChanged: (email) =>
+                    context.read<ResetPasswordCubit>().emailChanged(email),
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  labelText: 'email',
+                  hintText: '',
+                  errorText: state.email.invalid ? 'email non valide' : null,
+                ),
+              );
+            },
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                await context.read<ResetPasswordCubit>().sendResetPassword();
+                Navigator.of(context).pop();
+              },
+              child: Text("Envoyer le lien")),
+        ],
+      ),
     );
   }
 }

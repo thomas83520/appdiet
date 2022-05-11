@@ -68,6 +68,9 @@ class AuthenticationRepository {
     }
   }
 
+Future<void> sendResetPassword(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email.trim());
+  }
   /// Signs in with the provided [email] and [password].
   ///
   /// Throws a [LogInWithEmailAndPasswordFailure] if an exception occurs.

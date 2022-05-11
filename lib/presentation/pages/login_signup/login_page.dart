@@ -1,5 +1,6 @@
 import 'package:appdiet/data/repository/authentication_repository.dart';
 import 'package:appdiet/logic/cubits/login_cubit/login_cubit.dart';
+import 'package:appdiet/logic/cubits/reset_password_cubit/reset_password_cubit.dart';
 import 'package:appdiet/presentation/view/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,8 +18,16 @@ class LoginPage extends StatelessWidget {
         value: SystemUiOverlayStyle.dark,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: BlocProvider(
-            create: (_) => LoginCubit(context.read<AuthenticationRepository>()),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) =>
+                    LoginCubit(context.read<AuthenticationRepository>()),
+              ),
+              BlocProvider(
+                create: (context) => ResetPasswordCubit(context.read<AuthenticationRepository>()),
+              ),
+            ],
             child: Row(
               children: [
                 Expanded(flex: 1, child: Container()),
