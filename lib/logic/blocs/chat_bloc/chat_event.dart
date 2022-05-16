@@ -16,11 +16,20 @@ class ChatNewMessage extends ChatEvent{
   List<Object> get props => [];
 }
 
-class MessageSend extends ChatEvent{
-  const MessageSend({required this.message});
+class TextMessageSend extends ChatEvent{
+  const TextMessageSend({required this.message});
 
   final String message;
 
   @override
   List<Object> get props => [message];
+}
+
+class ImageMessageSend extends ChatEvent{
+  const ImageMessageSend({required this.file});
+
+  final XFile file;
+
+  @override
+  List<Object> get props => [file];
 }

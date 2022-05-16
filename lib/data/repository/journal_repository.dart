@@ -177,7 +177,7 @@ class JournalRepository {
                   "id": repasId,
                   "nom": repas.name,
                   "date": date,
-                  photoUrl: photoUrl
+                  "photoUrl": photoUrl
                 }
               ]
             : mealsList.replaceRange(index, index + 1, [
@@ -186,9 +186,10 @@ class JournalRepository {
                   "id": repasId,
                   "nom": repas.name,
                   "date": date,
-                  photoUrl: photoUrl
+                  "photoUrl": photoUrl
                 }
               ]);
+            print(mealsList);
         await _firestore
             .collection("patient")
             .doc(user.id)
@@ -196,7 +197,7 @@ class JournalRepository {
             .doc(dateString)
             .update({"Meals": mealsList});
       });
-
+      print("end");
       //Dashboard diet
       await _firestore
           .collection("patient")

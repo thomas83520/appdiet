@@ -5,24 +5,20 @@ class ChatMessage extends Equatable {
   const ChatMessage(
       {required this.messageContent,
       required this.senderId,
-      required this.date});
+      required this.date,
+      required this.type});
 
   final String messageContent;
   final String senderId;
   final DateTime date;
+  final String type;
 
   ChatMessage.fromJson(Map<String, dynamic> parsedJSON)
       : messageContent = parsedJSON['messageContent'],
         senderId = parsedJSON['senderId'],
-        date = (parsedJSON['date'] as Timestamp).toDate();
-
-  static ChatMessage fromDocumentSnapshot(DocumentSnapshot snapshot) {
-    return ChatMessage(
-        messageContent: snapshot.get("messageContent"),
-        senderId: snapshot.get("senderId"),
-        date: snapshot.get("date"));
-  }
+        date = (parsedJSON['date'] as Timestamp).toDate(),
+        type = parsedJSON.containsKey("type") ? parsedJSON['type'] : "text";
 
   @override
-  List<Object> get props => [messageContent, senderId, date];
+  List<Object> get props => [messageContent, senderId, date, type];
 }

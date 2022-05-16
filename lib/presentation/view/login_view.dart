@@ -23,7 +23,11 @@ class LoginForm extends StatelessWidget {
           listener: (context, state) {
             if (state.status.isSubmissionFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Authentication Failure')),
+                SnackBar(
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Theme.of(context).errorColor,
+                content: Text("Echec de l'authentification"),
+              ),
               );
             }
           },

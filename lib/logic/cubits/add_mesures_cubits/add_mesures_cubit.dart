@@ -1,4 +1,3 @@
-import 'package:appdiet/data/repository/photos_repository.dart';
 import 'package:appdiet/data/repository/poids_mesures_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -7,12 +6,11 @@ import 'package:image_picker/image_picker.dart';
 part 'add_mesures_state.dart';
 
 class AddMesuresCubit extends Cubit<AddMesuresState> {
-  AddMesuresCubit(this._photosRepository, this._poidsMesuresRepository)
+  AddMesuresCubit(this._poidsMesuresRepository)
       :
         super(AddMesuresState(date : DateTime.now(),file: XFile('')));
 
   final PoidsMesuresRepository _poidsMesuresRepository;
-  final PhotosRepository _photosRepository;
 
   void dateChange(DateTime date) {
     emit(state.copyWith(date: date));
@@ -54,10 +52,7 @@ class AddMesuresCubit extends Cubit<AddMesuresState> {
     Map<String, dynamic> map = mapState();
     try{
       emit(state.copyWith(formState: AddMesureFormState.loadInProgress));
-      String url = "";
-      if(state.file.path != '')
-        url = await _photosRepository.uploadPhoto(state.file.path, state.date.toString());
-      await _poidsMesuresRepository.addPoidsMesures(map,url,state.date.toString());
+      await _poidsMesuresRepository.addPoidsMesures(map);
       emit(state.copyWith(formState: AddMesureFormState.complete));
     }catch (e){
       emit(state.copyWith(formState: AddMesureFormState.error));

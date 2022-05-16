@@ -15,7 +15,11 @@ class InfoPersoPage extends StatelessWidget {
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sign Up Failure')),
+            SnackBar(
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Theme.of(context).errorColor,
+                content: Text("Echec de la création du compte"),
+              ),
           );
         }
       },

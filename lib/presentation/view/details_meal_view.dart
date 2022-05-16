@@ -57,7 +57,11 @@ class DetailMealView extends StatelessWidget {
           listener: (context, state) {
             if (state.status == SubmissionStatus.failure)
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Erreur dans l'ajout du repas")),
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Theme.of(context).errorColor,
+                  content: Text("Une erreur est survenue"),
+                ),
               );
           },
           child: GestureDetector(
@@ -205,8 +209,15 @@ class _Photo extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
-                            Flexible(child: Text("Prendre une photo ou choisir depuis la galerie : ",style: TextStyle(fontSize: 16),overflow: TextOverflow.fade,)),
-                            SizedBox(height: 15,),
+                            Flexible(
+                                child: Text(
+                              "Prendre une photo ou choisir depuis la galerie : ",
+                              style: TextStyle(fontSize: 16),
+                              overflow: TextOverflow.fade,
+                            )),
+                            SizedBox(
+                              height: 15,
+                            ),
                             _ModalButton(
                               iconData: Icons.camera_alt_outlined,
                               text: "Appareil photo",
@@ -217,15 +228,18 @@ class _Photo extends StatelessWidget {
                                 iconData: Icons.photo,
                                 text: "Gallerie photo",
                                 returnValue: "gallerie"),
-
-                            SizedBox(height: 15,),
+                            SizedBox(
+                              height: 15,
+                            ),
                           ]),
                     ),
                   );
                 });
-            if(value == null) return;
-            XFile? file =
-                await ImagePicker().pickImage(source: value == "gallerie" ? ImageSource.gallery : ImageSource.camera);
+            if (value == null) return;
+            XFile? file = await ImagePicker().pickImage(
+                source: value == "gallerie"
+                    ? ImageSource.gallery
+                    : ImageSource.camera);
             if (file != null) context.read<DetailmealCubit>().fileChanged(file);
           },
           child: Material(

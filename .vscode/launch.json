@@ -28,7 +28,11 @@
             "name": "appdiet_release",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         },
     ]
 }

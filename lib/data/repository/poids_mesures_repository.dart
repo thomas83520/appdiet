@@ -13,7 +13,6 @@ class PoidsMesuresRepository {
   Future<PoidsMesures> loadPoidsMesures() async {
     Map<MesureType, List<Mesures>> mesures = {};
     List<Poids> poids = [];
-    Map<DateTime, List<String>> photos = {};
     List<Mesures> taille = [];
     List<Mesures> ventre = [];
     List<Mesures> hanche = [];
@@ -68,15 +67,6 @@ class PoidsMesuresRepository {
           }
         });
       }
-
-      if ((doc.data() as Map<String, dynamic>).containsKey("photos")) {
-        String photo;
-        List<String> urlPhoto = [];
-        for (photo in doc["photos"]) {
-          urlPhoto.add(photo);
-        }
-        photos.putIfAbsent(dateTime, () => urlPhoto);
-      }
     });
 
     mesures.putIfAbsent(MesureType.taille, () => taille);
@@ -86,12 +76,10 @@ class PoidsMesuresRepository {
     mesures.putIfAbsent(MesureType.bras, () => bras);
     mesures.putIfAbsent(MesureType.poitrine, () => poitrine);
 
-    return PoidsMesures(mesures: mesures, poids: poids, photos: photos);
+    return PoidsMesures(mesures: mesures, poids: poids);
   }
 
-  Future<void> addPoidsMesures(Map<String, dynamic> map, String url,String photoName) async {
-    map.putIfAbsent("photoUrl", () => url);
-    map.putIfAbsent("photoName", () => photoName);
+  Future<void> addPoidsMesures(Map<String, dynamic> map) async {
 
     await _firestore
         .collection("patient")

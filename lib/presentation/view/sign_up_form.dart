@@ -14,11 +14,14 @@ class SignUpForm extends StatelessWidget {
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Code diététicien(ne) incorrect')),
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).errorColor,
+              content: Text("Code diététicien(ne) incorrect"),
+            ),
           );
         }
         if (state.status.isSubmissionSuccess) {
-
           Navigator.of(context).pushNamed('/infos_perso');
           //signUpNavigatorKey.currentState!.pushNamed('/infos_perso');
         }
@@ -67,13 +70,17 @@ class _EmailInput extends StatelessWidget {
           textCapitalization: TextCapitalization.none,
           initialValue: user.email,
           key: const Key('signUpForm_emailInput_textField'),
-          onChanged: (email) => context.read<SignUpCubit>().emailChanged(email.toLowerCase()),
+          onChanged: (email) =>
+              context.read<SignUpCubit>().emailChanged(email.toLowerCase()),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            labelText: 'email',
-            helperText: '',
-            errorText: state.email.invalid ? state.email.value.isEmpty ? 'Champ Email vide' : 'Caractères non valide' : null
-          ),
+              labelText: 'email',
+              helperText: '',
+              errorText: state.email.invalid
+                  ? state.email.value.isEmpty
+                      ? 'Champ Email vide'
+                      : 'Caractères non valide'
+                  : null),
         );
       },
     );
@@ -134,7 +141,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
 class _DietCodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-        var _controller = TextEditingController();
+    var _controller = TextEditingController();
 
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.codeDiet != current.codeDiet,
@@ -251,7 +258,8 @@ class _LogoAndName extends StatelessWidget {
         ),
         Text(
           "DietUp!",
-          style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
+          style:
+              TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
         ),
       ],
     );

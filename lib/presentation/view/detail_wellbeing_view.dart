@@ -50,7 +50,11 @@ class DetailWellbeingView extends StatelessWidget {
           listener: (context, state) {
             if (state.status == SubmissionStatus.failure)
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Une erreur est surevenue")),
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Theme.of(context).errorColor,
+                  content: Text("Une erreur est survenue"),
+                ),
               );
           },
           child: GestureDetector(

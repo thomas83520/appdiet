@@ -3,7 +3,6 @@ import 'package:appdiet/data/models/poids_mesures/poids_mesures.dart';
 import 'package:appdiet/data/repository/poids_mesures_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/poids_mesures/poidsmesures_cubit.dart';
-import 'package:appdiet/presentation/pages/photos/photos_page.dart';
 import 'package:appdiet/presentation/pages/poids_mesures/add_poids_mesures.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -112,8 +111,6 @@ class _Poids extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          _PhotosButton(),
-          SizedBox(height: 35),
         ],
       ),
     );
@@ -193,7 +190,6 @@ class _Mesures extends StatelessWidget {
               ],
             ),
           ),
-          _PhotosButton(),
           SizedBox(height: 25),
         ],
       ),
@@ -201,54 +197,3 @@ class _Mesures extends StatelessWidget {
   }
 }
 
-class _PhotosButton extends StatelessWidget {
-  const _PhotosButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        SizedBox(
-          width: 15,
-        ),
-        Expanded(
-          child: SizedBox(
-            height: 50.0,
-            child: ElevatedButton(
-              key: const Key('photos_mesures_open_photos_key'),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.photo_camera_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Voir les photos',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: theme.primaryColor,
-                onSurface: theme.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-              onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => PhotosPage())),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 15,
-        )
-      ],
-    );
-  }
-}

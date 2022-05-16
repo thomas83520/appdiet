@@ -1,7 +1,6 @@
 import 'package:appdiet/data/models/journal/Day_comments.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
-import 'package:appdiet/presentation/pages/journal/detail_day_comment_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,35 +13,28 @@ class ListDayCommentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.select((JournalBloc bloc) => bloc.state);
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
-    return BlocListener<JournalBloc, JournalState>(
-      listener: (context, state) {
-        if (state.journalStateStatus == JournalStateStatus.modifyDayComment) {
-          Navigator.of(context).push(DetailDayCommentsPage.route(state.dayComments));
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Commentaires"),
-        ),
-        body: BlocBuilder<JournalBloc, JournalState>(
-          builder: (context, state) =>
-              state.journalStateStatus == JournalStateStatus.loading
-                  ? Center(child: CircularProgressIndicator())
-                  : Container(
-                      child: _ListDayComments(
-                          listCommentaires: state.journal.mapCommentaires),
-                    ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            context.read<JournalBloc>().add(DayCommentsClicked(
-                dayComments: DayComments.empty,
-                journal: state.journal,
-                user: user,
-                date : state.date));
-          },
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Commentaires"),
+      ),
+      body: BlocBuilder<JournalBloc, JournalState>(
+        builder: (context, state) =>
+            state.journalStateStatus == JournalStateStatus.loading
+                ? Center(child: CircularProgressIndicator())
+                : Container(
+                    child: _ListDayComments(
+                        listCommentaires: state.journal.mapCommentaires),
+                  ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          context.read<JournalBloc>().add(DayCommentsClicked(
+              dayComments: DayComments.empty,
+              journal: state.journal,
+              user: user,
+              date : state.date));
+        },
       ),
     );
   }

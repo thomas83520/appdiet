@@ -1,6 +1,5 @@
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/presentation/pages/documents/documents_page.dart';
-import 'package:appdiet/presentation/pages/photos/photos_page.dart';
 import 'package:appdiet/presentation/pages/poids_mesures/poids_mesures_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,16 +37,6 @@ class SideDrawer extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => BuildingPage()));
             },
           ),*/
-          ListTile(
-            leading: Icon(Icons.collections),
-            title: Text("Photos"),
-            trailing: Icon(Icons.arrow_forward_ios),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => PhotosPage()));
-            },
-          ),
           ListTile(
             leading: Icon(Icons.multiline_chart),
             title: Text("Poids et mesures"),

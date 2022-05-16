@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:appdiet/data/models/chat/chat_message.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class MessageView extends StatelessWidget {
@@ -35,7 +38,7 @@ class MessageView extends StatelessWidget {
 class ListMessage extends StatelessWidget {
   final List<ChatMessage> messages;
 
-  const ListMessage({Key? key,required this.messages}) : super(key: key);
+  const ListMessage({Key? key, required this.messages}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +57,12 @@ class ListMessage extends StatelessWidget {
                 ? UserMessage(
                     content: messages[index].messageContent,
                     date: messages[index].date,
+                    type: messages[index].type,
                   )
                 : DietMessage(
                     content: messages[index].messageContent,
                     date: messages[index].date,
+                    type: messages[index].type,
                   ),
           );
         },
@@ -81,22 +86,89 @@ class ChatInput extends StatelessWidget {
         color: Colors.white,
         child: Row(
           children: <Widget>[
-            /*GestureDetector(
-              onTap: () {},
+            GestureDetector(
+              onTap: () async {
+                XFile? file =
+                    await ImagePicker().pickImage(source: ImageSource.camera);
+                if (file != null) {
+                  bool? accept = await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: Image.file(
+                        File(file.path),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text('Annuler')),
+                        TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: Text('Envoyer')),
+                      ],
+                      actionsAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
+                  );
+                  if (accept != null && accept)
+                    context.read<ChatBloc>().add(ImageMessageSend(file: file));
+                }
+              },
               child: Container(
-                height: 30,
-                width: 30,
+                height: 35,
+                width: 35,
                 decoration: BoxDecoration(
                   color: theme.primaryColor,
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
-                  Icons.add,
+                  Icons.camera_alt_outlined,
                   color: Colors.white,
-                  size: 20,
+                  size: 25,
                 ),
               ),
-            ),*/
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            GestureDetector(
+              onTap: () async {
+                XFile? file =
+                    await ImagePicker().pickImage(source: ImageSource.gallery);
+                if (file != null) {
+                  bool? accept = await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: Image.file(
+                        File(file.path),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text('Annuler')),
+                        TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: Text('Envoyer')),
+                      ],
+                      actionsAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
+                  );
+                  if (accept != null && accept)
+                    context.read<ChatBloc>().add(ImageMessageSend(file: file));
+                }
+              },
+              child: Container(
+                height: 35,
+                width: 35,
+                decoration: BoxDecoration(
+                  color: theme.primaryColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(
+                  Icons.image_outlined,
+                  color: Colors.white,
+                  size: 25,
+                ),
+              ),
+            ),
             SizedBox(
               width: 15,
             ),
@@ -120,7 +192,7 @@ class ChatInput extends StatelessWidget {
                 onPressed: () {
                   context
                       .read<ChatBloc>()
-                      .add(MessageSend(message: _controller.text));
+                      .add(TextMessageSend(message: _controller.text));
                   _controller.clear();
                 },
                 child: Icon(
@@ -142,8 +214,11 @@ class ChatInput extends StatelessWidget {
 class DietMessage extends StatelessWidget {
   final String content;
   final DateTime date;
+  final String type;
 
-  const DietMessage({Key? key,required this.content,required this.date}) : super(key: key);
+  const DietMessage(
+      {Key? key, required this.content, required this.date, required this.type})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -155,10 +230,10 @@ class DietMessage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.grey.shade200),
             padding: EdgeInsets.all(16),
-            child: Text(
+            child: type == "text" ? Text(
               content,
               style: TextStyle(fontSize: 15),
-            ),
+            ) : Image.network(content),
           ),
         ),
         Align(
@@ -176,8 +251,11 @@ class DietMessage extends StatelessWidget {
 class UserMessage extends StatelessWidget {
   final String content;
   final DateTime date;
+  final String type;
 
-  const UserMessage({Key? key,required this.content,required this.date}) : super(key: key);
+  const UserMessage(
+      {Key? key, required this.content, required this.date, required this.type})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -189,11 +267,12 @@ class UserMessage extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.green[200]),
+            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width /1.5),
             padding: EdgeInsets.all(16),
-            child: Text(
+            child: type =="text" ? Text(
               content,
               style: TextStyle(fontSize: 15),
-            ),
+            ): Image.network(content),
           ),
         ),
         Align(

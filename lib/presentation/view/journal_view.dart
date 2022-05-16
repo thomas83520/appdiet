@@ -24,7 +24,11 @@ class JournalView extends StatelessWidget {
               .push(DetailWellBeingPage.route(state.wellBeing));
         } else if (state.journalStateStatus == JournalStateStatus.fail)
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Une erreur est surevenue")),
+            SnackBar(
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Theme.of(context).errorColor,
+                content: Text("Une erreur est survenue"),
+              ),
           );
       },
       child: Container(

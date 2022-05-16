@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:appdiet/data/models/models.dart';
-import 'package:appdiet/data/repository/photos_repository.dart';
 import 'package:appdiet/data/repository/poids_mesures_repository.dart';
 import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:appdiet/logic/cubits/add_mesures_cubits/add_mesures_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AddPoidsMesures extends StatelessWidget {
   @override
@@ -15,8 +11,7 @@ class AddPoidsMesures extends StatelessWidget {
     final User user =
         context.select((AuthenticationBloc bloc) => bloc.state.user);
     return BlocProvider(
-      create: (context) => AddMesuresCubit(
-          PhotosRepository(user: user), PoidsMesuresRepository(user: user))
+      create: (context) => AddMesuresCubit(PoidsMesuresRepository(user: user))
         ..dateChange(DateTime.now()),
       child: BlocListener<AddMesuresCubit, AddMesuresState>(
         listener: (context, state) {
@@ -24,7 +19,11 @@ class AddPoidsMesures extends StatelessWidget {
             Navigator.of(context).pop();
           if (state.formState == AddMesureFormState.error)
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Une erreur est surevenue")),
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Theme.of(context).errorColor,
+                content: Text("Une erreur est survenue"),
+              ),
             );
         },
         child: Scaffold(
@@ -39,10 +38,6 @@ class AddPoidsMesures extends StatelessWidget {
                 child: Column(
                   children: [
                     _DateMesureInput(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    _PhotoMesure(),
                     SizedBox(
                       height: 10,
                     ),
@@ -314,62 +309,6 @@ class _PoidsMesureInput extends StatelessWidget {
   }
 }
 
-class _PhotoMesure extends StatelessWidget {
-  const _PhotoMesure({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AddMesuresCubit, AddMesuresState>(
-      builder: (context, state) {
-        return InkWell(
-          onTap: () async {
-            XFile? file =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
-            if (file != null) context.read<AddMesuresCubit>().fileChanged(file);
-          },
-          child: Material(
-            elevation: 2,
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            child: Container(
-              constraints: BoxConstraints(minHeight: 70.0),
-              padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              ),
-              width: double.infinity,
-              child: Row(
-                children: [
-                  Text(
-                    "Ajoutez une photo:",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(
-                    width: 50,
-                  ),
-                  BlocBuilder<AddMesuresCubit, AddMesuresState>(
-                    builder: (context, state) {
-                      return Container(
-                        height: 150,
-                        width: 100,
-                        child: state.file.path == ''
-                            ? Container()
-                            : Image.file(File(state.file.path)),
-                      );
-                    },
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
 class _DateMesureInput extends StatelessWidget {
   const _DateMesureInput({
     Key? key,
@@ -411,7 +350,7 @@ class _DateMesureInput extends StatelessWidget {
                           key: const Key('AddMesures_dateInput_textField'),
                           onTap: () async {
                             DateTime? date = await showDatePicker(
-                              locale : const Locale("fr","FR"),
+                                locale: const Locale("fr", "FR"),
                                 context: context,
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime(1900),
