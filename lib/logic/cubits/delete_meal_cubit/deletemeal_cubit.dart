@@ -1,4 +1,3 @@
-import 'package:appdiet/data/models/journal/repas.dart';
 import 'package:appdiet/data/models/user.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
 import 'package:bloc/bloc.dart';
