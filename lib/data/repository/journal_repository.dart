@@ -16,6 +16,8 @@ class AddRepasFailure implements Exception {}
 
 class AddDayCommentsFailure implements Exception {}
 
+class FailDeleteRepas implements Exception {}
+
 class JournalRepository {
   JournalRepository()
       : _firestore = FirebaseFirestore.instance,
@@ -189,7 +191,7 @@ class JournalRepository {
                   "photoUrl": photoUrl
                 }
               ]);
-            print(mealsList);
+        print(mealsList);
         await _firestore
             .collection("patient")
             .doc(user.id)
@@ -215,6 +217,44 @@ class JournalRepository {
       });
     } on Exception {
       throw AddRepasFailure();
+    }
+  }
+
+  Future<void> deleteMeal(User user, String id, DateTime date) async {
+    String dateString = stringDate(date);
+    var mealToDelete = {};
+    try {
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(dateString)
+          .collection("Repas")
+          .doc(id)
+          .delete();
+      final result = await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(dateString)
+          .get();
+
+      List<dynamic> meals = result["Meals"] as List<dynamic>;
+
+      meals.forEach((element) {
+        if (element["id"] == id) mealToDelete = element;
+      });
+      print(mealToDelete);
+      await _firestore
+          .collection("patient")
+          .doc(user.id)
+          .collection("Journal")
+          .doc(dateString)
+          .update({
+        "Meals": FieldValue.arrayRemove([mealToDelete])
+      });
+    } on Exception {
+      throw Exception();
     }
   }
 

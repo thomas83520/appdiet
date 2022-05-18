@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:formz/formz.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_button/sign_button.dart' as signin_button;
+import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 import 'package:the_apple_sign_in/apple_sign_in_button.dart';
 
 class LoginForm extends StatelessWidget {

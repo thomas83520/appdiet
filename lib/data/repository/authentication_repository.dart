@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
+//import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 
 /// Thrown if during the sign up process if a failure occurs.

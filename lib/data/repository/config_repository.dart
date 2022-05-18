@@ -5,7 +5,6 @@ class ConfigRepository {
   static Future<bool> get needUpdate async {
     final String packageVersionString = await packageVersion;
     final String enforcedVersionString = await enforcedVersion;
-
     final List<int> currentVersion = packageVersionString
         .split('.')
         .map((String number) => int.parse(number))
@@ -15,9 +14,12 @@ class ConfigRepository {
         .map((String number) => int.parse(number))
         .toList();
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i > 3; i++) {
       if (minimalVersion[i] > currentVersion[i]) {
         return true;
+      }
+      else if(minimalVersion[i] < currentVersion[i]){
+        return false;
       }
     }
     return false;

@@ -6,6 +6,7 @@ import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart
 import 'package:appdiet/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:appdiet/logic/blocs/goal_bloc/goal_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
+import 'package:appdiet/logic/cubits/delete_meal_cubit/deletemeal_cubit.dart';
 import 'package:appdiet/logic/cubits/navbar_cubit/navbar_cubit.dart';
 import 'package:appdiet/presentation/pages/building_page.dart';
 import 'package:appdiet/presentation/view/goal_view.dart';
@@ -21,7 +22,6 @@ class HomePage extends StatelessWidget {
     return MaterialPageRoute<void>(builder: (_) => HomePage());
   }
 
-
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
@@ -34,8 +34,14 @@ class HomePage extends StatelessWidget {
           ),
           BlocProvider<JournalBloc>(
             create: (context) => JournalBloc(
-                date: DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day), journalRepository: JournalRepository(), user: user),
-          )
+                date: DateTime(DateTime.now().year, DateTime.now().month,
+                    DateTime.now().day),
+                journalRepository: JournalRepository(),
+                user: user),
+          ),
+          BlocProvider(
+              create: (context) =>
+                  DeletemealCubit(user: user,journalRepository: JournalRepository()))
         ],
         child: Navigator(
           onGenerateRoute: (settings) => MaterialPageRoute(
@@ -53,7 +59,8 @@ class HomePage extends StatelessWidget {
               drawer: SideDrawer(),
               bottomNavigationBar: NavBar(),
               body: BlocBuilder<NavbarCubit, NavbarState>(
-                buildWhen: (previous, current) => previous.index != current.index,
+                buildWhen: (previous, current) =>
+                    previous.index != current.index,
                 builder: (context, state) {
                   return childfromindex(state.index, user);
                 },

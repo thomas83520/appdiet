@@ -9,30 +9,21 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug",
-            "args": [
-                "--flavor",
-                "dev"
-            ]
+            
         },
         {
             "name": "appdiet_debug_prod",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug",
-            "args": [
-                "--flavor",
-                "prod"
-            ]
+            
         },
         {
             "name": "appdiet_release",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",
-            "args": [
-                "--flavor",
-                "prod"
-            ]
+            
         },
     ]
 }

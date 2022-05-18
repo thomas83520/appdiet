@@ -8,28 +8,32 @@ abstract class JournalEvent extends Equatable {
 }
 
 class JournalDateChange extends JournalEvent {
-  const JournalDateChange(this.date,this.user);
+  const JournalDateChange(this.date, this.user);
 
   final DateTime date;
   final User user;
 
   @override
-  List<Object> get props => [date,user];
+  List<Object> get props => [date, user];
 }
 
 class JournalUpdate extends JournalEvent {
-  const JournalUpdate(this.journal,this.date,this.user);
-  
+  const JournalUpdate(this.journal, this.date, this.user);
+
   final Journal journal;
   final DateTime date;
   final User user;
-  
+
   @override
-  List<Object> get props => [journal,date,user];  
+  List<Object> get props => [journal, date, user];
 }
 
 class RepasClicked extends JournalEvent {
-  const RepasClicked({required this.repas,required this.journal,required this.user,required this.date});
+  const RepasClicked(
+      {required this.repas,
+      required this.journal,
+      required this.user,
+      required this.date});
 
   final Repas repas;
   final Journal journal;
@@ -37,11 +41,15 @@ class RepasClicked extends JournalEvent {
   final DateTime date;
 
   @override
-  List<Object> get props => [repas,journal,user,date];
+  List<Object> get props => [repas, journal, user, date];
 }
 
 class DayCommentsClicked extends JournalEvent {
-  const DayCommentsClicked({required this.dayComments,required this.journal,required this.user,required this.date});
+  const DayCommentsClicked(
+      {required this.dayComments,
+      required this.journal,
+      required this.user,
+      required this.date});
 
   final DayComments dayComments;
   final Journal journal;
@@ -49,11 +57,15 @@ class DayCommentsClicked extends JournalEvent {
   final DateTime date;
 
   @override
-  List<Object> get props => [dayComments,journal,user,date];
+  List<Object> get props => [dayComments, journal, user, date];
 }
 
 class WellBeingClicked extends JournalEvent {
-  const WellBeingClicked({required this.wellBeing, required this.journal,required this.user,required this.date});
+  const WellBeingClicked(
+      {required this.wellBeing,
+      required this.journal,
+      required this.user,
+      required this.date});
 
   final WellBeing wellBeing;
   final Journal journal;
@@ -61,5 +73,5 @@ class WellBeingClicked extends JournalEvent {
   final DateTime date;
 
   @override
-  List<Object> get props => [wellBeing,journal,user,date];
+  List<Object> get props => [wellBeing, journal, user, date];
 }

@@ -2,17 +2,20 @@ import 'package:appdiet/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class NeedUpdatePage extends StatelessWidget {
-  const NeedUpdatePage({Key? key,required this.currentVersion,required this.minimunVersion}) : super(key: key);
+  const NeedUpdatePage(
+      {Key? key, required this.currentVersion, required this.minimunVersion})
+      : super(key: key);
 
   final String currentVersion;
   final String minimunVersion;
   @override
   Widget build(BuildContext context) {
     const String iosURL = 'https://apps.apple.com/fr/app/dietup/id1576122128';
-    const String androidUrl = 'https://play.google.com/store/apps/details?id=fr.dietup.mobileapp';
+    const String androidUrl =
+        'https://play.google.com/store/apps/details?id=fr.dietup.mobileapp';
     final appleSignInAvailable =
         Provider.of<AppleSignInAvailable>(context, listen: false);
     return Scaffold(
@@ -30,20 +33,20 @@ class NeedUpdatePage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             Text('Version actuelle : ' + currentVersion),
             Text('Version minimum requise : ' + minimunVersion),
-
             SizedBox(
               height: 10,
             ),
             appleSignInAvailable.isAvailable
                 ? InkWell(
                     onTap: () async {
-                      if (await canLaunch(iosURL))
-                        await launch(
+                      if (await canLaunchUrlString(iosURL))
+                        await launchUrlString(
                           iosURL,
-                          forceSafariVC: false,
                         );
                       else
                         throw 'Could not launch url';
@@ -55,8 +58,8 @@ class NeedUpdatePage extends StatelessWidget {
                   )
                 : InkWell(
                     onTap: () async {
-                      if (await canLaunch(androidUrl))
-                        await launch(androidUrl);
+                      if (await canLaunchUrlString(androidUrl))
+                        await launchUrlString(androidUrl);
                       else
                         throw 'Could not launch url';
                     },

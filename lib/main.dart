@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
+//import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 
 class AppleSignInAvailable {
