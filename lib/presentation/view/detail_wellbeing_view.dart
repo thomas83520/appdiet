@@ -26,7 +26,7 @@ class DetailWellbeingView extends StatelessWidget {
               statejournal.journalStateStatus != JournalStateStatus.complete) {
             context
                 .read<JournalBloc>()
-                .add(JournalUpdate(journal, journal.date, user));
+                .add(JournalUpdate(journal, statejournal.date, user));
             //Navigator.of(context).pop();
           }
         })

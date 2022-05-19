@@ -93,7 +93,7 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
       else {
         try {
           Repas repas = await _journalRepository.repasById(
-              event.journal.date, event.user.id, event.repas.id);
+              event.date, event.user.id, event.repas.id);
           emit(JournalState.modifyRepas(repas, event.journal, event.date));
         } catch (e) {
 

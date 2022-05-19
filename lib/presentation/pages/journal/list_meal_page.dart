@@ -14,7 +14,7 @@ class ListMealPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.select((JournalBloc bloc) => bloc.state);
+    final journalstate = context.select((JournalBloc bloc) => bloc.state);
     final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     final journal = context.select((JournalBloc bloc) => bloc.state.journal);
     return MultiBlocListener(
@@ -42,7 +42,7 @@ class ListMealPage extends StatelessWidget {
                 backgroundColor: Colors.green,
                 duration: Duration(seconds: 1),
               ),);
-              context.read<JournalBloc>().add(JournalUpdate(journal, journal.date, user));
+              context.read<JournalBloc>().add(JournalUpdate(journal, journalstate.date, user));
             }
           },
         ),
@@ -65,9 +65,9 @@ class ListMealPage extends StatelessWidget {
           onPressed: () {
             context.read<JournalBloc>().add(RepasClicked(
                 repas: Repas.empty,
-                journal: state.journal,
+                journal: journalstate.journal,
                 user: user,
-                date: state.date));
+                date: journalstate.date));
           },
         ),
       ),
