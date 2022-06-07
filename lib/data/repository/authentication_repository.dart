@@ -59,7 +59,6 @@ class AuthenticationRepository {
     required String password,
   }) async {
     try {
-      print("signup");
       await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -179,7 +178,7 @@ Future<void> sendResetPassword(String email) async {
 
   Future<User> completeUserSubscription(User user,String uidUser) async {
     await _firestore.collection('patient').doc(uidUser).set({
-      'name': user.name,
+      'name': user.name.toUpperCase(),
       'firstName': user.firstName,
       'email': user.email,
       'id': uidUser,
@@ -191,7 +190,7 @@ Future<void> sendResetPassword(String email) async {
       'suivi' : "Suivi en cours"
     });
     return User(
-      name: user.name,
+      name: user.name.toUpperCase(),
       firstName: user.firstName,
       email: user.email,
       id: uidUser,
@@ -206,7 +205,7 @@ Future<void> sendResetPassword(String email) async {
 
   Future<void> addUserToWaiting(User user) async {
     await _firestore.collection('accountwaiting').add({
-      'name': user.name,
+      'name': user.name.toUpperCase(),
       'firstName': user.firstName,
       'email': user.email,
       'id': user.id,
@@ -269,7 +268,7 @@ Future<void> sendResetPassword(String email) async {
   Future<User> initUserInFirestore(
       String uid, String email, String name, String firstName) async {
     await _firestore.collection('patient').doc(uid).set({
-      'name': name,
+      'name': name.toUpperCase(),
       'firstName':  firstName,
       'email': email,
       'id': uid,
@@ -283,7 +282,7 @@ Future<void> sendResetPassword(String email) async {
     return User(
         email:  email,
         id: uid,
-        name: name,
+        name: name.toUpperCase(),
         firstName: firstName,
         creatingAccount: true,
         linkFoodPlan: "null",

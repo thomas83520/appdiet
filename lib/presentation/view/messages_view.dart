@@ -5,8 +5,10 @@ import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart
 import 'package:appdiet/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MessageView extends StatelessWidget {
   const MessageView({
@@ -230,10 +232,18 @@ class DietMessage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.grey.shade200),
             padding: EdgeInsets.all(16),
-            child: type == "text" ? Text(
-              content,
-              style: TextStyle(fontSize: 15),
-            ) : Image.network(content),
+            child: type == "text"
+                ? SelectableLinkify(
+                    onOpen: (link) async {
+                      if (await canLaunchUrlString(link.url)) {
+                        await launchUrlString(link.url);
+                      }
+                    },
+                    text: content,
+                    style: TextStyle(fontSize: 15),
+                    options: LinkifyOptions(humanize: false),
+                  )
+                : Image.network(content),
           ),
         ),
         Align(
@@ -267,12 +277,21 @@ class UserMessage extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.green[200]),
-            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width /1.5),
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width / 1.5),
             padding: EdgeInsets.all(16),
-            child: type =="text" ? Text(
-              content,
-              style: TextStyle(fontSize: 15),
-            ): Image.network(content),
+            child: type == "text"
+                ? SelectableLinkify(
+                    onOpen: (link) async {
+                      if (await canLaunchUrlString(link.url)) {
+                        await launchUrlString(link.url);
+                      }
+                    },
+                    text: content,
+                    style: TextStyle(fontSize: 15),
+                    options: LinkifyOptions(humanize: false),
+                  )
+                : Image.network(content),
           ),
         ),
         Align(
