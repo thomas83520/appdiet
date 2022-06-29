@@ -1,4 +1,5 @@
 import 'package:appdiet/data/models/models.dart';
+import 'package:appdiet/data/repository/account_repository.dart';
 import 'package:appdiet/data/repository/chat_repository.dart';
 import 'package:appdiet/data/repository/goal_repository.dart';
 import 'package:appdiet/data/repository/journal_repository.dart';
@@ -6,6 +7,7 @@ import 'package:appdiet/logic/blocs/authentication_bloc/authentication_bloc.dart
 import 'package:appdiet/logic/blocs/chat_bloc/chat_bloc.dart';
 import 'package:appdiet/logic/blocs/goal_bloc/goal_bloc.dart';
 import 'package:appdiet/logic/blocs/journal_bloc/journal_bloc.dart';
+import 'package:appdiet/logic/cubits/delete_account_cubit/delete_account_cubit.dart';
 import 'package:appdiet/logic/cubits/delete_meal_cubit/deletemeal_cubit.dart';
 import 'package:appdiet/logic/cubits/navbar_cubit/navbar_cubit.dart';
 import 'package:appdiet/presentation/pages/building_page.dart';
@@ -40,30 +42,72 @@ class HomePage extends StatelessWidget {
                 user: user),
           ),
           BlocProvider(
-              create: (context) =>
-                  DeletemealCubit(user: user,journalRepository: JournalRepository()))
+              create: (context) => DeletemealCubit(
+                  user: user, journalRepository: JournalRepository())),
+          BlocProvider(
+            create: (context) => DeleteAccountCubit(
+                accountRepository: AccountRepository(user: user)),
+          )
         ],
-        child: Navigator(
-          onGenerateRoute: (settings) => MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: BlocBuilder<NavbarCubit, NavbarState>(
+        child: BlocListener<DeleteAccountCubit, DeleteAccountState>(
+          listener: (context, state) {
+            if (state is DeleteAccountFail)
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Theme.of(context).errorColor,
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        Icons.cancel_outlined,
+                        color: Colors.white,
+                      ),
+                      Text("Une erreur est survenue"),
+                    ],
+                  ),
+                ),
+              );
+            if (state is DeleteAccountSuccess)
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline_outlined,
+                        color: Colors.white,
+                      ),
+                      Text("Votre demande à bien été prise en compte"),
+                    ],
+                  ),
+                ),
+              );
+          },
+          child: Navigator(
+            onGenerateRoute: (settings) => MaterialPageRoute(
+              builder: (context) => Scaffold(
+                appBar: AppBar(
+                  title: BlocBuilder<NavbarCubit, NavbarState>(
+                    buildWhen: (previous, current) =>
+                        previous.index != current.index,
+                    builder: (context, state) {
+                      return titlefromindex(state.index, user);
+                    },
+                  ),
+                  //backgroundColor: Theme.of(context).primaryColor,
+                ),
+                drawer: SideDrawer(),
+                bottomNavigationBar: NavBar(),
+                body: BlocBuilder<NavbarCubit, NavbarState>(
                   buildWhen: (previous, current) =>
                       previous.index != current.index,
                   builder: (context, state) {
-                    return titlefromindex(state.index, user);
+                    return childfromindex(state.index, user);
                   },
                 ),
-                //backgroundColor: Theme.of(context).primaryColor,
-              ),
-              drawer: SideDrawer(),
-              bottomNavigationBar: NavBar(),
-              body: BlocBuilder<NavbarCubit, NavbarState>(
-                buildWhen: (previous, current) =>
-                    previous.index != current.index,
-                builder: (context, state) {
-                  return childfromindex(state.index, user);
-                },
               ),
             ),
           ),
